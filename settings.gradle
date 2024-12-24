@@ -1,0 +1,3 @@
+rootProject.name = 'newscatcher-sdk'
+
+include 'sample-app'
