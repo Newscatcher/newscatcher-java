@@ -44,7 +44,7 @@ java {
 
 group = 'com.newscatcherapi'
 
-version = '1.0.0'
+version = '1.0.1'
 
 jar {
     dependsOn(":generatePomFileForMavenPublication")
@@ -71,7 +71,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.newscatcherapi'
             artifactId = 'newscatcher-sdk'
-            version = '1.0.0'
+            version = '1.0.1'
             from components.java
             pom {
                 description = 'Java library for Newscatcher News API v3'
