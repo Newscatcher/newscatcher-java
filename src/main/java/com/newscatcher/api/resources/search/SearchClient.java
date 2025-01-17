@@ -10,12 +10,18 @@ import com.newscatcher.api.core.NewscatcherApiApiException;
 import com.newscatcher.api.core.NewscatcherApiException;
 import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.core.RequestOptions;
+import com.newscatcher.api.errors.BadRequestError;
+import com.newscatcher.api.errors.ForbiddenError;
+import com.newscatcher.api.errors.InternalServerError;
+import com.newscatcher.api.errors.RequestTimeoutError;
+import com.newscatcher.api.errors.TooManyRequestsError;
+import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
 import com.newscatcher.api.resources.search.requests.SearchGetRequest;
-import com.newscatcher.api.resources.search.requests.SearchRequest;
+import com.newscatcher.api.resources.search.requests.SearchPostRequest;
 import com.newscatcher.api.resources.search.types.SearchGetResponse;
 import com.newscatcher.api.resources.search.types.SearchPostResponse;
-import com.newscatcher.api.types.HttpValidationError;
+import com.newscatcher.api.types.Error;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -33,14 +39,14 @@ public class SearchClient {
     }
 
     /**
-     * This endpoint allows you to search for articles. You can search for articles by keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
      */
     public SearchGetResponse get(SearchGetRequest request) {
         return get(request, null);
     }
 
     /**
-     * This endpoint allows you to search for articles. You can search for articles by keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
      */
     public SearchGetResponse get(SearchGetRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
@@ -50,74 +56,121 @@ public class SearchClient {
         if (request.getSearchIn().isPresent()) {
             httpUrl.addQueryParameter("search_in", request.getSearchIn().get());
         }
-        httpUrl.addQueryParameter("predefined_sources", request.getPredefinedSources());
-        httpUrl.addQueryParameter("sources", request.getSources());
-        httpUrl.addQueryParameter("not_sources", request.getNotSources());
-        httpUrl.addQueryParameter("lang", request.getLang());
-        httpUrl.addQueryParameter("not_lang", request.getNotLang());
-        httpUrl.addQueryParameter("countries", request.getCountries());
-        httpUrl.addQueryParameter("not_countries", request.getNotCountries());
-        httpUrl.addQueryParameter("not_author_name", request.getNotAuthorName());
+        if (request.getPredefinedSources().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "predefined_sources", request.getPredefinedSources().get());
+        }
+        if (request.getSourceName().isPresent()) {
+            httpUrl.addQueryParameter("source_name", request.getSourceName().get());
+        }
+        if (request.getSources().isPresent()) {
+            httpUrl.addQueryParameter("sources", request.getSources().get());
+        }
+        if (request.getNotSources().isPresent()) {
+            httpUrl.addQueryParameter("not_sources", request.getNotSources().get());
+        }
+        if (request.getLang().isPresent()) {
+            httpUrl.addQueryParameter("lang", request.getLang().get());
+        }
+        if (request.getNotLang().isPresent()) {
+            httpUrl.addQueryParameter("not_lang", request.getNotLang().get());
+        }
+        if (request.getCountries().isPresent()) {
+            httpUrl.addQueryParameter("countries", request.getCountries().get());
+        }
+        if (request.getNotCountries().isPresent()) {
+            httpUrl.addQueryParameter("not_countries", request.getNotCountries().get());
+        }
+        if (request.getNotAuthorName().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "not_author_name", request.getNotAuthorName().get());
+        }
         if (request.getFrom().isPresent()) {
-            httpUrl.addQueryParameter("from_", request.getFrom().get());
+            httpUrl.addQueryParameter("from_", request.getFrom().get().toString());
         }
         if (request.getTo().isPresent()) {
-            httpUrl.addQueryParameter("to_", request.getTo().get());
+            httpUrl.addQueryParameter("to_", request.getTo().get().toString());
         }
         if (request.getPublishedDatePrecision().isPresent()) {
             httpUrl.addQueryParameter(
                     "published_date_precision",
-                    request.getPublishedDatePrecision().get());
+                    request.getPublishedDatePrecision().get().toString());
         }
         if (request.getByParseDate().isPresent()) {
-            httpUrl.addQueryParameter("by_parse_date", request.getByParseDate().get());
+            httpUrl.addQueryParameter(
+                    "by_parse_date", request.getByParseDate().get().toString());
         }
         if (request.getSortBy().isPresent()) {
-            httpUrl.addQueryParameter("sort_by", request.getSortBy().get());
+            httpUrl.addQueryParameter("sort_by", request.getSortBy().get().toString());
         }
         if (request.getRankedOnly().isPresent()) {
-            httpUrl.addQueryParameter("ranked_only", request.getRankedOnly().get());
+            httpUrl.addQueryParameter(
+                    "ranked_only", request.getRankedOnly().get().toString());
         }
         if (request.getFromRank().isPresent()) {
-            httpUrl.addQueryParameter("from_rank", request.getFromRank().get());
+            httpUrl.addQueryParameter("from_rank", request.getFromRank().get().toString());
         }
         if (request.getToRank().isPresent()) {
-            httpUrl.addQueryParameter("to_rank", request.getToRank().get());
+            httpUrl.addQueryParameter("to_rank", request.getToRank().get().toString());
         }
         if (request.getIsHeadline().isPresent()) {
-            httpUrl.addQueryParameter("is_headline", request.getIsHeadline().get());
+            httpUrl.addQueryParameter(
+                    "is_headline", request.getIsHeadline().get().toString());
         }
         if (request.getIsOpinion().isPresent()) {
-            httpUrl.addQueryParameter("is_opinion", request.getIsOpinion().get());
+            httpUrl.addQueryParameter("is_opinion", request.getIsOpinion().get().toString());
         }
         if (request.getIsPaidContent().isPresent()) {
             httpUrl.addQueryParameter(
-                    "is_paid_content", request.getIsPaidContent().get());
+                    "is_paid_content", request.getIsPaidContent().get().toString());
         }
-        httpUrl.addQueryParameter("parent_url", request.getParentUrl());
-        httpUrl.addQueryParameter("all_links", request.getAllLinks());
-        httpUrl.addQueryParameter("all_domain_links", request.getAllDomainLinks());
+        if (request.getParentUrl().isPresent()) {
+            httpUrl.addQueryParameter("parent_url", request.getParentUrl().get());
+        }
+        if (request.getAllLinks().isPresent()) {
+            httpUrl.addQueryParameter("all_links", request.getAllLinks().get());
+        }
+        if (request.getAllDomainLinks().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "all_domain_links", request.getAllDomainLinks().get());
+        }
+        if (request.getAdditionalDomainInfo().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "additional_domain_info",
+                    request.getAdditionalDomainInfo().get().toString());
+        }
+        if (request.getIsNewsDomain().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "is_news_domain", request.getIsNewsDomain().get().toString());
+        }
+        if (request.getNewsDomainType().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "news_domain_type", request.getNewsDomainType().get().toString());
+        }
+        if (request.getNewsType().isPresent()) {
+            httpUrl.addQueryParameter("news_type", request.getNewsType().get());
+        }
         if (request.getWordCountMin().isPresent()) {
             httpUrl.addQueryParameter(
-                    "word_count_min", request.getWordCountMin().get());
+                    "word_count_min", request.getWordCountMin().get().toString());
         }
         if (request.getWordCountMax().isPresent()) {
             httpUrl.addQueryParameter(
-                    "word_count_max", request.getWordCountMax().get());
+                    "word_count_max", request.getWordCountMax().get().toString());
         }
         if (request.getPage().isPresent()) {
-            httpUrl.addQueryParameter("page", request.getPage().get());
+            httpUrl.addQueryParameter("page", request.getPage().get().toString());
         }
         if (request.getPageSize().isPresent()) {
-            httpUrl.addQueryParameter("page_size", request.getPageSize().get());
-        }
-        if (request.getClusteringVariable().isPresent()) {
-            httpUrl.addQueryParameter(
-                    "clustering_variable", request.getClusteringVariable().get());
+            httpUrl.addQueryParameter("page_size", request.getPageSize().get().toString());
         }
         if (request.getClusteringEnabled().isPresent()) {
             httpUrl.addQueryParameter(
-                    "clustering_enabled", request.getClusteringEnabled().get());
+                    "clustering_enabled", request.getClusteringEnabled().get().toString());
+        }
+        if (request.getClusteringVariable().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "clustering_variable", request.getClusteringVariable().get().toString());
         }
         if (request.getClusteringThreshold().isPresent()) {
             httpUrl.addQueryParameter(
@@ -126,7 +179,7 @@ public class SearchClient {
         }
         if (request.getIncludeNlpData().isPresent()) {
             httpUrl.addQueryParameter(
-                    "include_nlp_data", request.getIncludeNlpData().get());
+                    "include_nlp_data", request.getIncludeNlpData().get().toString());
         }
         if (request.getHasNlp().isPresent()) {
             httpUrl.addQueryParameter("has_nlp", request.getHasNlp().get().toString());
@@ -171,26 +224,25 @@ public class SearchClient {
                     "content_sentiment_max",
                     request.getContentSentimentMax().get().toString());
         }
-        httpUrl.addQueryParameter("iptc_tags", request.getIptcTags());
-        httpUrl.addQueryParameter("not_iptc_tags", request.getNotIptcTags());
-        httpUrl.addQueryParameter("source_name", request.getSourceName());
-        httpUrl.addQueryParameter("iab_tags", request.getIabTags());
-        httpUrl.addQueryParameter("not_iab_tags", request.getNotIabTags());
+        if (request.getIptcTags().isPresent()) {
+            httpUrl.addQueryParameter("iptc_tags", request.getIptcTags().get());
+        }
+        if (request.getNotIptcTags().isPresent()) {
+            httpUrl.addQueryParameter("not_iptc_tags", request.getNotIptcTags().get());
+        }
+        if (request.getIabTags().isPresent()) {
+            httpUrl.addQueryParameter("iab_tags", request.getIabTags().get());
+        }
+        if (request.getNotIabTags().isPresent()) {
+            httpUrl.addQueryParameter("not_iab_tags", request.getNotIabTags().get());
+        }
+        if (request.getCustomTags().isPresent()) {
+            httpUrl.addQueryParameter("custom_tags", request.getCustomTags().get());
+        }
         if (request.getExcludeDuplicates().isPresent()) {
             httpUrl.addQueryParameter(
                     "exclude_duplicates", request.getExcludeDuplicates().get().toString());
         }
-        if (request.getAdditionalDomainInfo().isPresent()) {
-            httpUrl.addQueryParameter(
-                    "additional_domain_info",
-                    request.getAdditionalDomainInfo().get().toString());
-        }
-        if (request.getIsNewsDomain().isPresent()) {
-            httpUrl.addQueryParameter(
-                    "is_news_domain", request.getIsNewsDomain().get().toString());
-        }
-        httpUrl.addQueryParameter("news_domain_type", request.getNewsDomainType());
-        httpUrl.addQueryParameter("news_type", request.getNewsType());
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -208,9 +260,26 @@ public class SearchClient {
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
-                if (response.code() == 422) {
-                    throw new UnprocessableEntityError(
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, HttpValidationError.class));
+                switch (response.code()) {
+                    case 400:
+                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 401:
+                        throw new UnauthorizedError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 403:
+                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 408:
+                        throw new RequestTimeoutError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 422:
+                        throw new UnprocessableEntityError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 429:
+                        throw new TooManyRequestsError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 500:
+                        throw new InternalServerError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
                 }
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
@@ -225,16 +294,16 @@ public class SearchClient {
     }
 
     /**
-     * This endpoint allows you to search for articles. You can search for articles by keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
      */
-    public SearchPostResponse post(SearchRequest request) {
+    public SearchPostResponse post(SearchPostRequest request) {
         return post(request, null);
     }
 
     /**
-     * This endpoint allows you to search for articles. You can search for articles by keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
      */
-    public SearchPostResponse post(SearchRequest request, RequestOptions requestOptions) {
+    public SearchPostResponse post(SearchPostRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/search")
@@ -263,9 +332,26 @@ public class SearchClient {
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
-                if (response.code() == 422) {
-                    throw new UnprocessableEntityError(
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, HttpValidationError.class));
+                switch (response.code()) {
+                    case 400:
+                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 401:
+                        throw new UnauthorizedError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 403:
+                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 408:
+                        throw new RequestTimeoutError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 422:
+                        throw new UnprocessableEntityError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 429:
+                        throw new TooManyRequestsError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 500:
+                        throw new InternalServerError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
                 }
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error

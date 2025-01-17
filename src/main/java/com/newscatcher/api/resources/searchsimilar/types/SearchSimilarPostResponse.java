@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.newscatcher.api.core.ObjectMappers;
-import com.newscatcher.api.types.FailedSearchResponse;
-import com.newscatcher.api.types.SearchResponse;
+import com.newscatcher.api.types.FailedSearchSimilarResponseDto;
+import com.newscatcher.api.types.SearchSimilarResponseDto;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -33,9 +33,9 @@ public final class SearchSimilarPostResponse {
 
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
-            return visitor.visit((SearchResponse) this.value);
+            return visitor.visit((SearchSimilarResponseDto) this.value);
         } else if (this.type == 1) {
-            return visitor.visit((FailedSearchResponse) this.value);
+            return visitor.visit((FailedSearchSimilarResponseDto) this.value);
         }
         throw new IllegalStateException("Failed to visit value. This should never happen.");
     }
@@ -60,18 +60,18 @@ public final class SearchSimilarPostResponse {
         return this.value.toString();
     }
 
-    public static SearchSimilarPostResponse of(SearchResponse value) {
+    public static SearchSimilarPostResponse of(SearchSimilarResponseDto value) {
         return new SearchSimilarPostResponse(value, 0);
     }
 
-    public static SearchSimilarPostResponse of(FailedSearchResponse value) {
+    public static SearchSimilarPostResponse of(FailedSearchSimilarResponseDto value) {
         return new SearchSimilarPostResponse(value, 1);
     }
 
     public interface Visitor<T> {
-        T visit(SearchResponse value);
+        T visit(SearchSimilarResponseDto value);
 
-        T visit(FailedSearchResponse value);
+        T visit(FailedSearchSimilarResponseDto value);
     }
 
     static final class Deserializer extends StdDeserializer<SearchSimilarPostResponse> {
@@ -83,11 +83,11 @@ public final class SearchSimilarPostResponse {
         public SearchSimilarPostResponse deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, SearchResponse.class));
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, SearchSimilarResponseDto.class));
             } catch (IllegalArgumentException e) {
             }
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, FailedSearchResponse.class));
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, FailedSearchSimilarResponseDto.class));
             } catch (IllegalArgumentException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");

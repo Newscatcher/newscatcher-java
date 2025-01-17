@@ -12,6 +12,9 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
+import com.newscatcher.api.resources.searchsimilar.types.SearchSimilarGetRequestPublishedDatePrecision;
+import com.newscatcher.api.resources.searchsimilar.types.SearchSimilarGetRequestSortBy;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -31,31 +34,31 @@ public final class SearchSimilarGetRequest {
 
     private final Optional<String> similarDocumentsFields;
 
-    private final String predefinedSources;
+    private final Optional<String> predefinedSources;
 
-    private final String sources;
+    private final Optional<String> sources;
 
-    private final String notSources;
+    private final Optional<String> notSources;
 
-    private final String lang;
+    private final Optional<String> lang;
 
-    private final String notLang;
+    private final Optional<String> notLang;
 
-    private final String countries;
+    private final Optional<String> countries;
 
-    private final String notCountries;
+    private final Optional<String> notCountries;
 
-    private final Optional<String> from;
+    private final Optional<OffsetDateTime> from;
 
-    private final Optional<String> to;
+    private final Optional<OffsetDateTime> to;
 
     private final Optional<Boolean> byParseDate;
 
-    private final Optional<String> publishedDatePrecision;
+    private final Optional<SearchSimilarGetRequestPublishedDatePrecision> publishedDatePrecision;
 
-    private final Optional<String> sortBy;
+    private final Optional<SearchSimilarGetRequestSortBy> sortBy;
 
-    private final Optional<String> rankedOnly;
+    private final Optional<Boolean> rankedOnly;
 
     private final Optional<Integer> fromRank;
 
@@ -67,11 +70,11 @@ public final class SearchSimilarGetRequest {
 
     private final Optional<Boolean> isPaidContent;
 
-    private final String parentUrl;
+    private final Optional<String> parentUrl;
 
-    private final String allLinks;
+    private final Optional<String> allLinks;
 
-    private final String allDomainLinks;
+    private final Optional<String> allDomainLinks;
 
     private final Optional<Integer> wordCountMin;
 
@@ -89,17 +92,21 @@ public final class SearchSimilarGetRequest {
 
     private final Optional<String> notTheme;
 
-    private final Optional<Double> titleSentimentMin;
+    private final Optional<String> nerName;
 
-    private final Optional<Double> titleSentimentMax;
+    private final Optional<Float> titleSentimentMin;
 
-    private final Optional<Double> contentSentimentMin;
+    private final Optional<Float> titleSentimentMax;
 
-    private final Optional<Double> contentSentimentMax;
+    private final Optional<Float> contentSentimentMin;
 
-    private final String iptcTags;
+    private final Optional<Float> contentSentimentMax;
 
-    private final String notIptcTags;
+    private final Optional<String> iptcTags;
+
+    private final Optional<String> notIptcTags;
+
+    private final Optional<String> customTags;
 
     private final Map<String, Object> additionalProperties;
 
@@ -109,27 +116,27 @@ public final class SearchSimilarGetRequest {
             Optional<Boolean> includeSimilarDocuments,
             Optional<Integer> similarDocumentsNumber,
             Optional<String> similarDocumentsFields,
-            String predefinedSources,
-            String sources,
-            String notSources,
-            String lang,
-            String notLang,
-            String countries,
-            String notCountries,
-            Optional<String> from,
-            Optional<String> to,
+            Optional<String> predefinedSources,
+            Optional<String> sources,
+            Optional<String> notSources,
+            Optional<String> lang,
+            Optional<String> notLang,
+            Optional<String> countries,
+            Optional<String> notCountries,
+            Optional<OffsetDateTime> from,
+            Optional<OffsetDateTime> to,
             Optional<Boolean> byParseDate,
-            Optional<String> publishedDatePrecision,
-            Optional<String> sortBy,
-            Optional<String> rankedOnly,
+            Optional<SearchSimilarGetRequestPublishedDatePrecision> publishedDatePrecision,
+            Optional<SearchSimilarGetRequestSortBy> sortBy,
+            Optional<Boolean> rankedOnly,
             Optional<Integer> fromRank,
             Optional<Integer> toRank,
             Optional<Boolean> isHeadline,
             Optional<Boolean> isOpinion,
             Optional<Boolean> isPaidContent,
-            String parentUrl,
-            String allLinks,
-            String allDomainLinks,
+            Optional<String> parentUrl,
+            Optional<String> allLinks,
+            Optional<String> allDomainLinks,
             Optional<Integer> wordCountMin,
             Optional<Integer> wordCountMax,
             Optional<Integer> page,
@@ -138,12 +145,14 @@ public final class SearchSimilarGetRequest {
             Optional<Boolean> hasNlp,
             Optional<String> theme,
             Optional<String> notTheme,
-            Optional<Double> titleSentimentMin,
-            Optional<Double> titleSentimentMax,
-            Optional<Double> contentSentimentMin,
-            Optional<Double> contentSentimentMax,
-            String iptcTags,
-            String notIptcTags,
+            Optional<String> nerName,
+            Optional<Float> titleSentimentMin,
+            Optional<Float> titleSentimentMax,
+            Optional<Float> contentSentimentMin,
+            Optional<Float> contentSentimentMax,
+            Optional<String> iptcTags,
+            Optional<String> notIptcTags,
+            Optional<String> customTags,
             Map<String, Object> additionalProperties) {
         this.q = q;
         this.searchIn = searchIn;
@@ -179,213 +188,483 @@ public final class SearchSimilarGetRequest {
         this.hasNlp = hasNlp;
         this.theme = theme;
         this.notTheme = notTheme;
+        this.nerName = nerName;
         this.titleSentimentMin = titleSentimentMin;
         this.titleSentimentMax = titleSentimentMax;
         this.contentSentimentMin = contentSentimentMin;
         this.contentSentimentMax = contentSentimentMax;
         this.iptcTags = iptcTags;
         this.notIptcTags = notIptcTags;
+        this.customTags = customTags;
         this.additionalProperties = additionalProperties;
     }
 
+    /**
+     * @return The keyword(s) to search for in articles. Query syntax supports logical operators (<code>AND</code>, <code>OR</code>, <code>NOT</code>) and wildcards:
+     * <ul>
+     * <li>For an exact match, use double quotes. For example, <code>&quot;technology news&quot;</code>.</li>
+     * <li>Use <code>*</code> to search for any keyword.</li>
+     * <li>Use <code>+</code> to include and <code>-</code> to exclude specific words or phrases.
+     * For example, <code>+Apple</code>, <code>-Google</code>.</li>
+     * <li>Use <code>AND</code>, <code>OR</code>, and <code>NOT</code> to refine search results.
+     * For example, <code>technology AND (Apple OR Microsoft) NOT Google</code>.</li>
+     * </ul>
+     * <p>For more details, see <a href="/docs/v3/documentation/guides-and-concepts/advanced-querying">Advanced querying</a>.</p>
+     */
     @JsonProperty("q")
     public String getQ() {
         return q;
     }
 
+    /**
+     * @return The article fields to search in. To search in multiple fields, use a comma-separated string.
+     * <p>Example: <code>&quot;title, summary&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>summary</code> option is available if NLP is enabled in your plan.</p>
+     * <p>Available options: <code>title</code>, <code>summary</code>, <code>content</code>.</p>
+     */
     @JsonProperty("search_in")
     public Optional<String> getSearchIn() {
         return searchIn;
     }
 
+    /**
+     * @return If true, includes similar documents in the response.
+     */
     @JsonProperty("include_similar_documents")
     public Optional<Boolean> getIncludeSimilarDocuments() {
         return includeSimilarDocuments;
     }
 
+    /**
+     * @return The number of similar documents to return.
+     */
     @JsonProperty("similar_documents_number")
     public Optional<Integer> getSimilarDocumentsNumber() {
         return similarDocumentsNumber;
     }
 
+    /**
+     * @return The fields to consider for finding similar documents.
+     */
     @JsonProperty("similar_documents_fields")
     public Optional<String> getSimilarDocumentsFields() {
         return similarDocumentsFields;
     }
 
+    /**
+     * @return Predefined top news sources per country.
+     * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
+     * <p>Examples:</p>
+     * <ul>
+     * <li><code>&quot;top 100 US&quot;</code></li>
+     * <li><code>&quot;top 33 AT&quot;</code></li>
+     * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
+     * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
+     * </ul>
+     */
     @JsonProperty("predefined_sources")
-    public String getPredefinedSources() {
+    public Optional<String> getPredefinedSources() {
         return predefinedSources;
     }
 
+    /**
+     * @return One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.
+     * <p>Examples:</p>
+     * <ul>
+     * <li><code>&quot;nytimes.com&quot;</code></li>
+     * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
+     * </ul>
+     */
     @JsonProperty("sources")
-    public String getSources() {
+    public Optional<String> getSources() {
         return sources;
     }
 
+    /**
+     * @return The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.
+     * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
+     */
     @JsonProperty("not_sources")
-    public String getNotSources() {
+    public Optional<String> getNotSources() {
         return notSources;
     }
 
+    /**
+     * @return The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.
+     * <p>Example: <code>&quot;en, es&quot;</code></p>
+     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+     */
     @JsonProperty("lang")
-    public String getLang() {
+    public Optional<String> getLang() {
         return lang;
     }
 
+    /**
+     * @return The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.
+     * <p>Example: <code>&quot;fr, de&quot;</code></p>
+     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+     */
     @JsonProperty("not_lang")
-    public String getNotLang() {
+    public Optional<String> getNotLang() {
         return notLang;
     }
 
+    /**
+     * @return The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.
+     * <p>Example: <code>&quot;US, CA&quot;</code></p>
+     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+     */
     @JsonProperty("countries")
-    public String getCountries() {
+    public Optional<String> getCountries() {
         return countries;
     }
 
+    /**
+     * @return The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.
+     * <p>Example:<code>&quot;US, CA&quot;</code></p>
+     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+     */
     @JsonProperty("not_countries")
-    public String getNotCountries() {
+    public Optional<String> getNotCountries() {
         return notCountries;
     }
 
+    /**
+     * @return The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.
+     * <p>Formats with examples:</p>
+     * <ul>
+     * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+     * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+     * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+     * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+     * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+     * </ul>
+     * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
+     */
     @JsonProperty("from_")
-    public Optional<String> getFrom() {
+    public Optional<OffsetDateTime> getFrom() {
         return from;
     }
 
+    /**
+     * @return The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.
+     * <p>Formats with examples:</p>
+     * <ul>
+     * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+     * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+     * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+     * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+     * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+     * </ul>
+     * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
+     */
     @JsonProperty("to_")
-    public Optional<String> getTo() {
+    public Optional<OffsetDateTime> getTo() {
         return to;
     }
 
+    /**
+     * @return If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.
+     */
     @JsonProperty("by_parse_date")
     public Optional<Boolean> getByParseDate() {
         return byParseDate;
     }
 
+    /**
+     * @return The precision of the published date. There are three types:
+     * <ul>
+     * <li><code>full</code>: The day and time of an article is correctly identified with the appropriate timezone.</li>
+     * <li><code>timezone unknown</code>: The day and time of an article is correctly identified without timezone.</li>
+     * <li><code>date</code>: Only the day is identified without an exact time.</li>
+     * </ul>
+     */
     @JsonProperty("published_date_precision")
-    public Optional<String> getPublishedDatePrecision() {
+    public Optional<SearchSimilarGetRequestPublishedDatePrecision> getPublishedDatePrecision() {
         return publishedDatePrecision;
     }
 
+    /**
+     * @return The sorting order of the results. Possible values are:
+     * <ul>
+     * <li><code>relevancy</code>: The most relevant results first.</li>
+     * <li><code>date</code>: The most recently published results first.</li>
+     * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
+     * </ul>
+     */
     @JsonProperty("sort_by")
-    public Optional<String> getSortBy() {
+    public Optional<SearchSimilarGetRequestSortBy> getSortBy() {
         return sortBy;
     }
 
+    /**
+     * @return If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.
+     */
     @JsonProperty("ranked_only")
-    public Optional<String> getRankedOnly() {
+    public Optional<Boolean> getRankedOnly() {
         return rankedOnly;
     }
 
+    /**
+     * @return The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.
+     */
     @JsonProperty("from_rank")
     public Optional<Integer> getFromRank() {
         return fromRank;
     }
 
+    /**
+     * @return The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.
+     */
     @JsonProperty("to_rank")
     public Optional<Integer> getToRank() {
         return toRank;
     }
 
+    /**
+     * @return If true, only returns articles that were posted on the home page of a given news domain.
+     */
     @JsonProperty("is_headline")
     public Optional<Boolean> getIsHeadline() {
         return isHeadline;
     }
 
+    /**
+     * @return If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.
+     */
     @JsonProperty("is_opinion")
     public Optional<Boolean> getIsOpinion() {
         return isOpinion;
     }
 
+    /**
+     * @return If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.
+     */
     @JsonProperty("is_paid_content")
     public Optional<Boolean> getIsPaidContent() {
         return isPaidContent;
     }
 
+    /**
+     * @return The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.
+     * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
+     */
     @JsonProperty("parent_url")
-    public String getParentUrl() {
+    public Optional<String> getParentUrl() {
         return parentUrl;
     }
 
+    /**
+     * @return The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.
+     * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
+     * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+     */
     @JsonProperty("all_links")
-    public String getAllLinks() {
+    public Optional<String> getAllLinks() {
         return allLinks;
     }
 
+    /**
+     * @return The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.
+     * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
+     * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+     */
     @JsonProperty("all_domain_links")
-    public String getAllDomainLinks() {
+    public Optional<String> getAllDomainLinks() {
         return allDomainLinks;
     }
 
+    /**
+     * @return The minimum number of words an article must contain. To be used for avoiding articles with small content.
+     */
     @JsonProperty("word_count_min")
     public Optional<Integer> getWordCountMin() {
         return wordCountMin;
     }
 
+    /**
+     * @return The maximum number of words an article can contain. To be used for avoiding articles with large content.
+     */
     @JsonProperty("word_count_max")
     public Optional<Integer> getWordCountMax() {
         return wordCountMax;
     }
 
+    /**
+     * @return The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.
+     * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
+     */
     @JsonProperty("page")
     public Optional<Integer> getPage() {
         return page;
     }
 
+    /**
+     * @return The number of articles to return per page.
+     */
     @JsonProperty("page_size")
     public Optional<Integer> getPageSize() {
         return pageSize;
     }
 
+    /**
+     * @return If true, includes an NLP layer with each article in the response. This layer provides enhanced information such as theme classification, article summary, sentiment analysis, tags, and named entity recognition.
+     * <p>The NLP layer includes:</p>
+     * <ul>
+     * <li>Theme: General topic of the article.</li>
+     * <li>Summary: A concise overview of the article content.</li>
+     * <li>Sentiment: Separate scores for title and content (range: -1 to 1).</li>
+     * <li>Named entities: Identified persons (PER), organizations (ORG), locations (LOC), and miscellaneous entities (MISC).</li>
+     * <li>IPTC tags: Standardized news category tags.</li>
+     * <li>IAB tags: Content categories for digital advertising.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>include_nlp_data</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
     @JsonProperty("include_nlp_data")
     public Optional<Boolean> getIncludeNlpData() {
         return includeNlpData;
     }
 
+    /**
+     * @return If true, filters the results to include only articles with an NLP layer. This allows you to focus on articles that have been processed with advanced NLP techniques.
+     * <p><strong>Note</strong>: The <code>has_nlp</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
     @JsonProperty("has_nlp")
     public Optional<Boolean> getHasNlp() {
         return hasNlp;
     }
 
+    /**
+     * @return Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.
+     * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
+     */
     @JsonProperty("theme")
     public Optional<String> getTheme() {
         return theme;
     }
 
+    /**
+     * @return Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.
+     * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
     @JsonProperty("not_theme")
     public Optional<String> getNotTheme() {
         return notTheme;
     }
 
+    /**
+     * @return The name of person, organization, location, product or other named entity to search for. To specify multiple names use a comma-separated string.
+     * <p>Example: <code>&quot;Tesla, Amazon&quot;</code></p>
+     */
+    @JsonProperty("ner_name")
+    public Optional<String> getNerName() {
+        return nerName;
+    }
+
+    /**
+     * @return Filters articles based on the minimum sentiment score of their titles.
+     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+     * <ul>
+     * <li>Negative values indicate negative sentiment.</li>
+     * <li>Positive values indicate positive sentiment.</li>
+     * <li>Values close to 0 indicate neutral sentiment.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
     @JsonProperty("title_sentiment_min")
-    public Optional<Double> getTitleSentimentMin() {
+    public Optional<Float> getTitleSentimentMin() {
         return titleSentimentMin;
     }
 
+    /**
+     * @return Filters articles based on the maximum sentiment score of their titles.
+     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+     * <ul>
+     * <li>Negative values indicate negative sentiment.</li>
+     * <li>Positive values indicate positive sentiment.</li>
+     * <li>Values close to 0 indicate neutral sentiment.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
     @JsonProperty("title_sentiment_max")
-    public Optional<Double> getTitleSentimentMax() {
+    public Optional<Float> getTitleSentimentMax() {
         return titleSentimentMax;
     }
 
+    /**
+     * @return Filters articles based on the minimum sentiment score of their content.
+     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+     * <ul>
+     * <li>Negative values indicate negative sentiment.</li>
+     * <li>Positive values indicate positive sentiment.</li>
+     * <li>Values close to 0 indicate neutral sentiment.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
     @JsonProperty("content_sentiment_min")
-    public Optional<Double> getContentSentimentMin() {
+    public Optional<Float> getContentSentimentMin() {
         return contentSentimentMin;
     }
 
+    /**
+     * @return Filters articles based on the maximum sentiment score of their content.
+     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+     * <ul>
+     * <li>Negative values indicate negative sentiment.</li>
+     * <li>Positive values indicate positive sentiment.</li>
+     * <li>Values close to 0 indicate neutral sentiment.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
     @JsonProperty("content_sentiment_max")
-    public Optional<Double> getContentSentimentMax() {
+    public Optional<Float> getContentSentimentMax() {
         return contentSentimentMax;
     }
 
+    /**
+     * @return Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.
+     * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+     */
     @JsonProperty("iptc_tags")
-    public String getIptcTags() {
+    public Optional<String> getIptcTags() {
         return iptcTags;
     }
 
+    /**
+     * @return Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.
+     * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+     */
     @JsonProperty("not_iptc_tags")
-    public String getNotIptcTags() {
+    public Optional<String> getNotIptcTags() {
         return notIptcTags;
+    }
+
+    /**
+     * @return Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:
+     * <ul>
+     * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+     * </ul>
+     * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
+     * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+     */
+    @JsonProperty("custom_tags")
+    public Optional<String> getCustomTags() {
+        return customTags;
     }
 
     @java.lang.Override
@@ -434,12 +713,14 @@ public final class SearchSimilarGetRequest {
                 && hasNlp.equals(other.hasNlp)
                 && theme.equals(other.theme)
                 && notTheme.equals(other.notTheme)
+                && nerName.equals(other.nerName)
                 && titleSentimentMin.equals(other.titleSentimentMin)
                 && titleSentimentMax.equals(other.titleSentimentMax)
                 && contentSentimentMin.equals(other.contentSentimentMin)
                 && contentSentimentMax.equals(other.contentSentimentMax)
                 && iptcTags.equals(other.iptcTags)
-                && notIptcTags.equals(other.notIptcTags);
+                && notIptcTags.equals(other.notIptcTags)
+                && customTags.equals(other.customTags);
     }
 
     @java.lang.Override
@@ -479,12 +760,14 @@ public final class SearchSimilarGetRequest {
                 this.hasNlp,
                 this.theme,
                 this.notTheme,
+                this.nerName,
                 this.titleSentimentMin,
                 this.titleSentimentMax,
                 this.contentSentimentMin,
                 this.contentSentimentMax,
                 this.iptcTags,
-                this.notIptcTags);
+                this.notIptcTags,
+                this.customTags);
     }
 
     @java.lang.Override
@@ -497,57 +780,9 @@ public final class SearchSimilarGetRequest {
     }
 
     public interface QStage {
-        PredefinedSourcesStage q(@NotNull String q);
+        _FinalStage q(@NotNull String q);
 
         Builder from(SearchSimilarGetRequest other);
-    }
-
-    public interface PredefinedSourcesStage {
-        SourcesStage predefinedSources(@NotNull String predefinedSources);
-    }
-
-    public interface SourcesStage {
-        NotSourcesStage sources(@NotNull String sources);
-    }
-
-    public interface NotSourcesStage {
-        LangStage notSources(@NotNull String notSources);
-    }
-
-    public interface LangStage {
-        NotLangStage lang(@NotNull String lang);
-    }
-
-    public interface NotLangStage {
-        CountriesStage notLang(@NotNull String notLang);
-    }
-
-    public interface CountriesStage {
-        NotCountriesStage countries(@NotNull String countries);
-    }
-
-    public interface NotCountriesStage {
-        ParentUrlStage notCountries(@NotNull String notCountries);
-    }
-
-    public interface ParentUrlStage {
-        AllLinksStage parentUrl(@NotNull String parentUrl);
-    }
-
-    public interface AllLinksStage {
-        AllDomainLinksStage allLinks(@NotNull String allLinks);
-    }
-
-    public interface AllDomainLinksStage {
-        IptcTagsStage allDomainLinks(@NotNull String allDomainLinks);
-    }
-
-    public interface IptcTagsStage {
-        NotIptcTagsStage iptcTags(@NotNull String iptcTags);
-    }
-
-    public interface NotIptcTagsStage {
-        _FinalStage notIptcTags(@NotNull String notIptcTags);
     }
 
     public interface _FinalStage {
@@ -569,29 +804,58 @@ public final class SearchSimilarGetRequest {
 
         _FinalStage similarDocumentsFields(String similarDocumentsFields);
 
-        _FinalStage from(Optional<String> from);
+        _FinalStage predefinedSources(Optional<String> predefinedSources);
 
-        _FinalStage from(String from);
+        _FinalStage predefinedSources(String predefinedSources);
 
-        _FinalStage to(Optional<String> to);
+        _FinalStage sources(Optional<String> sources);
 
-        _FinalStage to(String to);
+        _FinalStage sources(String sources);
+
+        _FinalStage notSources(Optional<String> notSources);
+
+        _FinalStage notSources(String notSources);
+
+        _FinalStage lang(Optional<String> lang);
+
+        _FinalStage lang(String lang);
+
+        _FinalStage notLang(Optional<String> notLang);
+
+        _FinalStage notLang(String notLang);
+
+        _FinalStage countries(Optional<String> countries);
+
+        _FinalStage countries(String countries);
+
+        _FinalStage notCountries(Optional<String> notCountries);
+
+        _FinalStage notCountries(String notCountries);
+
+        _FinalStage from(Optional<OffsetDateTime> from);
+
+        _FinalStage from(OffsetDateTime from);
+
+        _FinalStage to(Optional<OffsetDateTime> to);
+
+        _FinalStage to(OffsetDateTime to);
 
         _FinalStage byParseDate(Optional<Boolean> byParseDate);
 
         _FinalStage byParseDate(Boolean byParseDate);
 
-        _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision);
+        _FinalStage publishedDatePrecision(
+                Optional<SearchSimilarGetRequestPublishedDatePrecision> publishedDatePrecision);
 
-        _FinalStage publishedDatePrecision(String publishedDatePrecision);
+        _FinalStage publishedDatePrecision(SearchSimilarGetRequestPublishedDatePrecision publishedDatePrecision);
 
-        _FinalStage sortBy(Optional<String> sortBy);
+        _FinalStage sortBy(Optional<SearchSimilarGetRequestSortBy> sortBy);
 
-        _FinalStage sortBy(String sortBy);
+        _FinalStage sortBy(SearchSimilarGetRequestSortBy sortBy);
 
-        _FinalStage rankedOnly(Optional<String> rankedOnly);
+        _FinalStage rankedOnly(Optional<Boolean> rankedOnly);
 
-        _FinalStage rankedOnly(String rankedOnly);
+        _FinalStage rankedOnly(Boolean rankedOnly);
 
         _FinalStage fromRank(Optional<Integer> fromRank);
 
@@ -612,6 +876,18 @@ public final class SearchSimilarGetRequest {
         _FinalStage isPaidContent(Optional<Boolean> isPaidContent);
 
         _FinalStage isPaidContent(Boolean isPaidContent);
+
+        _FinalStage parentUrl(Optional<String> parentUrl);
+
+        _FinalStage parentUrl(String parentUrl);
+
+        _FinalStage allLinks(Optional<String> allLinks);
+
+        _FinalStage allLinks(String allLinks);
+
+        _FinalStage allDomainLinks(Optional<String> allDomainLinks);
+
+        _FinalStage allDomainLinks(String allDomainLinks);
 
         _FinalStage wordCountMin(Optional<Integer> wordCountMin);
 
@@ -645,72 +921,58 @@ public final class SearchSimilarGetRequest {
 
         _FinalStage notTheme(String notTheme);
 
-        _FinalStage titleSentimentMin(Optional<Double> titleSentimentMin);
+        _FinalStage nerName(Optional<String> nerName);
 
-        _FinalStage titleSentimentMin(Double titleSentimentMin);
+        _FinalStage nerName(String nerName);
 
-        _FinalStage titleSentimentMax(Optional<Double> titleSentimentMax);
+        _FinalStage titleSentimentMin(Optional<Float> titleSentimentMin);
 
-        _FinalStage titleSentimentMax(Double titleSentimentMax);
+        _FinalStage titleSentimentMin(Float titleSentimentMin);
 
-        _FinalStage contentSentimentMin(Optional<Double> contentSentimentMin);
+        _FinalStage titleSentimentMax(Optional<Float> titleSentimentMax);
 
-        _FinalStage contentSentimentMin(Double contentSentimentMin);
+        _FinalStage titleSentimentMax(Float titleSentimentMax);
 
-        _FinalStage contentSentimentMax(Optional<Double> contentSentimentMax);
+        _FinalStage contentSentimentMin(Optional<Float> contentSentimentMin);
 
-        _FinalStage contentSentimentMax(Double contentSentimentMax);
+        _FinalStage contentSentimentMin(Float contentSentimentMin);
+
+        _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax);
+
+        _FinalStage contentSentimentMax(Float contentSentimentMax);
+
+        _FinalStage iptcTags(Optional<String> iptcTags);
+
+        _FinalStage iptcTags(String iptcTags);
+
+        _FinalStage notIptcTags(Optional<String> notIptcTags);
+
+        _FinalStage notIptcTags(String notIptcTags);
+
+        _FinalStage customTags(Optional<String> customTags);
+
+        _FinalStage customTags(String customTags);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements QStage,
-                    PredefinedSourcesStage,
-                    SourcesStage,
-                    NotSourcesStage,
-                    LangStage,
-                    NotLangStage,
-                    CountriesStage,
-                    NotCountriesStage,
-                    ParentUrlStage,
-                    AllLinksStage,
-                    AllDomainLinksStage,
-                    IptcTagsStage,
-                    NotIptcTagsStage,
-                    _FinalStage {
+    public static final class Builder implements QStage, _FinalStage {
         private String q;
 
-        private String predefinedSources;
+        private Optional<String> customTags = Optional.empty();
 
-        private String sources;
+        private Optional<String> notIptcTags = Optional.empty();
 
-        private String notSources;
+        private Optional<String> iptcTags = Optional.empty();
 
-        private String lang;
+        private Optional<Float> contentSentimentMax = Optional.empty();
 
-        private String notLang;
+        private Optional<Float> contentSentimentMin = Optional.empty();
 
-        private String countries;
+        private Optional<Float> titleSentimentMax = Optional.empty();
 
-        private String notCountries;
+        private Optional<Float> titleSentimentMin = Optional.empty();
 
-        private String parentUrl;
-
-        private String allLinks;
-
-        private String allDomainLinks;
-
-        private String iptcTags;
-
-        private String notIptcTags;
-
-        private Optional<Double> contentSentimentMax = Optional.empty();
-
-        private Optional<Double> contentSentimentMin = Optional.empty();
-
-        private Optional<Double> titleSentimentMax = Optional.empty();
-
-        private Optional<Double> titleSentimentMin = Optional.empty();
+        private Optional<String> nerName = Optional.empty();
 
         private Optional<String> notTheme = Optional.empty();
 
@@ -728,6 +990,12 @@ public final class SearchSimilarGetRequest {
 
         private Optional<Integer> wordCountMin = Optional.empty();
 
+        private Optional<String> allDomainLinks = Optional.empty();
+
+        private Optional<String> allLinks = Optional.empty();
+
+        private Optional<String> parentUrl = Optional.empty();
+
         private Optional<Boolean> isPaidContent = Optional.empty();
 
         private Optional<Boolean> isOpinion = Optional.empty();
@@ -738,17 +1006,31 @@ public final class SearchSimilarGetRequest {
 
         private Optional<Integer> fromRank = Optional.empty();
 
-        private Optional<String> rankedOnly = Optional.empty();
+        private Optional<Boolean> rankedOnly = Optional.empty();
 
-        private Optional<String> sortBy = Optional.empty();
+        private Optional<SearchSimilarGetRequestSortBy> sortBy = Optional.empty();
 
-        private Optional<String> publishedDatePrecision = Optional.empty();
+        private Optional<SearchSimilarGetRequestPublishedDatePrecision> publishedDatePrecision = Optional.empty();
 
         private Optional<Boolean> byParseDate = Optional.empty();
 
-        private Optional<String> to = Optional.empty();
+        private Optional<OffsetDateTime> to = Optional.empty();
 
-        private Optional<String> from = Optional.empty();
+        private Optional<OffsetDateTime> from = Optional.empty();
+
+        private Optional<String> notCountries = Optional.empty();
+
+        private Optional<String> countries = Optional.empty();
+
+        private Optional<String> notLang = Optional.empty();
+
+        private Optional<String> lang = Optional.empty();
+
+        private Optional<String> notSources = Optional.empty();
+
+        private Optional<String> sources = Optional.empty();
+
+        private Optional<String> predefinedSources = Optional.empty();
 
         private Optional<String> similarDocumentsFields = Optional.empty();
 
@@ -799,158 +1081,224 @@ public final class SearchSimilarGetRequest {
             hasNlp(other.getHasNlp());
             theme(other.getTheme());
             notTheme(other.getNotTheme());
+            nerName(other.getNerName());
             titleSentimentMin(other.getTitleSentimentMin());
             titleSentimentMax(other.getTitleSentimentMax());
             contentSentimentMin(other.getContentSentimentMin());
             contentSentimentMax(other.getContentSentimentMax());
             iptcTags(other.getIptcTags());
             notIptcTags(other.getNotIptcTags());
+            customTags(other.getCustomTags());
             return this;
         }
 
+        /**
+         * <p>The keyword(s) to search for in articles. Query syntax supports logical operators (<code>AND</code>, <code>OR</code>, <code>NOT</code>) and wildcards:</p>
+         * <ul>
+         * <li>For an exact match, use double quotes. For example, <code>&quot;technology news&quot;</code>.</li>
+         * <li>Use <code>*</code> to search for any keyword.</li>
+         * <li>Use <code>+</code> to include and <code>-</code> to exclude specific words or phrases.
+         * For example, <code>+Apple</code>, <code>-Google</code>.</li>
+         * <li>Use <code>AND</code>, <code>OR</code>, and <code>NOT</code> to refine search results.
+         * For example, <code>technology AND (Apple OR Microsoft) NOT Google</code>.</li>
+         * </ul>
+         * <p>For more details, see <a href="/docs/v3/documentation/guides-and-concepts/advanced-querying">Advanced querying</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         @JsonSetter("q")
-        public PredefinedSourcesStage q(@NotNull String q) {
+        public _FinalStage q(@NotNull String q) {
             this.q = Objects.requireNonNull(q, "q must not be null");
             return this;
         }
 
+        /**
+         * <p>Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:</p>
+         * <ul>
+         * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+         * </ul>
+         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
+         * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        @JsonSetter("predefined_sources")
-        public SourcesStage predefinedSources(@NotNull String predefinedSources) {
-            this.predefinedSources = Objects.requireNonNull(predefinedSources, "predefinedSources must not be null");
+        public _FinalStage customTags(String customTags) {
+            this.customTags = Optional.ofNullable(customTags);
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter("sources")
-        public NotSourcesStage sources(@NotNull String sources) {
-            this.sources = Objects.requireNonNull(sources, "sources must not be null");
+        @JsonSetter(value = "custom_tags", nulls = Nulls.SKIP)
+        public _FinalStage customTags(Optional<String> customTags) {
+            this.customTags = customTags;
+            return this;
+        }
+
+        /**
+         * <p>Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.</p>
+         * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+         * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notIptcTags(String notIptcTags) {
+            this.notIptcTags = Optional.ofNullable(notIptcTags);
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter("not_sources")
-        public LangStage notSources(@NotNull String notSources) {
-            this.notSources = Objects.requireNonNull(notSources, "notSources must not be null");
+        @JsonSetter(value = "not_iptc_tags", nulls = Nulls.SKIP)
+        public _FinalStage notIptcTags(Optional<String> notIptcTags) {
+            this.notIptcTags = notIptcTags;
+            return this;
+        }
+
+        /**
+         * <p>Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.</p>
+         * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+         * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iptcTags(String iptcTags) {
+            this.iptcTags = Optional.ofNullable(iptcTags);
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter("lang")
-        public NotLangStage lang(@NotNull String lang) {
-            this.lang = Objects.requireNonNull(lang, "lang must not be null");
+        @JsonSetter(value = "iptc_tags", nulls = Nulls.SKIP)
+        public _FinalStage iptcTags(Optional<String> iptcTags) {
+            this.iptcTags = iptcTags;
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the maximum sentiment score of their content.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        @JsonSetter("not_lang")
-        public CountriesStage notLang(@NotNull String notLang) {
-            this.notLang = Objects.requireNonNull(notLang, "notLang must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("countries")
-        public NotCountriesStage countries(@NotNull String countries) {
-            this.countries = Objects.requireNonNull(countries, "countries must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("not_countries")
-        public ParentUrlStage notCountries(@NotNull String notCountries) {
-            this.notCountries = Objects.requireNonNull(notCountries, "notCountries must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("parent_url")
-        public AllLinksStage parentUrl(@NotNull String parentUrl) {
-            this.parentUrl = Objects.requireNonNull(parentUrl, "parentUrl must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("all_links")
-        public AllDomainLinksStage allLinks(@NotNull String allLinks) {
-            this.allLinks = Objects.requireNonNull(allLinks, "allLinks must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("all_domain_links")
-        public IptcTagsStage allDomainLinks(@NotNull String allDomainLinks) {
-            this.allDomainLinks = Objects.requireNonNull(allDomainLinks, "allDomainLinks must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("iptc_tags")
-        public NotIptcTagsStage iptcTags(@NotNull String iptcTags) {
-            this.iptcTags = Objects.requireNonNull(iptcTags, "iptcTags must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("not_iptc_tags")
-        public _FinalStage notIptcTags(@NotNull String notIptcTags) {
-            this.notIptcTags = Objects.requireNonNull(notIptcTags, "notIptcTags must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage contentSentimentMax(Double contentSentimentMax) {
+        public _FinalStage contentSentimentMax(Float contentSentimentMax) {
             this.contentSentimentMax = Optional.ofNullable(contentSentimentMax);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "content_sentiment_max", nulls = Nulls.SKIP)
-        public _FinalStage contentSentimentMax(Optional<Double> contentSentimentMax) {
+        public _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax) {
             this.contentSentimentMax = contentSentimentMax;
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the minimum sentiment score of their content.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage contentSentimentMin(Double contentSentimentMin) {
+        public _FinalStage contentSentimentMin(Float contentSentimentMin) {
             this.contentSentimentMin = Optional.ofNullable(contentSentimentMin);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "content_sentiment_min", nulls = Nulls.SKIP)
-        public _FinalStage contentSentimentMin(Optional<Double> contentSentimentMin) {
+        public _FinalStage contentSentimentMin(Optional<Float> contentSentimentMin) {
             this.contentSentimentMin = contentSentimentMin;
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the maximum sentiment score of their titles.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage titleSentimentMax(Double titleSentimentMax) {
+        public _FinalStage titleSentimentMax(Float titleSentimentMax) {
             this.titleSentimentMax = Optional.ofNullable(titleSentimentMax);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "title_sentiment_max", nulls = Nulls.SKIP)
-        public _FinalStage titleSentimentMax(Optional<Double> titleSentimentMax) {
+        public _FinalStage titleSentimentMax(Optional<Float> titleSentimentMax) {
             this.titleSentimentMax = titleSentimentMax;
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the minimum sentiment score of their titles.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage titleSentimentMin(Double titleSentimentMin) {
+        public _FinalStage titleSentimentMin(Float titleSentimentMin) {
             this.titleSentimentMin = Optional.ofNullable(titleSentimentMin);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "title_sentiment_min", nulls = Nulls.SKIP)
-        public _FinalStage titleSentimentMin(Optional<Double> titleSentimentMin) {
+        public _FinalStage titleSentimentMin(Optional<Float> titleSentimentMin) {
             this.titleSentimentMin = titleSentimentMin;
             return this;
         }
 
+        /**
+         * <p>The name of person, organization, location, product or other named entity to search for. To specify multiple names use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Tesla, Amazon&quot;</code></p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage nerName(String nerName) {
+            this.nerName = Optional.ofNullable(nerName);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "ner_name", nulls = Nulls.SKIP)
+        public _FinalStage nerName(Optional<String> nerName) {
+            this.nerName = nerName;
+            return this;
+        }
+
+        /**
+         * <p>Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage notTheme(String notTheme) {
             this.notTheme = Optional.ofNullable(notTheme);
@@ -964,6 +1312,14 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage theme(String theme) {
             this.theme = Optional.ofNullable(theme);
@@ -977,6 +1333,12 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, filters the results to include only articles with an NLP layer. This allows you to focus on articles that have been processed with advanced NLP techniques.</p>
+         * <p><strong>Note</strong>: The <code>has_nlp</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage hasNlp(Boolean hasNlp) {
             this.hasNlp = Optional.ofNullable(hasNlp);
@@ -990,6 +1352,21 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, includes an NLP layer with each article in the response. This layer provides enhanced information such as theme classification, article summary, sentiment analysis, tags, and named entity recognition.</p>
+         * <p>The NLP layer includes:</p>
+         * <ul>
+         * <li>Theme: General topic of the article.</li>
+         * <li>Summary: A concise overview of the article content.</li>
+         * <li>Sentiment: Separate scores for title and content (range: -1 to 1).</li>
+         * <li>Named entities: Identified persons (PER), organizations (ORG), locations (LOC), and miscellaneous entities (MISC).</li>
+         * <li>IPTC tags: Standardized news category tags.</li>
+         * <li>IAB tags: Content categories for digital advertising.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>include_nlp_data</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage includeNlpData(Boolean includeNlpData) {
             this.includeNlpData = Optional.ofNullable(includeNlpData);
@@ -1003,6 +1380,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The number of articles to return per page.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage pageSize(Integer pageSize) {
             this.pageSize = Optional.ofNullable(pageSize);
@@ -1016,6 +1397,11 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.</p>
+         * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage page(Integer page) {
             this.page = Optional.ofNullable(page);
@@ -1029,6 +1415,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The maximum number of words an article can contain. To be used for avoiding articles with large content.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage wordCountMax(Integer wordCountMax) {
             this.wordCountMax = Optional.ofNullable(wordCountMax);
@@ -1042,6 +1432,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The minimum number of words an article must contain. To be used for avoiding articles with small content.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage wordCountMin(Integer wordCountMin) {
             this.wordCountMin = Optional.ofNullable(wordCountMin);
@@ -1055,6 +1449,66 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
+         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage allDomainLinks(String allDomainLinks) {
+            this.allDomainLinks = Optional.ofNullable(allDomainLinks);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "all_domain_links", nulls = Nulls.SKIP)
+        public _FinalStage allDomainLinks(Optional<String> allDomainLinks) {
+            this.allDomainLinks = allDomainLinks;
+            return this;
+        }
+
+        /**
+         * <p>The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
+         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage allLinks(String allLinks) {
+            this.allLinks = Optional.ofNullable(allLinks);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "all_links", nulls = Nulls.SKIP)
+        public _FinalStage allLinks(Optional<String> allLinks) {
+            this.allLinks = allLinks;
+            return this;
+        }
+
+        /**
+         * <p>The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage parentUrl(String parentUrl) {
+            this.parentUrl = Optional.ofNullable(parentUrl);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "parent_url", nulls = Nulls.SKIP)
+        public _FinalStage parentUrl(Optional<String> parentUrl) {
+            this.parentUrl = parentUrl;
+            return this;
+        }
+
+        /**
+         * <p>If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage isPaidContent(Boolean isPaidContent) {
             this.isPaidContent = Optional.ofNullable(isPaidContent);
@@ -1068,6 +1522,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage isOpinion(Boolean isOpinion) {
             this.isOpinion = Optional.ofNullable(isOpinion);
@@ -1081,6 +1539,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, only returns articles that were posted on the home page of a given news domain.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage isHeadline(Boolean isHeadline) {
             this.isHeadline = Optional.ofNullable(isHeadline);
@@ -1094,6 +1556,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage toRank(Integer toRank) {
             this.toRank = Optional.ofNullable(toRank);
@@ -1107,6 +1573,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage fromRank(Integer fromRank) {
             this.fromRank = Optional.ofNullable(fromRank);
@@ -1120,45 +1590,73 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage rankedOnly(String rankedOnly) {
+        public _FinalStage rankedOnly(Boolean rankedOnly) {
             this.rankedOnly = Optional.ofNullable(rankedOnly);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "ranked_only", nulls = Nulls.SKIP)
-        public _FinalStage rankedOnly(Optional<String> rankedOnly) {
+        public _FinalStage rankedOnly(Optional<Boolean> rankedOnly) {
             this.rankedOnly = rankedOnly;
             return this;
         }
 
+        /**
+         * <p>The sorting order of the results. Possible values are:</p>
+         * <ul>
+         * <li><code>relevancy</code>: The most relevant results first.</li>
+         * <li><code>date</code>: The most recently published results first.</li>
+         * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage sortBy(String sortBy) {
+        public _FinalStage sortBy(SearchSimilarGetRequestSortBy sortBy) {
             this.sortBy = Optional.ofNullable(sortBy);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "sort_by", nulls = Nulls.SKIP)
-        public _FinalStage sortBy(Optional<String> sortBy) {
+        public _FinalStage sortBy(Optional<SearchSimilarGetRequestSortBy> sortBy) {
             this.sortBy = sortBy;
             return this;
         }
 
+        /**
+         * <p>The precision of the published date. There are three types:</p>
+         * <ul>
+         * <li><code>full</code>: The day and time of an article is correctly identified with the appropriate timezone.</li>
+         * <li><code>timezone unknown</code>: The day and time of an article is correctly identified without timezone.</li>
+         * <li><code>date</code>: Only the day is identified without an exact time.</li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage publishedDatePrecision(String publishedDatePrecision) {
+        public _FinalStage publishedDatePrecision(
+                SearchSimilarGetRequestPublishedDatePrecision publishedDatePrecision) {
             this.publishedDatePrecision = Optional.ofNullable(publishedDatePrecision);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "published_date_precision", nulls = Nulls.SKIP)
-        public _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision) {
+        public _FinalStage publishedDatePrecision(
+                Optional<SearchSimilarGetRequestPublishedDatePrecision> publishedDatePrecision) {
             this.publishedDatePrecision = publishedDatePrecision;
             return this;
         }
 
+        /**
+         * <p>If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage byParseDate(Boolean byParseDate) {
             this.byParseDate = Optional.ofNullable(byParseDate);
@@ -1172,32 +1670,203 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
+         * <p>Formats with examples:</p>
+         * <ul>
+         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+         * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+         * </ul>
+         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage to(String to) {
+        public _FinalStage to(OffsetDateTime to) {
             this.to = Optional.ofNullable(to);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "to_", nulls = Nulls.SKIP)
-        public _FinalStage to(Optional<String> to) {
+        public _FinalStage to(Optional<OffsetDateTime> to) {
             this.to = to;
             return this;
         }
 
+        /**
+         * <p>The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
+         * <p>Formats with examples:</p>
+         * <ul>
+         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+         * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+         * </ul>
+         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage from(String from) {
+        public _FinalStage from(OffsetDateTime from) {
             this.from = Optional.ofNullable(from);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "from_", nulls = Nulls.SKIP)
-        public _FinalStage from(Optional<String> from) {
+        public _FinalStage from(Optional<OffsetDateTime> from) {
             this.from = from;
             return this;
         }
 
+        /**
+         * <p>The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.</p>
+         * <p>Example:<code>&quot;US, CA&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notCountries(String notCountries) {
+            this.notCountries = Optional.ofNullable(notCountries);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_countries", nulls = Nulls.SKIP)
+        public _FinalStage notCountries(Optional<String> notCountries) {
+            this.notCountries = notCountries;
+            return this;
+        }
+
+        /**
+         * <p>The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;US, CA&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage countries(String countries) {
+            this.countries = Optional.ofNullable(countries);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "countries", nulls = Nulls.SKIP)
+        public _FinalStage countries(Optional<String> countries) {
+            this.countries = countries;
+            return this;
+        }
+
+        /**
+         * <p>The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;fr, de&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notLang(String notLang) {
+            this.notLang = Optional.ofNullable(notLang);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_lang", nulls = Nulls.SKIP)
+        public _FinalStage notLang(Optional<String> notLang) {
+            this.notLang = notLang;
+            return this;
+        }
+
+        /**
+         * <p>The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;en, es&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage lang(String lang) {
+            this.lang = Optional.ofNullable(lang);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "lang", nulls = Nulls.SKIP)
+        public _FinalStage lang(Optional<String> lang) {
+            this.lang = lang;
+            return this;
+        }
+
+        /**
+         * <p>The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notSources(String notSources) {
+            this.notSources = Optional.ofNullable(notSources);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_sources", nulls = Nulls.SKIP)
+        public _FinalStage notSources(Optional<String> notSources) {
+            this.notSources = notSources;
+            return this;
+        }
+
+        /**
+         * <p>One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>&quot;nytimes.com&quot;</code></li>
+         * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage sources(String sources) {
+            this.sources = Optional.ofNullable(sources);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "sources", nulls = Nulls.SKIP)
+        public _FinalStage sources(Optional<String> sources) {
+            this.sources = sources;
+            return this;
+        }
+
+        /**
+         * <p>Predefined top news sources per country.</p>
+         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>&quot;top 100 US&quot;</code></li>
+         * <li><code>&quot;top 33 AT&quot;</code></li>
+         * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
+         * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage predefinedSources(String predefinedSources) {
+            this.predefinedSources = Optional.ofNullable(predefinedSources);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "predefined_sources", nulls = Nulls.SKIP)
+        public _FinalStage predefinedSources(Optional<String> predefinedSources) {
+            this.predefinedSources = predefinedSources;
+            return this;
+        }
+
+        /**
+         * <p>The fields to consider for finding similar documents.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage similarDocumentsFields(String similarDocumentsFields) {
             this.similarDocumentsFields = Optional.ofNullable(similarDocumentsFields);
@@ -1211,6 +1880,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The number of similar documents to return.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage similarDocumentsNumber(Integer similarDocumentsNumber) {
             this.similarDocumentsNumber = Optional.ofNullable(similarDocumentsNumber);
@@ -1224,6 +1897,10 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, includes similar documents in the response.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage includeSimilarDocuments(Boolean includeSimilarDocuments) {
             this.includeSimilarDocuments = Optional.ofNullable(includeSimilarDocuments);
@@ -1237,6 +1914,13 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
+        /**
+         * <p>The article fields to search in. To search in multiple fields, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;title, summary&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>summary</code> option is available if NLP is enabled in your plan.</p>
+         * <p>Available options: <code>title</code>, <code>summary</code>, <code>content</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage searchIn(String searchIn) {
             this.searchIn = Optional.ofNullable(searchIn);
@@ -1287,12 +1971,14 @@ public final class SearchSimilarGetRequest {
                     hasNlp,
                     theme,
                     notTheme,
+                    nerName,
                     titleSentimentMin,
                     titleSentimentMax,
                     contentSentimentMin,
                     contentSentimentMax,
                     iptcTags,
                     notIptcTags,
+                    customTags,
                     additionalProperties);
         }
     }

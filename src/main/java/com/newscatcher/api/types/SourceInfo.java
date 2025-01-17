@@ -44,16 +44,25 @@ public final class SourceInfo {
         this.additionalProperties = additionalProperties;
     }
 
+    /**
+     * @return The name of the news source.
+     */
     @JsonProperty("name_source")
     public Optional<String> getNameSource() {
         return nameSource;
     }
 
+    /**
+     * @return The domain URL of the news source.
+     */
     @JsonProperty("domain_url")
     public String getDomainUrl() {
         return domainUrl;
     }
 
+    /**
+     * @return The logo of the news source.
+     */
     @JsonProperty("logo")
     public Optional<String> getLogo() {
         return logo;
@@ -142,6 +151,10 @@ public final class SourceInfo {
             return this;
         }
 
+        /**
+         * <p>The domain URL of the news source.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         @JsonSetter("domain_url")
         public _FinalStage domainUrl(@NotNull String domainUrl) {
@@ -162,6 +175,10 @@ public final class SourceInfo {
             return this;
         }
 
+        /**
+         * <p>The logo of the news source.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage logo(String logo) {
             this.logo = Optional.ofNullable(logo);
@@ -175,6 +192,10 @@ public final class SourceInfo {
             return this;
         }
 
+        /**
+         * <p>The name of the news source.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage nameSource(String nameSource) {
             this.nameSource = Optional.ofNullable(nameSource);

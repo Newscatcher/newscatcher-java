@@ -12,22 +12,23 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
+import com.newscatcher.api.types.From;
+import com.newscatcher.api.types.To;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = SearchUrlGetRequest.Builder.class)
 public final class SearchUrlGetRequest {
-    private final String ids;
+    private final Optional<String> ids;
 
-    private final String links;
+    private final Optional<String> links;
 
-    private final Optional<String> from;
+    private final Optional<From> from;
 
-    private final Optional<String> to;
+    private final Optional<To> to;
 
     private final Optional<Integer> page;
 
@@ -36,10 +37,10 @@ public final class SearchUrlGetRequest {
     private final Map<String, Object> additionalProperties;
 
     private SearchUrlGetRequest(
-            String ids,
-            String links,
-            Optional<String> from,
-            Optional<String> to,
+            Optional<String> ids,
+            Optional<String> links,
+            Optional<From> from,
+            Optional<To> to,
             Optional<Integer> page,
             Optional<Integer> pageSize,
             Map<String, Object> additionalProperties) {
@@ -52,31 +53,48 @@ public final class SearchUrlGetRequest {
         this.additionalProperties = additionalProperties;
     }
 
+    /**
+     * @return The Newscatcher article ID (corresponds to the <code>_id</code> field in API response) or a list of article IDs to search for. To specify multiple IDs, use a comma-separated string.
+     * <p>Example: <code>&quot;1234567890abcdef, abcdef1234567890&quot;</code></p>
+     * <p><strong>Caution</strong>: You can use either the <code>links</code> or the <code>ids</code> parameter, but not both at the same time.</p>
+     */
     @JsonProperty("ids")
-    public String getIds() {
+    public Optional<String> getIds() {
         return ids;
     }
 
+    /**
+     * @return The article link or list of article links to search for. To specify multiple links, use a comma-separated string.
+     * <p>Example: <code>&quot;https://example.com/article1, https://example.com/article2&quot;</code></p>
+     * <p><strong>Caution</strong>: You can use either the <code>links</code> or the <code>ids</code> parameter, but not both at the same time.</p>
+     */
     @JsonProperty("links")
-    public String getLinks() {
+    public Optional<String> getLinks() {
         return links;
     }
 
     @JsonProperty("from_")
-    public Optional<String> getFrom() {
+    public Optional<From> getFrom() {
         return from;
     }
 
     @JsonProperty("to_")
-    public Optional<String> getTo() {
+    public Optional<To> getTo() {
         return to;
     }
 
+    /**
+     * @return The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.
+     * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
+     */
     @JsonProperty("page")
     public Optional<Integer> getPage() {
         return page;
     }
 
+    /**
+     * @return The number of articles to return per page.
+     */
     @JsonProperty("page_size")
     public Optional<Integer> getPageSize() {
         return pageSize;
@@ -112,60 +130,29 @@ public final class SearchUrlGetRequest {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdsStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdsStage {
-        LinksStage ids(@NotNull String ids);
-
-        Builder from(SearchUrlGetRequest other);
-    }
-
-    public interface LinksStage {
-        _FinalStage links(@NotNull String links);
-    }
-
-    public interface _FinalStage {
-        SearchUrlGetRequest build();
-
-        _FinalStage from(Optional<String> from);
-
-        _FinalStage from(String from);
-
-        _FinalStage to(Optional<String> to);
-
-        _FinalStage to(String to);
-
-        _FinalStage page(Optional<Integer> page);
-
-        _FinalStage page(Integer page);
-
-        _FinalStage pageSize(Optional<Integer> pageSize);
-
-        _FinalStage pageSize(Integer pageSize);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdsStage, LinksStage, _FinalStage {
-        private String ids;
+    public static final class Builder {
+        private Optional<String> ids = Optional.empty();
 
-        private String links;
+        private Optional<String> links = Optional.empty();
 
-        private Optional<Integer> pageSize = Optional.empty();
+        private Optional<From> from = Optional.empty();
+
+        private Optional<To> to = Optional.empty();
 
         private Optional<Integer> page = Optional.empty();
 
-        private Optional<String> to = Optional.empty();
-
-        private Optional<String> from = Optional.empty();
+        private Optional<Integer> pageSize = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(SearchUrlGetRequest other) {
             ids(other.getIds());
             links(other.getLinks());
@@ -176,73 +163,72 @@ public final class SearchUrlGetRequest {
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("ids")
-        public LinksStage ids(@NotNull String ids) {
-            this.ids = Objects.requireNonNull(ids, "ids must not be null");
+        @JsonSetter(value = "ids", nulls = Nulls.SKIP)
+        public Builder ids(Optional<String> ids) {
+            this.ids = ids;
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("links")
-        public _FinalStage links(@NotNull String links) {
-            this.links = Objects.requireNonNull(links, "links must not be null");
+        public Builder ids(String ids) {
+            this.ids = Optional.ofNullable(ids);
             return this;
         }
 
-        @java.lang.Override
-        public _FinalStage pageSize(Integer pageSize) {
-            this.pageSize = Optional.ofNullable(pageSize);
+        @JsonSetter(value = "links", nulls = Nulls.SKIP)
+        public Builder links(Optional<String> links) {
+            this.links = links;
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
-        public _FinalStage pageSize(Optional<Integer> pageSize) {
-            this.pageSize = pageSize;
+        public Builder links(String links) {
+            this.links = Optional.ofNullable(links);
             return this;
         }
 
-        @java.lang.Override
-        public _FinalStage page(Integer page) {
-            this.page = Optional.ofNullable(page);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "page", nulls = Nulls.SKIP)
-        public _FinalStage page(Optional<Integer> page) {
-            this.page = page;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage to(String to) {
-            this.to = Optional.ofNullable(to);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "to_", nulls = Nulls.SKIP)
-        public _FinalStage to(Optional<String> to) {
-            this.to = to;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage from(String from) {
-            this.from = Optional.ofNullable(from);
-            return this;
-        }
-
-        @java.lang.Override
         @JsonSetter(value = "from_", nulls = Nulls.SKIP)
-        public _FinalStage from(Optional<String> from) {
+        public Builder from(Optional<From> from) {
             this.from = from;
             return this;
         }
 
-        @java.lang.Override
+        public Builder from(From from) {
+            this.from = Optional.ofNullable(from);
+            return this;
+        }
+
+        @JsonSetter(value = "to_", nulls = Nulls.SKIP)
+        public Builder to(Optional<To> to) {
+            this.to = to;
+            return this;
+        }
+
+        public Builder to(To to) {
+            this.to = Optional.ofNullable(to);
+            return this;
+        }
+
+        @JsonSetter(value = "page", nulls = Nulls.SKIP)
+        public Builder page(Optional<Integer> page) {
+            this.page = page;
+            return this;
+        }
+
+        public Builder page(Integer page) {
+            this.page = Optional.ofNullable(page);
+            return this;
+        }
+
+        @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
+        public Builder pageSize(Optional<Integer> pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        public Builder pageSize(Integer pageSize) {
+            this.pageSize = Optional.ofNullable(pageSize);
+            return this;
+        }
+
         public SearchUrlGetRequest build() {
             return new SearchUrlGetRequest(ids, links, from, to, page, pageSize, additionalProperties);
         }

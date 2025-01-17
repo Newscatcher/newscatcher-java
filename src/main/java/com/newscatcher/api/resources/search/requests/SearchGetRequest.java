@@ -12,6 +12,11 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
+import com.newscatcher.api.resources.search.types.SearchGetRequestClusteringVariable;
+import com.newscatcher.api.resources.search.types.SearchGetRequestNewsDomainType;
+import com.newscatcher.api.resources.search.types.SearchGetRequestPublishedDatePrecision;
+import com.newscatcher.api.resources.search.types.SearchGetRequestSortBy;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -25,65 +30,75 @@ public final class SearchGetRequest {
 
     private final Optional<String> searchIn;
 
-    private final String predefinedSources;
+    private final Optional<String> predefinedSources;
 
-    private final String sources;
+    private final Optional<String> sourceName;
 
-    private final String notSources;
+    private final Optional<String> sources;
 
-    private final String lang;
+    private final Optional<String> notSources;
 
-    private final String notLang;
+    private final Optional<String> lang;
 
-    private final String countries;
+    private final Optional<String> notLang;
 
-    private final String notCountries;
+    private final Optional<String> countries;
 
-    private final String notAuthorName;
+    private final Optional<String> notCountries;
 
-    private final Optional<String> from;
+    private final Optional<String> notAuthorName;
 
-    private final Optional<String> to;
+    private final Optional<OffsetDateTime> from;
 
-    private final Optional<String> publishedDatePrecision;
+    private final Optional<OffsetDateTime> to;
 
-    private final Optional<String> byParseDate;
+    private final Optional<SearchGetRequestPublishedDatePrecision> publishedDatePrecision;
 
-    private final Optional<String> sortBy;
+    private final Optional<Boolean> byParseDate;
 
-    private final Optional<String> rankedOnly;
+    private final Optional<SearchGetRequestSortBy> sortBy;
 
-    private final Optional<String> fromRank;
+    private final Optional<Boolean> rankedOnly;
 
-    private final Optional<String> toRank;
+    private final Optional<Integer> fromRank;
 
-    private final Optional<String> isHeadline;
+    private final Optional<Integer> toRank;
 
-    private final Optional<String> isOpinion;
+    private final Optional<Boolean> isHeadline;
 
-    private final Optional<String> isPaidContent;
+    private final Optional<Boolean> isOpinion;
 
-    private final String parentUrl;
+    private final Optional<Boolean> isPaidContent;
 
-    private final String allLinks;
+    private final Optional<String> parentUrl;
 
-    private final String allDomainLinks;
+    private final Optional<String> allLinks;
 
-    private final Optional<String> wordCountMin;
+    private final Optional<String> allDomainLinks;
 
-    private final Optional<String> wordCountMax;
+    private final Optional<Boolean> additionalDomainInfo;
 
-    private final Optional<String> page;
+    private final Optional<Boolean> isNewsDomain;
 
-    private final Optional<String> pageSize;
+    private final Optional<SearchGetRequestNewsDomainType> newsDomainType;
 
-    private final Optional<String> clusteringVariable;
+    private final Optional<String> newsType;
 
-    private final Optional<String> clusteringEnabled;
+    private final Optional<Integer> wordCountMin;
 
-    private final Optional<Double> clusteringThreshold;
+    private final Optional<Integer> wordCountMax;
 
-    private final Optional<String> includeNlpData;
+    private final Optional<Integer> page;
+
+    private final Optional<Integer> pageSize;
+
+    private final Optional<Boolean> clusteringEnabled;
+
+    private final Optional<SearchGetRequestClusteringVariable> clusteringVariable;
+
+    private final Optional<Float> clusteringThreshold;
+
+    private final Optional<Boolean> includeNlpData;
 
     private final Optional<Boolean> hasNlp;
 
@@ -99,69 +114,66 @@ public final class SearchGetRequest {
 
     private final Optional<String> miscEntityName;
 
-    private final Optional<Double> titleSentimentMin;
+    private final Optional<Float> titleSentimentMin;
 
-    private final Optional<Double> titleSentimentMax;
+    private final Optional<Float> titleSentimentMax;
 
-    private final Optional<Double> contentSentimentMin;
+    private final Optional<Float> contentSentimentMin;
 
-    private final Optional<Double> contentSentimentMax;
+    private final Optional<Float> contentSentimentMax;
 
-    private final String iptcTags;
+    private final Optional<String> iptcTags;
 
-    private final String notIptcTags;
+    private final Optional<String> notIptcTags;
 
-    private final String sourceName;
+    private final Optional<String> iabTags;
 
-    private final String iabTags;
+    private final Optional<String> notIabTags;
 
-    private final String notIabTags;
+    private final Optional<String> customTags;
 
     private final Optional<Boolean> excludeDuplicates;
-
-    private final Optional<Boolean> additionalDomainInfo;
-
-    private final Optional<Boolean> isNewsDomain;
-
-    private final String newsDomainType;
-
-    private final String newsType;
 
     private final Map<String, Object> additionalProperties;
 
     private SearchGetRequest(
             String q,
             Optional<String> searchIn,
-            String predefinedSources,
-            String sources,
-            String notSources,
-            String lang,
-            String notLang,
-            String countries,
-            String notCountries,
-            String notAuthorName,
-            Optional<String> from,
-            Optional<String> to,
-            Optional<String> publishedDatePrecision,
-            Optional<String> byParseDate,
-            Optional<String> sortBy,
-            Optional<String> rankedOnly,
-            Optional<String> fromRank,
-            Optional<String> toRank,
-            Optional<String> isHeadline,
-            Optional<String> isOpinion,
-            Optional<String> isPaidContent,
-            String parentUrl,
-            String allLinks,
-            String allDomainLinks,
-            Optional<String> wordCountMin,
-            Optional<String> wordCountMax,
-            Optional<String> page,
-            Optional<String> pageSize,
-            Optional<String> clusteringVariable,
-            Optional<String> clusteringEnabled,
-            Optional<Double> clusteringThreshold,
-            Optional<String> includeNlpData,
+            Optional<String> predefinedSources,
+            Optional<String> sourceName,
+            Optional<String> sources,
+            Optional<String> notSources,
+            Optional<String> lang,
+            Optional<String> notLang,
+            Optional<String> countries,
+            Optional<String> notCountries,
+            Optional<String> notAuthorName,
+            Optional<OffsetDateTime> from,
+            Optional<OffsetDateTime> to,
+            Optional<SearchGetRequestPublishedDatePrecision> publishedDatePrecision,
+            Optional<Boolean> byParseDate,
+            Optional<SearchGetRequestSortBy> sortBy,
+            Optional<Boolean> rankedOnly,
+            Optional<Integer> fromRank,
+            Optional<Integer> toRank,
+            Optional<Boolean> isHeadline,
+            Optional<Boolean> isOpinion,
+            Optional<Boolean> isPaidContent,
+            Optional<String> parentUrl,
+            Optional<String> allLinks,
+            Optional<String> allDomainLinks,
+            Optional<Boolean> additionalDomainInfo,
+            Optional<Boolean> isNewsDomain,
+            Optional<SearchGetRequestNewsDomainType> newsDomainType,
+            Optional<String> newsType,
+            Optional<Integer> wordCountMin,
+            Optional<Integer> wordCountMax,
+            Optional<Integer> page,
+            Optional<Integer> pageSize,
+            Optional<Boolean> clusteringEnabled,
+            Optional<SearchGetRequestClusteringVariable> clusteringVariable,
+            Optional<Float> clusteringThreshold,
+            Optional<Boolean> includeNlpData,
             Optional<Boolean> hasNlp,
             Optional<String> theme,
             Optional<String> notTheme,
@@ -169,24 +181,21 @@ public final class SearchGetRequest {
             Optional<String> perEntityName,
             Optional<String> locEntityName,
             Optional<String> miscEntityName,
-            Optional<Double> titleSentimentMin,
-            Optional<Double> titleSentimentMax,
-            Optional<Double> contentSentimentMin,
-            Optional<Double> contentSentimentMax,
-            String iptcTags,
-            String notIptcTags,
-            String sourceName,
-            String iabTags,
-            String notIabTags,
+            Optional<Float> titleSentimentMin,
+            Optional<Float> titleSentimentMax,
+            Optional<Float> contentSentimentMin,
+            Optional<Float> contentSentimentMax,
+            Optional<String> iptcTags,
+            Optional<String> notIptcTags,
+            Optional<String> iabTags,
+            Optional<String> notIabTags,
+            Optional<String> customTags,
             Optional<Boolean> excludeDuplicates,
-            Optional<Boolean> additionalDomainInfo,
-            Optional<Boolean> isNewsDomain,
-            String newsDomainType,
-            String newsType,
             Map<String, Object> additionalProperties) {
         this.q = q;
         this.searchIn = searchIn;
         this.predefinedSources = predefinedSources;
+        this.sourceName = sourceName;
         this.sources = sources;
         this.notSources = notSources;
         this.lang = lang;
@@ -208,12 +217,16 @@ public final class SearchGetRequest {
         this.parentUrl = parentUrl;
         this.allLinks = allLinks;
         this.allDomainLinks = allDomainLinks;
+        this.additionalDomainInfo = additionalDomainInfo;
+        this.isNewsDomain = isNewsDomain;
+        this.newsDomainType = newsDomainType;
+        this.newsType = newsType;
         this.wordCountMin = wordCountMin;
         this.wordCountMax = wordCountMax;
         this.page = page;
         this.pageSize = pageSize;
-        this.clusteringVariable = clusteringVariable;
         this.clusteringEnabled = clusteringEnabled;
+        this.clusteringVariable = clusteringVariable;
         this.clusteringThreshold = clusteringThreshold;
         this.includeNlpData = includeNlpData;
         this.hasNlp = hasNlp;
@@ -229,280 +242,625 @@ public final class SearchGetRequest {
         this.contentSentimentMax = contentSentimentMax;
         this.iptcTags = iptcTags;
         this.notIptcTags = notIptcTags;
-        this.sourceName = sourceName;
         this.iabTags = iabTags;
         this.notIabTags = notIabTags;
+        this.customTags = customTags;
         this.excludeDuplicates = excludeDuplicates;
-        this.additionalDomainInfo = additionalDomainInfo;
-        this.isNewsDomain = isNewsDomain;
-        this.newsDomainType = newsDomainType;
-        this.newsType = newsType;
         this.additionalProperties = additionalProperties;
     }
 
+    /**
+     * @return The keyword(s) to search for in articles. Query syntax supports logical operators (<code>AND</code>, <code>OR</code>, <code>NOT</code>) and wildcards:
+     * <ul>
+     * <li>For an exact match, use double quotes. For example, <code>&quot;technology news&quot;</code>.</li>
+     * <li>Use <code>*</code> to search for any keyword.</li>
+     * <li>Use <code>+</code> to include and <code>-</code> to exclude specific words or phrases.
+     * For example, <code>+Apple</code>, <code>-Google</code>.</li>
+     * <li>Use <code>AND</code>, <code>OR</code>, and <code>NOT</code> to refine search results.
+     * For example, <code>technology AND (Apple OR Microsoft) NOT Google</code>.</li>
+     * </ul>
+     * <p>For more details, see <a href="/docs/v3/documentation/guides-and-concepts/advanced-querying">Advanced querying</a>.</p>
+     */
     @JsonProperty("q")
     public String getQ() {
         return q;
     }
 
+    /**
+     * @return The article fields to search in. To search in multiple fields, use a comma-separated string.
+     * <p>Example: <code>&quot;title, summary&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>summary</code> option is available if NLP is enabled in your plan.</p>
+     * <p>Available options: <code>title</code>, <code>summary</code>, <code>content</code>.</p>
+     */
     @JsonProperty("search_in")
     public Optional<String> getSearchIn() {
         return searchIn;
     }
 
+    /**
+     * @return Predefined top news sources per country.
+     * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
+     * <p>Examples:</p>
+     * <ul>
+     * <li><code>&quot;top 100 US&quot;</code></li>
+     * <li><code>&quot;top 33 AT&quot;</code></li>
+     * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
+     * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
+     * </ul>
+     */
     @JsonProperty("predefined_sources")
-    public String getPredefinedSources() {
+    public Optional<String> getPredefinedSources() {
         return predefinedSources;
     }
 
-    @JsonProperty("sources")
-    public String getSources() {
-        return sources;
-    }
-
-    @JsonProperty("not_sources")
-    public String getNotSources() {
-        return notSources;
-    }
-
-    @JsonProperty("lang")
-    public String getLang() {
-        return lang;
-    }
-
-    @JsonProperty("not_lang")
-    public String getNotLang() {
-        return notLang;
-    }
-
-    @JsonProperty("countries")
-    public String getCountries() {
-        return countries;
-    }
-
-    @JsonProperty("not_countries")
-    public String getNotCountries() {
-        return notCountries;
-    }
-
-    @JsonProperty("not_author_name")
-    public String getNotAuthorName() {
-        return notAuthorName;
-    }
-
-    @JsonProperty("from_")
-    public Optional<String> getFrom() {
-        return from;
-    }
-
-    @JsonProperty("to_")
-    public Optional<String> getTo() {
-        return to;
-    }
-
-    @JsonProperty("published_date_precision")
-    public Optional<String> getPublishedDatePrecision() {
-        return publishedDatePrecision;
-    }
-
-    @JsonProperty("by_parse_date")
-    public Optional<String> getByParseDate() {
-        return byParseDate;
-    }
-
-    @JsonProperty("sort_by")
-    public Optional<String> getSortBy() {
-        return sortBy;
-    }
-
-    @JsonProperty("ranked_only")
-    public Optional<String> getRankedOnly() {
-        return rankedOnly;
-    }
-
-    @JsonProperty("from_rank")
-    public Optional<String> getFromRank() {
-        return fromRank;
-    }
-
-    @JsonProperty("to_rank")
-    public Optional<String> getToRank() {
-        return toRank;
-    }
-
-    @JsonProperty("is_headline")
-    public Optional<String> getIsHeadline() {
-        return isHeadline;
-    }
-
-    @JsonProperty("is_opinion")
-    public Optional<String> getIsOpinion() {
-        return isOpinion;
-    }
-
-    @JsonProperty("is_paid_content")
-    public Optional<String> getIsPaidContent() {
-        return isPaidContent;
-    }
-
-    @JsonProperty("parent_url")
-    public String getParentUrl() {
-        return parentUrl;
-    }
-
-    @JsonProperty("all_links")
-    public String getAllLinks() {
-        return allLinks;
-    }
-
-    @JsonProperty("all_domain_links")
-    public String getAllDomainLinks() {
-        return allDomainLinks;
-    }
-
-    @JsonProperty("word_count_min")
-    public Optional<String> getWordCountMin() {
-        return wordCountMin;
-    }
-
-    @JsonProperty("word_count_max")
-    public Optional<String> getWordCountMax() {
-        return wordCountMax;
-    }
-
-    @JsonProperty("page")
-    public Optional<String> getPage() {
-        return page;
-    }
-
-    @JsonProperty("page_size")
-    public Optional<String> getPageSize() {
-        return pageSize;
-    }
-
-    @JsonProperty("clustering_variable")
-    public Optional<String> getClusteringVariable() {
-        return clusteringVariable;
-    }
-
-    @JsonProperty("clustering_enabled")
-    public Optional<String> getClusteringEnabled() {
-        return clusteringEnabled;
-    }
-
-    @JsonProperty("clustering_threshold")
-    public Optional<Double> getClusteringThreshold() {
-        return clusteringThreshold;
-    }
-
-    @JsonProperty("include_nlp_data")
-    public Optional<String> getIncludeNlpData() {
-        return includeNlpData;
-    }
-
-    @JsonProperty("has_nlp")
-    public Optional<Boolean> getHasNlp() {
-        return hasNlp;
-    }
-
-    @JsonProperty("theme")
-    public Optional<String> getTheme() {
-        return theme;
-    }
-
-    @JsonProperty("not_theme")
-    public Optional<String> getNotTheme() {
-        return notTheme;
-    }
-
-    @JsonProperty("ORG_entity_name")
-    public Optional<String> getOrgEntityName() {
-        return orgEntityName;
-    }
-
-    @JsonProperty("PER_entity_name")
-    public Optional<String> getPerEntityName() {
-        return perEntityName;
-    }
-
-    @JsonProperty("LOC_entity_name")
-    public Optional<String> getLocEntityName() {
-        return locEntityName;
-    }
-
-    @JsonProperty("MISC_entity_name")
-    public Optional<String> getMiscEntityName() {
-        return miscEntityName;
-    }
-
-    @JsonProperty("title_sentiment_min")
-    public Optional<Double> getTitleSentimentMin() {
-        return titleSentimentMin;
-    }
-
-    @JsonProperty("title_sentiment_max")
-    public Optional<Double> getTitleSentimentMax() {
-        return titleSentimentMax;
-    }
-
-    @JsonProperty("content_sentiment_min")
-    public Optional<Double> getContentSentimentMin() {
-        return contentSentimentMin;
-    }
-
-    @JsonProperty("content_sentiment_max")
-    public Optional<Double> getContentSentimentMax() {
-        return contentSentimentMax;
-    }
-
-    @JsonProperty("iptc_tags")
-    public String getIptcTags() {
-        return iptcTags;
-    }
-
-    @JsonProperty("not_iptc_tags")
-    public String getNotIptcTags() {
-        return notIptcTags;
-    }
-
+    /**
+     * @return Word or phrase to search within the source names. To specify multiple values, use a comma-separated string.
+     * <p>Example: <code>&quot;sport, tech&quot;</code></p>
+     * <p><strong>Note</strong>: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like <code>&quot;sport&quot;</code> or <code>&quot;new york times&quot;</code>. For example, <code>&quot;sport&quot;</code> returns sources such as <code>&quot;Motorsport&quot;</code>, <code>&quot;Dot Esport&quot;</code>, and <code>&quot;Tuttosport&quot;</code>.</p>
+     */
     @JsonProperty("source_name")
-    public String getSourceName() {
+    public Optional<String> getSourceName() {
         return sourceName;
     }
 
-    @JsonProperty("iab_tags")
-    public String getIabTags() {
-        return iabTags;
+    /**
+     * @return One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.
+     * <p>Examples:</p>
+     * <ul>
+     * <li><code>&quot;nytimes.com&quot;</code></li>
+     * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
+     * </ul>
+     */
+    @JsonProperty("sources")
+    public Optional<String> getSources() {
+        return sources;
     }
 
-    @JsonProperty("not_iab_tags")
-    public String getNotIabTags() {
-        return notIabTags;
+    /**
+     * @return The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.
+     * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
+     */
+    @JsonProperty("not_sources")
+    public Optional<String> getNotSources() {
+        return notSources;
     }
 
-    @JsonProperty("exclude_duplicates")
-    public Optional<Boolean> getExcludeDuplicates() {
-        return excludeDuplicates;
+    /**
+     * @return The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.
+     * <p>Example: <code>&quot;en, es&quot;</code></p>
+     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+     */
+    @JsonProperty("lang")
+    public Optional<String> getLang() {
+        return lang;
     }
 
+    /**
+     * @return The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.
+     * <p>Example: <code>&quot;fr, de&quot;</code></p>
+     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+     */
+    @JsonProperty("not_lang")
+    public Optional<String> getNotLang() {
+        return notLang;
+    }
+
+    /**
+     * @return The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.
+     * <p>Example: <code>&quot;US, CA&quot;</code></p>
+     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+     */
+    @JsonProperty("countries")
+    public Optional<String> getCountries() {
+        return countries;
+    }
+
+    /**
+     * @return The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.
+     * <p>Example:<code>&quot;US, CA&quot;</code></p>
+     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+     */
+    @JsonProperty("not_countries")
+    public Optional<String> getNotCountries() {
+        return notCountries;
+    }
+
+    /**
+     * @return The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.
+     * <p>Example: <code>&quot;John Doe, Jane Doe&quot;</code></p>
+     */
+    @JsonProperty("not_author_name")
+    public Optional<String> getNotAuthorName() {
+        return notAuthorName;
+    }
+
+    /**
+     * @return The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.
+     * <p>Formats with examples:</p>
+     * <ul>
+     * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+     * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+     * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+     * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+     * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+     * </ul>
+     * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
+     */
+    @JsonProperty("from_")
+    public Optional<OffsetDateTime> getFrom() {
+        return from;
+    }
+
+    /**
+     * @return The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.
+     * <p>Formats with examples:</p>
+     * <ul>
+     * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+     * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+     * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+     * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+     * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+     * </ul>
+     * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
+     */
+    @JsonProperty("to_")
+    public Optional<OffsetDateTime> getTo() {
+        return to;
+    }
+
+    /**
+     * @return The precision of the published date. There are three types:
+     * <ul>
+     * <li><code>full</code>: The day and time of an article is correctly identified with the appropriate timezone.</li>
+     * <li><code>timezone unknown</code>: The day and time of an article is correctly identified without timezone.</li>
+     * <li><code>date</code>: Only the day is identified without an exact time.</li>
+     * </ul>
+     */
+    @JsonProperty("published_date_precision")
+    public Optional<SearchGetRequestPublishedDatePrecision> getPublishedDatePrecision() {
+        return publishedDatePrecision;
+    }
+
+    /**
+     * @return If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.
+     */
+    @JsonProperty("by_parse_date")
+    public Optional<Boolean> getByParseDate() {
+        return byParseDate;
+    }
+
+    /**
+     * @return The sorting order of the results. Possible values are:
+     * <ul>
+     * <li><code>relevancy</code>: The most relevant results first.</li>
+     * <li><code>date</code>: The most recently published results first.</li>
+     * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
+     * </ul>
+     */
+    @JsonProperty("sort_by")
+    public Optional<SearchGetRequestSortBy> getSortBy() {
+        return sortBy;
+    }
+
+    /**
+     * @return If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.
+     */
+    @JsonProperty("ranked_only")
+    public Optional<Boolean> getRankedOnly() {
+        return rankedOnly;
+    }
+
+    /**
+     * @return The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.
+     */
+    @JsonProperty("from_rank")
+    public Optional<Integer> getFromRank() {
+        return fromRank;
+    }
+
+    /**
+     * @return The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.
+     */
+    @JsonProperty("to_rank")
+    public Optional<Integer> getToRank() {
+        return toRank;
+    }
+
+    /**
+     * @return If true, only returns articles that were posted on the home page of a given news domain.
+     */
+    @JsonProperty("is_headline")
+    public Optional<Boolean> getIsHeadline() {
+        return isHeadline;
+    }
+
+    /**
+     * @return If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.
+     */
+    @JsonProperty("is_opinion")
+    public Optional<Boolean> getIsOpinion() {
+        return isOpinion;
+    }
+
+    /**
+     * @return If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.
+     */
+    @JsonProperty("is_paid_content")
+    public Optional<Boolean> getIsPaidContent() {
+        return isPaidContent;
+    }
+
+    /**
+     * @return The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.
+     * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
+     */
+    @JsonProperty("parent_url")
+    public Optional<String> getParentUrl() {
+        return parentUrl;
+    }
+
+    /**
+     * @return The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.
+     * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
+     * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+     */
+    @JsonProperty("all_links")
+    public Optional<String> getAllLinks() {
+        return allLinks;
+    }
+
+    /**
+     * @return The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.
+     * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
+     * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+     */
+    @JsonProperty("all_domain_links")
+    public Optional<String> getAllDomainLinks() {
+        return allDomainLinks;
+    }
+
+    /**
+     * @return If true, includes additional domain information in the response for each article:
+     * <ul>
+     * <li><code>is_news_domain</code>: Boolean indicating if the source is a news domain.</li>
+     * <li><code>news_domain_type</code>: Type of news domain (e.g., <code>&quot;Original Content&quot;</code>).</li>
+     * <li><code>news_type</code>: Category of news (e.g., <code>&quot;News and Blogs&quot;</code>).</li>
+     * </ul>
+     */
     @JsonProperty("additional_domain_info")
     public Optional<Boolean> getAdditionalDomainInfo() {
         return additionalDomainInfo;
     }
 
+    /**
+     * @return If true, filters results to include only news domains.
+     */
     @JsonProperty("is_news_domain")
     public Optional<Boolean> getIsNewsDomain() {
         return isNewsDomain;
     }
 
+    /**
+     * @return Filters results based on the news domain type. Possible values are:
+     * <ul>
+     * <li><code>Original Content</code>: Sources that produce their own content.</li>
+     * <li><code>Aggregator</code>: Sources that collect content from various other sources.</li>
+     * <li><code>Press Releases</code>: Sources primarily publishing press releases.</li>
+     * <li><code>Republisher</code>: Sources that republish content from other sources.</li>
+     * <li><code>Other</code>: Sources that don't fit into main categories.</li>
+     * </ul>
+     */
     @JsonProperty("news_domain_type")
-    public String getNewsDomainType() {
+    public Optional<SearchGetRequestNewsDomainType> getNewsDomainType() {
         return newsDomainType;
     }
 
+    /**
+     * @return Filters results based on the news type. Multiple types can be specified using a comma-separated string.
+     * <p>Example: <code>&quot;General News Outlets,Tech News and Updates&quot;</code></p>
+     * <p>For a complete list of available news types, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#news-type-news-type">Enumerated parameters &gt; News type</a>.</p>
+     */
     @JsonProperty("news_type")
-    public String getNewsType() {
+    public Optional<String> getNewsType() {
         return newsType;
+    }
+
+    /**
+     * @return The minimum number of words an article must contain. To be used for avoiding articles with small content.
+     */
+    @JsonProperty("word_count_min")
+    public Optional<Integer> getWordCountMin() {
+        return wordCountMin;
+    }
+
+    /**
+     * @return The maximum number of words an article can contain. To be used for avoiding articles with large content.
+     */
+    @JsonProperty("word_count_max")
+    public Optional<Integer> getWordCountMax() {
+        return wordCountMax;
+    }
+
+    /**
+     * @return The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.
+     * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
+     */
+    @JsonProperty("page")
+    public Optional<Integer> getPage() {
+        return page;
+    }
+
+    /**
+     * @return The number of articles to return per page.
+     */
+    @JsonProperty("page_size")
+    public Optional<Integer> getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     * @return Determines whether to group similar articles into clusters. If true, the API returns clustered results.
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+     */
+    @JsonProperty("clustering_enabled")
+    public Optional<Boolean> getClusteringEnabled() {
+        return clusteringEnabled;
+    }
+
+    /**
+     * @return Specifies which part of the article to use for determining similarity when clustering.
+     * <p>Possible values are:</p>
+     * <ul>
+     * <li><code>content</code>: Uses the full article content (default).</li>
+     * <li><code>title</code>: Uses only the article title.</li>
+     * <li><code>summary</code>: Uses the article summary.</li>
+     * </ul>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+     */
+    @JsonProperty("clustering_variable")
+    public Optional<SearchGetRequestClusteringVariable> getClusteringVariable() {
+        return clusteringVariable;
+    }
+
+    /**
+     * @return Sets the similarity threshold for grouping articles into clusters. A lower value creates more inclusive clusters, while a higher value requires greater similarity between articles.
+     * <p>Examples:</p>
+     * <ul>
+     * <li><code>0.3</code>: Results in larger, more diverse clusters.</li>
+     * <li><code>0.6</code>: Balances cluster size and article similarity (default).</li>
+     * <li><code>0.9</code>: Creates smaller, tightly related clusters.</li>
+     * </ul>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+     */
+    @JsonProperty("clustering_threshold")
+    public Optional<Float> getClusteringThreshold() {
+        return clusteringThreshold;
+    }
+
+    /**
+     * @return If true, includes an NLP layer with each article in the response. This layer provides enhanced information such as theme classification, article summary, sentiment analysis, tags, and named entity recognition.
+     * <p>The NLP layer includes:</p>
+     * <ul>
+     * <li>Theme: General topic of the article.</li>
+     * <li>Summary: A concise overview of the article content.</li>
+     * <li>Sentiment: Separate scores for title and content (range: -1 to 1).</li>
+     * <li>Named entities: Identified persons (PER), organizations (ORG), locations (LOC), and miscellaneous entities (MISC).</li>
+     * <li>IPTC tags: Standardized news category tags.</li>
+     * <li>IAB tags: Content categories for digital advertising.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>include_nlp_data</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
+    @JsonProperty("include_nlp_data")
+    public Optional<Boolean> getIncludeNlpData() {
+        return includeNlpData;
+    }
+
+    /**
+     * @return If true, filters the results to include only articles with an NLP layer. This allows you to focus on articles that have been processed with advanced NLP techniques.
+     * <p><strong>Note</strong>: The <code>has_nlp</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
+    @JsonProperty("has_nlp")
+    public Optional<Boolean> getHasNlp() {
+        return hasNlp;
+    }
+
+    /**
+     * @return Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.
+     * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
+     */
+    @JsonProperty("theme")
+    public Optional<String> getTheme() {
+        return theme;
+    }
+
+    /**
+     * @return Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.
+     * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
+    @JsonProperty("not_theme")
+    public Optional<String> getNotTheme() {
+        return notTheme;
+    }
+
+    /**
+     * @return Filters articles that mention specific organization names, as identified by NLP analysis. To specify multiple organizations, use a comma-separated string.
+     * <p>Example: <code>&quot;Apple, Microsoft&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>ORG_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+     */
+    @JsonProperty("ORG_entity_name")
+    public Optional<String> getOrgEntityName() {
+        return orgEntityName;
+    }
+
+    /**
+     * @return Filters articles that mention specific person names, as identified by NLP analysis. To specify multiple names, use a comma-separated string.
+     * <p>Example: <code>&quot;Elon Musk, Jeff Bezos&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>PER_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+     */
+    @JsonProperty("PER_entity_name")
+    public Optional<String> getPerEntityName() {
+        return perEntityName;
+    }
+
+    /**
+     * @return Filters articles that mention specific location names, as identified by NLP analysis. To specify multiple locations, use a comma-separated string.
+     * <p>Example: <code>&quot;California, New York&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>LOC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+     */
+    @JsonProperty("LOC_entity_name")
+    public Optional<String> getLocEntityName() {
+        return locEntityName;
+    }
+
+    /**
+     * @return Filters articles that mention other named entities not falling under person, organization, or location categories. Includes events, nationalities, products, works of art, and more. To specify multiple entities, use a comma-separated string.
+     * <p>Example: <code>&quot;Bitcoin, Blockchain&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>MISC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+     */
+    @JsonProperty("MISC_entity_name")
+    public Optional<String> getMiscEntityName() {
+        return miscEntityName;
+    }
+
+    /**
+     * @return Filters articles based on the minimum sentiment score of their titles.
+     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+     * <ul>
+     * <li>Negative values indicate negative sentiment.</li>
+     * <li>Positive values indicate positive sentiment.</li>
+     * <li>Values close to 0 indicate neutral sentiment.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
+    @JsonProperty("title_sentiment_min")
+    public Optional<Float> getTitleSentimentMin() {
+        return titleSentimentMin;
+    }
+
+    /**
+     * @return Filters articles based on the maximum sentiment score of their titles.
+     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+     * <ul>
+     * <li>Negative values indicate negative sentiment.</li>
+     * <li>Positive values indicate positive sentiment.</li>
+     * <li>Values close to 0 indicate neutral sentiment.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
+    @JsonProperty("title_sentiment_max")
+    public Optional<Float> getTitleSentimentMax() {
+        return titleSentimentMax;
+    }
+
+    /**
+     * @return Filters articles based on the minimum sentiment score of their content.
+     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+     * <ul>
+     * <li>Negative values indicate negative sentiment.</li>
+     * <li>Positive values indicate positive sentiment.</li>
+     * <li>Values close to 0 indicate neutral sentiment.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
+    @JsonProperty("content_sentiment_min")
+    public Optional<Float> getContentSentimentMin() {
+        return contentSentimentMin;
+    }
+
+    /**
+     * @return Filters articles based on the maximum sentiment score of their content.
+     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+     * <ul>
+     * <li>Negative values indicate negative sentiment.</li>
+     * <li>Positive values indicate positive sentiment.</li>
+     * <li>Values close to 0 indicate neutral sentiment.</li>
+     * </ul>
+     * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+     */
+    @JsonProperty("content_sentiment_max")
+    public Optional<Float> getContentSentimentMax() {
+        return contentSentimentMax;
+    }
+
+    /**
+     * @return Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.
+     * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+     */
+    @JsonProperty("iptc_tags")
+    public Optional<String> getIptcTags() {
+        return iptcTags;
+    }
+
+    /**
+     * @return Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.
+     * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+     */
+    @JsonProperty("not_iptc_tags")
+    public Optional<String> getNotIptcTags() {
+        return notIptcTags;
+    }
+
+    /**
+     * @return Filters articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories, use a comma-separated string.
+     * <p>Example: <code>&quot;Business, Events&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
+     */
+    @JsonProperty("iab_tags")
+    public Optional<String> getIabTags() {
+        return iabTags;
+    }
+
+    /**
+     * @return Inverse of the <code>iab_tags</code> parameter. Excludes articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories to exclude, use a comma-separated string.
+     * <p>Example: <code>&quot;Agriculture, Metals&quot;</code></p>
+     * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
+     */
+    @JsonProperty("not_iab_tags")
+    public Optional<String> getNotIabTags() {
+        return notIabTags;
+    }
+
+    /**
+     * @return Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:
+     * <ul>
+     * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+     * </ul>
+     * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
+     * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+     */
+    @JsonProperty("custom_tags")
+    public Optional<String> getCustomTags() {
+        return customTags;
+    }
+
+    /**
+     * @return If true, excludes duplicate and highly similar articles from the search results. If false, returns all relevant articles, including duplicates.
+     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/articles-deduplication">Articles deduplication</a>.</p>
+     */
+    @JsonProperty("exclude_duplicates")
+    public Optional<Boolean> getExcludeDuplicates() {
+        return excludeDuplicates;
     }
 
     @java.lang.Override
@@ -520,6 +878,7 @@ public final class SearchGetRequest {
         return q.equals(other.q)
                 && searchIn.equals(other.searchIn)
                 && predefinedSources.equals(other.predefinedSources)
+                && sourceName.equals(other.sourceName)
                 && sources.equals(other.sources)
                 && notSources.equals(other.notSources)
                 && lang.equals(other.lang)
@@ -541,12 +900,16 @@ public final class SearchGetRequest {
                 && parentUrl.equals(other.parentUrl)
                 && allLinks.equals(other.allLinks)
                 && allDomainLinks.equals(other.allDomainLinks)
+                && additionalDomainInfo.equals(other.additionalDomainInfo)
+                && isNewsDomain.equals(other.isNewsDomain)
+                && newsDomainType.equals(other.newsDomainType)
+                && newsType.equals(other.newsType)
                 && wordCountMin.equals(other.wordCountMin)
                 && wordCountMax.equals(other.wordCountMax)
                 && page.equals(other.page)
                 && pageSize.equals(other.pageSize)
-                && clusteringVariable.equals(other.clusteringVariable)
                 && clusteringEnabled.equals(other.clusteringEnabled)
+                && clusteringVariable.equals(other.clusteringVariable)
                 && clusteringThreshold.equals(other.clusteringThreshold)
                 && includeNlpData.equals(other.includeNlpData)
                 && hasNlp.equals(other.hasNlp)
@@ -562,14 +925,10 @@ public final class SearchGetRequest {
                 && contentSentimentMax.equals(other.contentSentimentMax)
                 && iptcTags.equals(other.iptcTags)
                 && notIptcTags.equals(other.notIptcTags)
-                && sourceName.equals(other.sourceName)
                 && iabTags.equals(other.iabTags)
                 && notIabTags.equals(other.notIabTags)
-                && excludeDuplicates.equals(other.excludeDuplicates)
-                && additionalDomainInfo.equals(other.additionalDomainInfo)
-                && isNewsDomain.equals(other.isNewsDomain)
-                && newsDomainType.equals(other.newsDomainType)
-                && newsType.equals(other.newsType);
+                && customTags.equals(other.customTags)
+                && excludeDuplicates.equals(other.excludeDuplicates);
     }
 
     @java.lang.Override
@@ -578,6 +937,7 @@ public final class SearchGetRequest {
                 this.q,
                 this.searchIn,
                 this.predefinedSources,
+                this.sourceName,
                 this.sources,
                 this.notSources,
                 this.lang,
@@ -599,12 +959,16 @@ public final class SearchGetRequest {
                 this.parentUrl,
                 this.allLinks,
                 this.allDomainLinks,
+                this.additionalDomainInfo,
+                this.isNewsDomain,
+                this.newsDomainType,
+                this.newsType,
                 this.wordCountMin,
                 this.wordCountMax,
                 this.page,
                 this.pageSize,
-                this.clusteringVariable,
                 this.clusteringEnabled,
+                this.clusteringVariable,
                 this.clusteringThreshold,
                 this.includeNlpData,
                 this.hasNlp,
@@ -620,14 +984,10 @@ public final class SearchGetRequest {
                 this.contentSentimentMax,
                 this.iptcTags,
                 this.notIptcTags,
-                this.sourceName,
                 this.iabTags,
                 this.notIabTags,
-                this.excludeDuplicates,
-                this.additionalDomainInfo,
-                this.isNewsDomain,
-                this.newsDomainType,
-                this.newsType);
+                this.customTags,
+                this.excludeDuplicates);
     }
 
     @java.lang.Override
@@ -640,81 +1000,9 @@ public final class SearchGetRequest {
     }
 
     public interface QStage {
-        PredefinedSourcesStage q(@NotNull String q);
+        _FinalStage q(@NotNull String q);
 
         Builder from(SearchGetRequest other);
-    }
-
-    public interface PredefinedSourcesStage {
-        SourcesStage predefinedSources(@NotNull String predefinedSources);
-    }
-
-    public interface SourcesStage {
-        NotSourcesStage sources(@NotNull String sources);
-    }
-
-    public interface NotSourcesStage {
-        LangStage notSources(@NotNull String notSources);
-    }
-
-    public interface LangStage {
-        NotLangStage lang(@NotNull String lang);
-    }
-
-    public interface NotLangStage {
-        CountriesStage notLang(@NotNull String notLang);
-    }
-
-    public interface CountriesStage {
-        NotCountriesStage countries(@NotNull String countries);
-    }
-
-    public interface NotCountriesStage {
-        NotAuthorNameStage notCountries(@NotNull String notCountries);
-    }
-
-    public interface NotAuthorNameStage {
-        ParentUrlStage notAuthorName(@NotNull String notAuthorName);
-    }
-
-    public interface ParentUrlStage {
-        AllLinksStage parentUrl(@NotNull String parentUrl);
-    }
-
-    public interface AllLinksStage {
-        AllDomainLinksStage allLinks(@NotNull String allLinks);
-    }
-
-    public interface AllDomainLinksStage {
-        IptcTagsStage allDomainLinks(@NotNull String allDomainLinks);
-    }
-
-    public interface IptcTagsStage {
-        NotIptcTagsStage iptcTags(@NotNull String iptcTags);
-    }
-
-    public interface NotIptcTagsStage {
-        SourceNameStage notIptcTags(@NotNull String notIptcTags);
-    }
-
-    public interface SourceNameStage {
-        IabTagsStage sourceName(@NotNull String sourceName);
-    }
-
-    public interface IabTagsStage {
-        NotIabTagsStage iabTags(@NotNull String iabTags);
-    }
-
-    public interface NotIabTagsStage {
-        NewsDomainTypeStage notIabTags(@NotNull String notIabTags);
-    }
-
-    public interface NewsDomainTypeStage {
-        NewsTypeStage newsDomainType(@NotNull String newsDomainType);
-    }
-
-    public interface NewsTypeStage {
-        _FinalStage newsType(@NotNull String newsType);
     }
 
     public interface _FinalStage {
@@ -724,81 +1012,145 @@ public final class SearchGetRequest {
 
         _FinalStage searchIn(String searchIn);
 
-        _FinalStage from(Optional<String> from);
+        _FinalStage predefinedSources(Optional<String> predefinedSources);
 
-        _FinalStage from(String from);
+        _FinalStage predefinedSources(String predefinedSources);
 
-        _FinalStage to(Optional<String> to);
+        _FinalStage sourceName(Optional<String> sourceName);
 
-        _FinalStage to(String to);
+        _FinalStage sourceName(String sourceName);
 
-        _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision);
+        _FinalStage sources(Optional<String> sources);
 
-        _FinalStage publishedDatePrecision(String publishedDatePrecision);
+        _FinalStage sources(String sources);
 
-        _FinalStage byParseDate(Optional<String> byParseDate);
+        _FinalStage notSources(Optional<String> notSources);
 
-        _FinalStage byParseDate(String byParseDate);
+        _FinalStage notSources(String notSources);
 
-        _FinalStage sortBy(Optional<String> sortBy);
+        _FinalStage lang(Optional<String> lang);
 
-        _FinalStage sortBy(String sortBy);
+        _FinalStage lang(String lang);
 
-        _FinalStage rankedOnly(Optional<String> rankedOnly);
+        _FinalStage notLang(Optional<String> notLang);
 
-        _FinalStage rankedOnly(String rankedOnly);
+        _FinalStage notLang(String notLang);
 
-        _FinalStage fromRank(Optional<String> fromRank);
+        _FinalStage countries(Optional<String> countries);
 
-        _FinalStage fromRank(String fromRank);
+        _FinalStage countries(String countries);
 
-        _FinalStage toRank(Optional<String> toRank);
+        _FinalStage notCountries(Optional<String> notCountries);
 
-        _FinalStage toRank(String toRank);
+        _FinalStage notCountries(String notCountries);
 
-        _FinalStage isHeadline(Optional<String> isHeadline);
+        _FinalStage notAuthorName(Optional<String> notAuthorName);
 
-        _FinalStage isHeadline(String isHeadline);
+        _FinalStage notAuthorName(String notAuthorName);
 
-        _FinalStage isOpinion(Optional<String> isOpinion);
+        _FinalStage from(Optional<OffsetDateTime> from);
 
-        _FinalStage isOpinion(String isOpinion);
+        _FinalStage from(OffsetDateTime from);
 
-        _FinalStage isPaidContent(Optional<String> isPaidContent);
+        _FinalStage to(Optional<OffsetDateTime> to);
 
-        _FinalStage isPaidContent(String isPaidContent);
+        _FinalStage to(OffsetDateTime to);
 
-        _FinalStage wordCountMin(Optional<String> wordCountMin);
+        _FinalStage publishedDatePrecision(Optional<SearchGetRequestPublishedDatePrecision> publishedDatePrecision);
 
-        _FinalStage wordCountMin(String wordCountMin);
+        _FinalStage publishedDatePrecision(SearchGetRequestPublishedDatePrecision publishedDatePrecision);
 
-        _FinalStage wordCountMax(Optional<String> wordCountMax);
+        _FinalStage byParseDate(Optional<Boolean> byParseDate);
 
-        _FinalStage wordCountMax(String wordCountMax);
+        _FinalStage byParseDate(Boolean byParseDate);
 
-        _FinalStage page(Optional<String> page);
+        _FinalStage sortBy(Optional<SearchGetRequestSortBy> sortBy);
 
-        _FinalStage page(String page);
+        _FinalStage sortBy(SearchGetRequestSortBy sortBy);
 
-        _FinalStage pageSize(Optional<String> pageSize);
+        _FinalStage rankedOnly(Optional<Boolean> rankedOnly);
 
-        _FinalStage pageSize(String pageSize);
+        _FinalStage rankedOnly(Boolean rankedOnly);
 
-        _FinalStage clusteringVariable(Optional<String> clusteringVariable);
+        _FinalStage fromRank(Optional<Integer> fromRank);
 
-        _FinalStage clusteringVariable(String clusteringVariable);
+        _FinalStage fromRank(Integer fromRank);
 
-        _FinalStage clusteringEnabled(Optional<String> clusteringEnabled);
+        _FinalStage toRank(Optional<Integer> toRank);
 
-        _FinalStage clusteringEnabled(String clusteringEnabled);
+        _FinalStage toRank(Integer toRank);
 
-        _FinalStage clusteringThreshold(Optional<Double> clusteringThreshold);
+        _FinalStage isHeadline(Optional<Boolean> isHeadline);
 
-        _FinalStage clusteringThreshold(Double clusteringThreshold);
+        _FinalStage isHeadline(Boolean isHeadline);
 
-        _FinalStage includeNlpData(Optional<String> includeNlpData);
+        _FinalStage isOpinion(Optional<Boolean> isOpinion);
 
-        _FinalStage includeNlpData(String includeNlpData);
+        _FinalStage isOpinion(Boolean isOpinion);
+
+        _FinalStage isPaidContent(Optional<Boolean> isPaidContent);
+
+        _FinalStage isPaidContent(Boolean isPaidContent);
+
+        _FinalStage parentUrl(Optional<String> parentUrl);
+
+        _FinalStage parentUrl(String parentUrl);
+
+        _FinalStage allLinks(Optional<String> allLinks);
+
+        _FinalStage allLinks(String allLinks);
+
+        _FinalStage allDomainLinks(Optional<String> allDomainLinks);
+
+        _FinalStage allDomainLinks(String allDomainLinks);
+
+        _FinalStage additionalDomainInfo(Optional<Boolean> additionalDomainInfo);
+
+        _FinalStage additionalDomainInfo(Boolean additionalDomainInfo);
+
+        _FinalStage isNewsDomain(Optional<Boolean> isNewsDomain);
+
+        _FinalStage isNewsDomain(Boolean isNewsDomain);
+
+        _FinalStage newsDomainType(Optional<SearchGetRequestNewsDomainType> newsDomainType);
+
+        _FinalStage newsDomainType(SearchGetRequestNewsDomainType newsDomainType);
+
+        _FinalStage newsType(Optional<String> newsType);
+
+        _FinalStage newsType(String newsType);
+
+        _FinalStage wordCountMin(Optional<Integer> wordCountMin);
+
+        _FinalStage wordCountMin(Integer wordCountMin);
+
+        _FinalStage wordCountMax(Optional<Integer> wordCountMax);
+
+        _FinalStage wordCountMax(Integer wordCountMax);
+
+        _FinalStage page(Optional<Integer> page);
+
+        _FinalStage page(Integer page);
+
+        _FinalStage pageSize(Optional<Integer> pageSize);
+
+        _FinalStage pageSize(Integer pageSize);
+
+        _FinalStage clusteringEnabled(Optional<Boolean> clusteringEnabled);
+
+        _FinalStage clusteringEnabled(Boolean clusteringEnabled);
+
+        _FinalStage clusteringVariable(Optional<SearchGetRequestClusteringVariable> clusteringVariable);
+
+        _FinalStage clusteringVariable(SearchGetRequestClusteringVariable clusteringVariable);
+
+        _FinalStage clusteringThreshold(Optional<Float> clusteringThreshold);
+
+        _FinalStage clusteringThreshold(Float clusteringThreshold);
+
+        _FinalStage includeNlpData(Optional<Boolean> includeNlpData);
+
+        _FinalStage includeNlpData(Boolean includeNlpData);
 
         _FinalStage hasNlp(Optional<Boolean> hasNlp);
 
@@ -828,108 +1180,70 @@ public final class SearchGetRequest {
 
         _FinalStage miscEntityName(String miscEntityName);
 
-        _FinalStage titleSentimentMin(Optional<Double> titleSentimentMin);
+        _FinalStage titleSentimentMin(Optional<Float> titleSentimentMin);
 
-        _FinalStage titleSentimentMin(Double titleSentimentMin);
+        _FinalStage titleSentimentMin(Float titleSentimentMin);
 
-        _FinalStage titleSentimentMax(Optional<Double> titleSentimentMax);
+        _FinalStage titleSentimentMax(Optional<Float> titleSentimentMax);
 
-        _FinalStage titleSentimentMax(Double titleSentimentMax);
+        _FinalStage titleSentimentMax(Float titleSentimentMax);
 
-        _FinalStage contentSentimentMin(Optional<Double> contentSentimentMin);
+        _FinalStage contentSentimentMin(Optional<Float> contentSentimentMin);
 
-        _FinalStage contentSentimentMin(Double contentSentimentMin);
+        _FinalStage contentSentimentMin(Float contentSentimentMin);
 
-        _FinalStage contentSentimentMax(Optional<Double> contentSentimentMax);
+        _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax);
 
-        _FinalStage contentSentimentMax(Double contentSentimentMax);
+        _FinalStage contentSentimentMax(Float contentSentimentMax);
+
+        _FinalStage iptcTags(Optional<String> iptcTags);
+
+        _FinalStage iptcTags(String iptcTags);
+
+        _FinalStage notIptcTags(Optional<String> notIptcTags);
+
+        _FinalStage notIptcTags(String notIptcTags);
+
+        _FinalStage iabTags(Optional<String> iabTags);
+
+        _FinalStage iabTags(String iabTags);
+
+        _FinalStage notIabTags(Optional<String> notIabTags);
+
+        _FinalStage notIabTags(String notIabTags);
+
+        _FinalStage customTags(Optional<String> customTags);
+
+        _FinalStage customTags(String customTags);
 
         _FinalStage excludeDuplicates(Optional<Boolean> excludeDuplicates);
 
         _FinalStage excludeDuplicates(Boolean excludeDuplicates);
-
-        _FinalStage additionalDomainInfo(Optional<Boolean> additionalDomainInfo);
-
-        _FinalStage additionalDomainInfo(Boolean additionalDomainInfo);
-
-        _FinalStage isNewsDomain(Optional<Boolean> isNewsDomain);
-
-        _FinalStage isNewsDomain(Boolean isNewsDomain);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements QStage,
-                    PredefinedSourcesStage,
-                    SourcesStage,
-                    NotSourcesStage,
-                    LangStage,
-                    NotLangStage,
-                    CountriesStage,
-                    NotCountriesStage,
-                    NotAuthorNameStage,
-                    ParentUrlStage,
-                    AllLinksStage,
-                    AllDomainLinksStage,
-                    IptcTagsStage,
-                    NotIptcTagsStage,
-                    SourceNameStage,
-                    IabTagsStage,
-                    NotIabTagsStage,
-                    NewsDomainTypeStage,
-                    NewsTypeStage,
-                    _FinalStage {
+    public static final class Builder implements QStage, _FinalStage {
         private String q;
-
-        private String predefinedSources;
-
-        private String sources;
-
-        private String notSources;
-
-        private String lang;
-
-        private String notLang;
-
-        private String countries;
-
-        private String notCountries;
-
-        private String notAuthorName;
-
-        private String parentUrl;
-
-        private String allLinks;
-
-        private String allDomainLinks;
-
-        private String iptcTags;
-
-        private String notIptcTags;
-
-        private String sourceName;
-
-        private String iabTags;
-
-        private String notIabTags;
-
-        private String newsDomainType;
-
-        private String newsType;
-
-        private Optional<Boolean> isNewsDomain = Optional.empty();
-
-        private Optional<Boolean> additionalDomainInfo = Optional.empty();
 
         private Optional<Boolean> excludeDuplicates = Optional.empty();
 
-        private Optional<Double> contentSentimentMax = Optional.empty();
+        private Optional<String> customTags = Optional.empty();
 
-        private Optional<Double> contentSentimentMin = Optional.empty();
+        private Optional<String> notIabTags = Optional.empty();
 
-        private Optional<Double> titleSentimentMax = Optional.empty();
+        private Optional<String> iabTags = Optional.empty();
 
-        private Optional<Double> titleSentimentMin = Optional.empty();
+        private Optional<String> notIptcTags = Optional.empty();
+
+        private Optional<String> iptcTags = Optional.empty();
+
+        private Optional<Float> contentSentimentMax = Optional.empty();
+
+        private Optional<Float> contentSentimentMin = Optional.empty();
+
+        private Optional<Float> titleSentimentMax = Optional.empty();
+
+        private Optional<Float> titleSentimentMin = Optional.empty();
 
         private Optional<String> miscEntityName = Optional.empty();
 
@@ -945,43 +1259,75 @@ public final class SearchGetRequest {
 
         private Optional<Boolean> hasNlp = Optional.empty();
 
-        private Optional<String> includeNlpData = Optional.empty();
+        private Optional<Boolean> includeNlpData = Optional.empty();
 
-        private Optional<Double> clusteringThreshold = Optional.empty();
+        private Optional<Float> clusteringThreshold = Optional.empty();
 
-        private Optional<String> clusteringEnabled = Optional.empty();
+        private Optional<SearchGetRequestClusteringVariable> clusteringVariable = Optional.empty();
 
-        private Optional<String> clusteringVariable = Optional.empty();
+        private Optional<Boolean> clusteringEnabled = Optional.empty();
 
-        private Optional<String> pageSize = Optional.empty();
+        private Optional<Integer> pageSize = Optional.empty();
 
-        private Optional<String> page = Optional.empty();
+        private Optional<Integer> page = Optional.empty();
 
-        private Optional<String> wordCountMax = Optional.empty();
+        private Optional<Integer> wordCountMax = Optional.empty();
 
-        private Optional<String> wordCountMin = Optional.empty();
+        private Optional<Integer> wordCountMin = Optional.empty();
 
-        private Optional<String> isPaidContent = Optional.empty();
+        private Optional<String> newsType = Optional.empty();
 
-        private Optional<String> isOpinion = Optional.empty();
+        private Optional<SearchGetRequestNewsDomainType> newsDomainType = Optional.empty();
 
-        private Optional<String> isHeadline = Optional.empty();
+        private Optional<Boolean> isNewsDomain = Optional.empty();
 
-        private Optional<String> toRank = Optional.empty();
+        private Optional<Boolean> additionalDomainInfo = Optional.empty();
 
-        private Optional<String> fromRank = Optional.empty();
+        private Optional<String> allDomainLinks = Optional.empty();
 
-        private Optional<String> rankedOnly = Optional.empty();
+        private Optional<String> allLinks = Optional.empty();
 
-        private Optional<String> sortBy = Optional.empty();
+        private Optional<String> parentUrl = Optional.empty();
 
-        private Optional<String> byParseDate = Optional.empty();
+        private Optional<Boolean> isPaidContent = Optional.empty();
 
-        private Optional<String> publishedDatePrecision = Optional.empty();
+        private Optional<Boolean> isOpinion = Optional.empty();
 
-        private Optional<String> to = Optional.empty();
+        private Optional<Boolean> isHeadline = Optional.empty();
 
-        private Optional<String> from = Optional.empty();
+        private Optional<Integer> toRank = Optional.empty();
+
+        private Optional<Integer> fromRank = Optional.empty();
+
+        private Optional<Boolean> rankedOnly = Optional.empty();
+
+        private Optional<SearchGetRequestSortBy> sortBy = Optional.empty();
+
+        private Optional<Boolean> byParseDate = Optional.empty();
+
+        private Optional<SearchGetRequestPublishedDatePrecision> publishedDatePrecision = Optional.empty();
+
+        private Optional<OffsetDateTime> to = Optional.empty();
+
+        private Optional<OffsetDateTime> from = Optional.empty();
+
+        private Optional<String> notAuthorName = Optional.empty();
+
+        private Optional<String> notCountries = Optional.empty();
+
+        private Optional<String> countries = Optional.empty();
+
+        private Optional<String> notLang = Optional.empty();
+
+        private Optional<String> lang = Optional.empty();
+
+        private Optional<String> notSources = Optional.empty();
+
+        private Optional<String> sources = Optional.empty();
+
+        private Optional<String> sourceName = Optional.empty();
+
+        private Optional<String> predefinedSources = Optional.empty();
 
         private Optional<String> searchIn = Optional.empty();
 
@@ -995,6 +1341,7 @@ public final class SearchGetRequest {
             q(other.getQ());
             searchIn(other.getSearchIn());
             predefinedSources(other.getPredefinedSources());
+            sourceName(other.getSourceName());
             sources(other.getSources());
             notSources(other.getNotSources());
             lang(other.getLang());
@@ -1016,12 +1363,16 @@ public final class SearchGetRequest {
             parentUrl(other.getParentUrl());
             allLinks(other.getAllLinks());
             allDomainLinks(other.getAllDomainLinks());
+            additionalDomainInfo(other.getAdditionalDomainInfo());
+            isNewsDomain(other.getIsNewsDomain());
+            newsDomainType(other.getNewsDomainType());
+            newsType(other.getNewsType());
             wordCountMin(other.getWordCountMin());
             wordCountMax(other.getWordCountMax());
             page(other.getPage());
             pageSize(other.getPageSize());
-            clusteringVariable(other.getClusteringVariable());
             clusteringEnabled(other.getClusteringEnabled());
+            clusteringVariable(other.getClusteringVariable());
             clusteringThreshold(other.getClusteringThreshold());
             includeNlpData(other.getIncludeNlpData());
             hasNlp(other.getHasNlp());
@@ -1037,176 +1388,38 @@ public final class SearchGetRequest {
             contentSentimentMax(other.getContentSentimentMax());
             iptcTags(other.getIptcTags());
             notIptcTags(other.getNotIptcTags());
-            sourceName(other.getSourceName());
             iabTags(other.getIabTags());
             notIabTags(other.getNotIabTags());
+            customTags(other.getCustomTags());
             excludeDuplicates(other.getExcludeDuplicates());
-            additionalDomainInfo(other.getAdditionalDomainInfo());
-            isNewsDomain(other.getIsNewsDomain());
-            newsDomainType(other.getNewsDomainType());
-            newsType(other.getNewsType());
             return this;
         }
 
+        /**
+         * <p>The keyword(s) to search for in articles. Query syntax supports logical operators (<code>AND</code>, <code>OR</code>, <code>NOT</code>) and wildcards:</p>
+         * <ul>
+         * <li>For an exact match, use double quotes. For example, <code>&quot;technology news&quot;</code>.</li>
+         * <li>Use <code>*</code> to search for any keyword.</li>
+         * <li>Use <code>+</code> to include and <code>-</code> to exclude specific words or phrases.
+         * For example, <code>+Apple</code>, <code>-Google</code>.</li>
+         * <li>Use <code>AND</code>, <code>OR</code>, and <code>NOT</code> to refine search results.
+         * For example, <code>technology AND (Apple OR Microsoft) NOT Google</code>.</li>
+         * </ul>
+         * <p>For more details, see <a href="/docs/v3/documentation/guides-and-concepts/advanced-querying">Advanced querying</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         @JsonSetter("q")
-        public PredefinedSourcesStage q(@NotNull String q) {
+        public _FinalStage q(@NotNull String q) {
             this.q = Objects.requireNonNull(q, "q must not be null");
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("predefined_sources")
-        public SourcesStage predefinedSources(@NotNull String predefinedSources) {
-            this.predefinedSources = Objects.requireNonNull(predefinedSources, "predefinedSources must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("sources")
-        public NotSourcesStage sources(@NotNull String sources) {
-            this.sources = Objects.requireNonNull(sources, "sources must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("not_sources")
-        public LangStage notSources(@NotNull String notSources) {
-            this.notSources = Objects.requireNonNull(notSources, "notSources must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("lang")
-        public NotLangStage lang(@NotNull String lang) {
-            this.lang = Objects.requireNonNull(lang, "lang must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("not_lang")
-        public CountriesStage notLang(@NotNull String notLang) {
-            this.notLang = Objects.requireNonNull(notLang, "notLang must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("countries")
-        public NotCountriesStage countries(@NotNull String countries) {
-            this.countries = Objects.requireNonNull(countries, "countries must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("not_countries")
-        public NotAuthorNameStage notCountries(@NotNull String notCountries) {
-            this.notCountries = Objects.requireNonNull(notCountries, "notCountries must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("not_author_name")
-        public ParentUrlStage notAuthorName(@NotNull String notAuthorName) {
-            this.notAuthorName = Objects.requireNonNull(notAuthorName, "notAuthorName must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("parent_url")
-        public AllLinksStage parentUrl(@NotNull String parentUrl) {
-            this.parentUrl = Objects.requireNonNull(parentUrl, "parentUrl must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("all_links")
-        public AllDomainLinksStage allLinks(@NotNull String allLinks) {
-            this.allLinks = Objects.requireNonNull(allLinks, "allLinks must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("all_domain_links")
-        public IptcTagsStage allDomainLinks(@NotNull String allDomainLinks) {
-            this.allDomainLinks = Objects.requireNonNull(allDomainLinks, "allDomainLinks must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("iptc_tags")
-        public NotIptcTagsStage iptcTags(@NotNull String iptcTags) {
-            this.iptcTags = Objects.requireNonNull(iptcTags, "iptcTags must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("not_iptc_tags")
-        public SourceNameStage notIptcTags(@NotNull String notIptcTags) {
-            this.notIptcTags = Objects.requireNonNull(notIptcTags, "notIptcTags must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("source_name")
-        public IabTagsStage sourceName(@NotNull String sourceName) {
-            this.sourceName = Objects.requireNonNull(sourceName, "sourceName must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("iab_tags")
-        public NotIabTagsStage iabTags(@NotNull String iabTags) {
-            this.iabTags = Objects.requireNonNull(iabTags, "iabTags must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("not_iab_tags")
-        public NewsDomainTypeStage notIabTags(@NotNull String notIabTags) {
-            this.notIabTags = Objects.requireNonNull(notIabTags, "notIabTags must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("news_domain_type")
-        public NewsTypeStage newsDomainType(@NotNull String newsDomainType) {
-            this.newsDomainType = Objects.requireNonNull(newsDomainType, "newsDomainType must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("news_type")
-        public _FinalStage newsType(@NotNull String newsType) {
-            this.newsType = Objects.requireNonNull(newsType, "newsType must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage isNewsDomain(Boolean isNewsDomain) {
-            this.isNewsDomain = Optional.ofNullable(isNewsDomain);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "is_news_domain", nulls = Nulls.SKIP)
-        public _FinalStage isNewsDomain(Optional<Boolean> isNewsDomain) {
-            this.isNewsDomain = isNewsDomain;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage additionalDomainInfo(Boolean additionalDomainInfo) {
-            this.additionalDomainInfo = Optional.ofNullable(additionalDomainInfo);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "additional_domain_info", nulls = Nulls.SKIP)
-        public _FinalStage additionalDomainInfo(Optional<Boolean> additionalDomainInfo) {
-            this.additionalDomainInfo = additionalDomainInfo;
-            return this;
-        }
-
+        /**
+         * <p>If true, excludes duplicate and highly similar articles from the search results. If false, returns all relevant articles, including duplicates.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/articles-deduplication">Articles deduplication</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage excludeDuplicates(Boolean excludeDuplicates) {
             this.excludeDuplicates = Optional.ofNullable(excludeDuplicates);
@@ -1220,58 +1433,215 @@ public final class SearchGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:</p>
+         * <ul>
+         * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+         * </ul>
+         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
+         * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage contentSentimentMax(Double contentSentimentMax) {
+        public _FinalStage customTags(String customTags) {
+            this.customTags = Optional.ofNullable(customTags);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "custom_tags", nulls = Nulls.SKIP)
+        public _FinalStage customTags(Optional<String> customTags) {
+            this.customTags = customTags;
+            return this;
+        }
+
+        /**
+         * <p>Inverse of the <code>iab_tags</code> parameter. Excludes articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories to exclude, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Agriculture, Metals&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+         * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notIabTags(String notIabTags) {
+            this.notIabTags = Optional.ofNullable(notIabTags);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_iab_tags", nulls = Nulls.SKIP)
+        public _FinalStage notIabTags(Optional<String> notIabTags) {
+            this.notIabTags = notIabTags;
+            return this;
+        }
+
+        /**
+         * <p>Filters articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Business, Events&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+         * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iabTags(String iabTags) {
+            this.iabTags = Optional.ofNullable(iabTags);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "iab_tags", nulls = Nulls.SKIP)
+        public _FinalStage iabTags(Optional<String> iabTags) {
+            this.iabTags = iabTags;
+            return this;
+        }
+
+        /**
+         * <p>Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.</p>
+         * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+         * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notIptcTags(String notIptcTags) {
+            this.notIptcTags = Optional.ofNullable(notIptcTags);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_iptc_tags", nulls = Nulls.SKIP)
+        public _FinalStage notIptcTags(Optional<String> notIptcTags) {
+            this.notIptcTags = notIptcTags;
+            return this;
+        }
+
+        /**
+         * <p>Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.</p>
+         * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+         * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iptcTags(String iptcTags) {
+            this.iptcTags = Optional.ofNullable(iptcTags);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "iptc_tags", nulls = Nulls.SKIP)
+        public _FinalStage iptcTags(Optional<String> iptcTags) {
+            this.iptcTags = iptcTags;
+            return this;
+        }
+
+        /**
+         * <p>Filters articles based on the maximum sentiment score of their content.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage contentSentimentMax(Float contentSentimentMax) {
             this.contentSentimentMax = Optional.ofNullable(contentSentimentMax);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "content_sentiment_max", nulls = Nulls.SKIP)
-        public _FinalStage contentSentimentMax(Optional<Double> contentSentimentMax) {
+        public _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax) {
             this.contentSentimentMax = contentSentimentMax;
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the minimum sentiment score of their content.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage contentSentimentMin(Double contentSentimentMin) {
+        public _FinalStage contentSentimentMin(Float contentSentimentMin) {
             this.contentSentimentMin = Optional.ofNullable(contentSentimentMin);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "content_sentiment_min", nulls = Nulls.SKIP)
-        public _FinalStage contentSentimentMin(Optional<Double> contentSentimentMin) {
+        public _FinalStage contentSentimentMin(Optional<Float> contentSentimentMin) {
             this.contentSentimentMin = contentSentimentMin;
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the maximum sentiment score of their titles.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage titleSentimentMax(Double titleSentimentMax) {
+        public _FinalStage titleSentimentMax(Float titleSentimentMax) {
             this.titleSentimentMax = Optional.ofNullable(titleSentimentMax);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "title_sentiment_max", nulls = Nulls.SKIP)
-        public _FinalStage titleSentimentMax(Optional<Double> titleSentimentMax) {
+        public _FinalStage titleSentimentMax(Optional<Float> titleSentimentMax) {
             this.titleSentimentMax = titleSentimentMax;
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the minimum sentiment score of their titles.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage titleSentimentMin(Double titleSentimentMin) {
+        public _FinalStage titleSentimentMin(Float titleSentimentMin) {
             this.titleSentimentMin = Optional.ofNullable(titleSentimentMin);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "title_sentiment_min", nulls = Nulls.SKIP)
-        public _FinalStage titleSentimentMin(Optional<Double> titleSentimentMin) {
+        public _FinalStage titleSentimentMin(Optional<Float> titleSentimentMin) {
             this.titleSentimentMin = titleSentimentMin;
             return this;
         }
 
+        /**
+         * <p>Filters articles that mention other named entities not falling under person, organization, or location categories. Includes events, nationalities, products, works of art, and more. To specify multiple entities, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Bitcoin, Blockchain&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>MISC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage miscEntityName(String miscEntityName) {
             this.miscEntityName = Optional.ofNullable(miscEntityName);
@@ -1285,6 +1655,13 @@ public final class SearchGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles that mention specific location names, as identified by NLP analysis. To specify multiple locations, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;California, New York&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>LOC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage locEntityName(String locEntityName) {
             this.locEntityName = Optional.ofNullable(locEntityName);
@@ -1298,6 +1675,13 @@ public final class SearchGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles that mention specific person names, as identified by NLP analysis. To specify multiple names, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Elon Musk, Jeff Bezos&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>PER_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage perEntityName(String perEntityName) {
             this.perEntityName = Optional.ofNullable(perEntityName);
@@ -1311,6 +1695,13 @@ public final class SearchGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles that mention specific organization names, as identified by NLP analysis. To specify multiple organizations, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Apple, Microsoft&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>ORG_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage orgEntityName(String orgEntityName) {
             this.orgEntityName = Optional.ofNullable(orgEntityName);
@@ -1324,6 +1715,13 @@ public final class SearchGetRequest {
             return this;
         }
 
+        /**
+         * <p>Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage notTheme(String notTheme) {
             this.notTheme = Optional.ofNullable(notTheme);
@@ -1337,6 +1735,14 @@ public final class SearchGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage theme(String theme) {
             this.theme = Optional.ofNullable(theme);
@@ -1350,6 +1756,12 @@ public final class SearchGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, filters the results to include only articles with an NLP layer. This allows you to focus on articles that have been processed with advanced NLP techniques.</p>
+         * <p><strong>Note</strong>: The <code>has_nlp</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage hasNlp(Boolean hasNlp) {
             this.hasNlp = Optional.ofNullable(hasNlp);
@@ -1363,253 +1775,708 @@ public final class SearchGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, includes an NLP layer with each article in the response. This layer provides enhanced information such as theme classification, article summary, sentiment analysis, tags, and named entity recognition.</p>
+         * <p>The NLP layer includes:</p>
+         * <ul>
+         * <li>Theme: General topic of the article.</li>
+         * <li>Summary: A concise overview of the article content.</li>
+         * <li>Sentiment: Separate scores for title and content (range: -1 to 1).</li>
+         * <li>Named entities: Identified persons (PER), organizations (ORG), locations (LOC), and miscellaneous entities (MISC).</li>
+         * <li>IPTC tags: Standardized news category tags.</li>
+         * <li>IAB tags: Content categories for digital advertising.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>include_nlp_data</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage includeNlpData(String includeNlpData) {
+        public _FinalStage includeNlpData(Boolean includeNlpData) {
             this.includeNlpData = Optional.ofNullable(includeNlpData);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "include_nlp_data", nulls = Nulls.SKIP)
-        public _FinalStage includeNlpData(Optional<String> includeNlpData) {
+        public _FinalStage includeNlpData(Optional<Boolean> includeNlpData) {
             this.includeNlpData = includeNlpData;
             return this;
         }
 
+        /**
+         * <p>Sets the similarity threshold for grouping articles into clusters. A lower value creates more inclusive clusters, while a higher value requires greater similarity between articles.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>0.3</code>: Results in larger, more diverse clusters.</li>
+         * <li><code>0.6</code>: Balances cluster size and article similarity (default).</li>
+         * <li><code>0.9</code>: Creates smaller, tightly related clusters.</li>
+         * </ul>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage clusteringThreshold(Double clusteringThreshold) {
+        public _FinalStage clusteringThreshold(Float clusteringThreshold) {
             this.clusteringThreshold = Optional.ofNullable(clusteringThreshold);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "clustering_threshold", nulls = Nulls.SKIP)
-        public _FinalStage clusteringThreshold(Optional<Double> clusteringThreshold) {
+        public _FinalStage clusteringThreshold(Optional<Float> clusteringThreshold) {
             this.clusteringThreshold = clusteringThreshold;
             return this;
         }
 
+        /**
+         * <p>Specifies which part of the article to use for determining similarity when clustering.</p>
+         * <p>Possible values are:</p>
+         * <ul>
+         * <li><code>content</code>: Uses the full article content (default).</li>
+         * <li><code>title</code>: Uses only the article title.</li>
+         * <li><code>summary</code>: Uses the article summary.</li>
+         * </ul>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage clusteringEnabled(String clusteringEnabled) {
-            this.clusteringEnabled = Optional.ofNullable(clusteringEnabled);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "clustering_enabled", nulls = Nulls.SKIP)
-        public _FinalStage clusteringEnabled(Optional<String> clusteringEnabled) {
-            this.clusteringEnabled = clusteringEnabled;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage clusteringVariable(String clusteringVariable) {
+        public _FinalStage clusteringVariable(SearchGetRequestClusteringVariable clusteringVariable) {
             this.clusteringVariable = Optional.ofNullable(clusteringVariable);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "clustering_variable", nulls = Nulls.SKIP)
-        public _FinalStage clusteringVariable(Optional<String> clusteringVariable) {
+        public _FinalStage clusteringVariable(Optional<SearchGetRequestClusteringVariable> clusteringVariable) {
             this.clusteringVariable = clusteringVariable;
             return this;
         }
 
+        /**
+         * <p>Determines whether to group similar articles into clusters. If true, the API returns clustered results.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage pageSize(String pageSize) {
+        public _FinalStage clusteringEnabled(Boolean clusteringEnabled) {
+            this.clusteringEnabled = Optional.ofNullable(clusteringEnabled);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "clustering_enabled", nulls = Nulls.SKIP)
+        public _FinalStage clusteringEnabled(Optional<Boolean> clusteringEnabled) {
+            this.clusteringEnabled = clusteringEnabled;
+            return this;
+        }
+
+        /**
+         * <p>The number of articles to return per page.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage pageSize(Integer pageSize) {
             this.pageSize = Optional.ofNullable(pageSize);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
-        public _FinalStage pageSize(Optional<String> pageSize) {
+        public _FinalStage pageSize(Optional<Integer> pageSize) {
             this.pageSize = pageSize;
             return this;
         }
 
+        /**
+         * <p>The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.</p>
+         * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage page(String page) {
+        public _FinalStage page(Integer page) {
             this.page = Optional.ofNullable(page);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
-        public _FinalStage page(Optional<String> page) {
+        public _FinalStage page(Optional<Integer> page) {
             this.page = page;
             return this;
         }
 
+        /**
+         * <p>The maximum number of words an article can contain. To be used for avoiding articles with large content.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage wordCountMax(String wordCountMax) {
+        public _FinalStage wordCountMax(Integer wordCountMax) {
             this.wordCountMax = Optional.ofNullable(wordCountMax);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "word_count_max", nulls = Nulls.SKIP)
-        public _FinalStage wordCountMax(Optional<String> wordCountMax) {
+        public _FinalStage wordCountMax(Optional<Integer> wordCountMax) {
             this.wordCountMax = wordCountMax;
             return this;
         }
 
+        /**
+         * <p>The minimum number of words an article must contain. To be used for avoiding articles with small content.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage wordCountMin(String wordCountMin) {
+        public _FinalStage wordCountMin(Integer wordCountMin) {
             this.wordCountMin = Optional.ofNullable(wordCountMin);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "word_count_min", nulls = Nulls.SKIP)
-        public _FinalStage wordCountMin(Optional<String> wordCountMin) {
+        public _FinalStage wordCountMin(Optional<Integer> wordCountMin) {
             this.wordCountMin = wordCountMin;
             return this;
         }
 
+        /**
+         * <p>Filters results based on the news type. Multiple types can be specified using a comma-separated string.</p>
+         * <p>Example: <code>&quot;General News Outlets,Tech News and Updates&quot;</code></p>
+         * <p>For a complete list of available news types, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#news-type-news-type">Enumerated parameters &gt; News type</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage isPaidContent(String isPaidContent) {
+        public _FinalStage newsType(String newsType) {
+            this.newsType = Optional.ofNullable(newsType);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "news_type", nulls = Nulls.SKIP)
+        public _FinalStage newsType(Optional<String> newsType) {
+            this.newsType = newsType;
+            return this;
+        }
+
+        /**
+         * <p>Filters results based on the news domain type. Possible values are:</p>
+         * <ul>
+         * <li><code>Original Content</code>: Sources that produce their own content.</li>
+         * <li><code>Aggregator</code>: Sources that collect content from various other sources.</li>
+         * <li><code>Press Releases</code>: Sources primarily publishing press releases.</li>
+         * <li><code>Republisher</code>: Sources that republish content from other sources.</li>
+         * <li><code>Other</code>: Sources that don't fit into main categories.</li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage newsDomainType(SearchGetRequestNewsDomainType newsDomainType) {
+            this.newsDomainType = Optional.ofNullable(newsDomainType);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "news_domain_type", nulls = Nulls.SKIP)
+        public _FinalStage newsDomainType(Optional<SearchGetRequestNewsDomainType> newsDomainType) {
+            this.newsDomainType = newsDomainType;
+            return this;
+        }
+
+        /**
+         * <p>If true, filters results to include only news domains.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage isNewsDomain(Boolean isNewsDomain) {
+            this.isNewsDomain = Optional.ofNullable(isNewsDomain);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "is_news_domain", nulls = Nulls.SKIP)
+        public _FinalStage isNewsDomain(Optional<Boolean> isNewsDomain) {
+            this.isNewsDomain = isNewsDomain;
+            return this;
+        }
+
+        /**
+         * <p>If true, includes additional domain information in the response for each article:</p>
+         * <ul>
+         * <li><code>is_news_domain</code>: Boolean indicating if the source is a news domain.</li>
+         * <li><code>news_domain_type</code>: Type of news domain (e.g., <code>&quot;Original Content&quot;</code>).</li>
+         * <li><code>news_type</code>: Category of news (e.g., <code>&quot;News and Blogs&quot;</code>).</li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage additionalDomainInfo(Boolean additionalDomainInfo) {
+            this.additionalDomainInfo = Optional.ofNullable(additionalDomainInfo);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "additional_domain_info", nulls = Nulls.SKIP)
+        public _FinalStage additionalDomainInfo(Optional<Boolean> additionalDomainInfo) {
+            this.additionalDomainInfo = additionalDomainInfo;
+            return this;
+        }
+
+        /**
+         * <p>The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
+         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage allDomainLinks(String allDomainLinks) {
+            this.allDomainLinks = Optional.ofNullable(allDomainLinks);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "all_domain_links", nulls = Nulls.SKIP)
+        public _FinalStage allDomainLinks(Optional<String> allDomainLinks) {
+            this.allDomainLinks = allDomainLinks;
+            return this;
+        }
+
+        /**
+         * <p>The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
+         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage allLinks(String allLinks) {
+            this.allLinks = Optional.ofNullable(allLinks);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "all_links", nulls = Nulls.SKIP)
+        public _FinalStage allLinks(Optional<String> allLinks) {
+            this.allLinks = allLinks;
+            return this;
+        }
+
+        /**
+         * <p>The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage parentUrl(String parentUrl) {
+            this.parentUrl = Optional.ofNullable(parentUrl);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "parent_url", nulls = Nulls.SKIP)
+        public _FinalStage parentUrl(Optional<String> parentUrl) {
+            this.parentUrl = parentUrl;
+            return this;
+        }
+
+        /**
+         * <p>If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage isPaidContent(Boolean isPaidContent) {
             this.isPaidContent = Optional.ofNullable(isPaidContent);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "is_paid_content", nulls = Nulls.SKIP)
-        public _FinalStage isPaidContent(Optional<String> isPaidContent) {
+        public _FinalStage isPaidContent(Optional<Boolean> isPaidContent) {
             this.isPaidContent = isPaidContent;
             return this;
         }
 
+        /**
+         * <p>If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage isOpinion(String isOpinion) {
+        public _FinalStage isOpinion(Boolean isOpinion) {
             this.isOpinion = Optional.ofNullable(isOpinion);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "is_opinion", nulls = Nulls.SKIP)
-        public _FinalStage isOpinion(Optional<String> isOpinion) {
+        public _FinalStage isOpinion(Optional<Boolean> isOpinion) {
             this.isOpinion = isOpinion;
             return this;
         }
 
+        /**
+         * <p>If true, only returns articles that were posted on the home page of a given news domain.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage isHeadline(String isHeadline) {
+        public _FinalStage isHeadline(Boolean isHeadline) {
             this.isHeadline = Optional.ofNullable(isHeadline);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "is_headline", nulls = Nulls.SKIP)
-        public _FinalStage isHeadline(Optional<String> isHeadline) {
+        public _FinalStage isHeadline(Optional<Boolean> isHeadline) {
             this.isHeadline = isHeadline;
             return this;
         }
 
+        /**
+         * <p>The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage toRank(String toRank) {
+        public _FinalStage toRank(Integer toRank) {
             this.toRank = Optional.ofNullable(toRank);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "to_rank", nulls = Nulls.SKIP)
-        public _FinalStage toRank(Optional<String> toRank) {
+        public _FinalStage toRank(Optional<Integer> toRank) {
             this.toRank = toRank;
             return this;
         }
 
+        /**
+         * <p>The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage fromRank(String fromRank) {
+        public _FinalStage fromRank(Integer fromRank) {
             this.fromRank = Optional.ofNullable(fromRank);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "from_rank", nulls = Nulls.SKIP)
-        public _FinalStage fromRank(Optional<String> fromRank) {
+        public _FinalStage fromRank(Optional<Integer> fromRank) {
             this.fromRank = fromRank;
             return this;
         }
 
+        /**
+         * <p>If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage rankedOnly(String rankedOnly) {
+        public _FinalStage rankedOnly(Boolean rankedOnly) {
             this.rankedOnly = Optional.ofNullable(rankedOnly);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "ranked_only", nulls = Nulls.SKIP)
-        public _FinalStage rankedOnly(Optional<String> rankedOnly) {
+        public _FinalStage rankedOnly(Optional<Boolean> rankedOnly) {
             this.rankedOnly = rankedOnly;
             return this;
         }
 
+        /**
+         * <p>The sorting order of the results. Possible values are:</p>
+         * <ul>
+         * <li><code>relevancy</code>: The most relevant results first.</li>
+         * <li><code>date</code>: The most recently published results first.</li>
+         * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage sortBy(String sortBy) {
+        public _FinalStage sortBy(SearchGetRequestSortBy sortBy) {
             this.sortBy = Optional.ofNullable(sortBy);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "sort_by", nulls = Nulls.SKIP)
-        public _FinalStage sortBy(Optional<String> sortBy) {
+        public _FinalStage sortBy(Optional<SearchGetRequestSortBy> sortBy) {
             this.sortBy = sortBy;
             return this;
         }
 
+        /**
+         * <p>If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage byParseDate(String byParseDate) {
+        public _FinalStage byParseDate(Boolean byParseDate) {
             this.byParseDate = Optional.ofNullable(byParseDate);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "by_parse_date", nulls = Nulls.SKIP)
-        public _FinalStage byParseDate(Optional<String> byParseDate) {
+        public _FinalStage byParseDate(Optional<Boolean> byParseDate) {
             this.byParseDate = byParseDate;
             return this;
         }
 
+        /**
+         * <p>The precision of the published date. There are three types:</p>
+         * <ul>
+         * <li><code>full</code>: The day and time of an article is correctly identified with the appropriate timezone.</li>
+         * <li><code>timezone unknown</code>: The day and time of an article is correctly identified without timezone.</li>
+         * <li><code>date</code>: Only the day is identified without an exact time.</li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage publishedDatePrecision(String publishedDatePrecision) {
+        public _FinalStage publishedDatePrecision(SearchGetRequestPublishedDatePrecision publishedDatePrecision) {
             this.publishedDatePrecision = Optional.ofNullable(publishedDatePrecision);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "published_date_precision", nulls = Nulls.SKIP)
-        public _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision) {
+        public _FinalStage publishedDatePrecision(
+                Optional<SearchGetRequestPublishedDatePrecision> publishedDatePrecision) {
             this.publishedDatePrecision = publishedDatePrecision;
             return this;
         }
 
+        /**
+         * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
+         * <p>Formats with examples:</p>
+         * <ul>
+         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+         * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+         * </ul>
+         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage to(String to) {
+        public _FinalStage to(OffsetDateTime to) {
             this.to = Optional.ofNullable(to);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "to_", nulls = Nulls.SKIP)
-        public _FinalStage to(Optional<String> to) {
+        public _FinalStage to(Optional<OffsetDateTime> to) {
             this.to = to;
             return this;
         }
 
+        /**
+         * <p>The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
+         * <p>Formats with examples:</p>
+         * <ul>
+         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+         * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+         * </ul>
+         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage from(String from) {
+        public _FinalStage from(OffsetDateTime from) {
             this.from = Optional.ofNullable(from);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "from_", nulls = Nulls.SKIP)
-        public _FinalStage from(Optional<String> from) {
+        public _FinalStage from(Optional<OffsetDateTime> from) {
             this.from = from;
             return this;
         }
 
+        /**
+         * <p>The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;John Doe, Jane Doe&quot;</code></p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notAuthorName(String notAuthorName) {
+            this.notAuthorName = Optional.ofNullable(notAuthorName);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_author_name", nulls = Nulls.SKIP)
+        public _FinalStage notAuthorName(Optional<String> notAuthorName) {
+            this.notAuthorName = notAuthorName;
+            return this;
+        }
+
+        /**
+         * <p>The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.</p>
+         * <p>Example:<code>&quot;US, CA&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notCountries(String notCountries) {
+            this.notCountries = Optional.ofNullable(notCountries);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_countries", nulls = Nulls.SKIP)
+        public _FinalStage notCountries(Optional<String> notCountries) {
+            this.notCountries = notCountries;
+            return this;
+        }
+
+        /**
+         * <p>The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;US, CA&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage countries(String countries) {
+            this.countries = Optional.ofNullable(countries);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "countries", nulls = Nulls.SKIP)
+        public _FinalStage countries(Optional<String> countries) {
+            this.countries = countries;
+            return this;
+        }
+
+        /**
+         * <p>The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;fr, de&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notLang(String notLang) {
+            this.notLang = Optional.ofNullable(notLang);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_lang", nulls = Nulls.SKIP)
+        public _FinalStage notLang(Optional<String> notLang) {
+            this.notLang = notLang;
+            return this;
+        }
+
+        /**
+         * <p>The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;en, es&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage lang(String lang) {
+            this.lang = Optional.ofNullable(lang);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "lang", nulls = Nulls.SKIP)
+        public _FinalStage lang(Optional<String> lang) {
+            this.lang = lang;
+            return this;
+        }
+
+        /**
+         * <p>The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notSources(String notSources) {
+            this.notSources = Optional.ofNullable(notSources);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "not_sources", nulls = Nulls.SKIP)
+        public _FinalStage notSources(Optional<String> notSources) {
+            this.notSources = notSources;
+            return this;
+        }
+
+        /**
+         * <p>One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>&quot;nytimes.com&quot;</code></li>
+         * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage sources(String sources) {
+            this.sources = Optional.ofNullable(sources);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "sources", nulls = Nulls.SKIP)
+        public _FinalStage sources(Optional<String> sources) {
+            this.sources = sources;
+            return this;
+        }
+
+        /**
+         * <p>Word or phrase to search within the source names. To specify multiple values, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;sport, tech&quot;</code></p>
+         * <p><strong>Note</strong>: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like <code>&quot;sport&quot;</code> or <code>&quot;new york times&quot;</code>. For example, <code>&quot;sport&quot;</code> returns sources such as <code>&quot;Motorsport&quot;</code>, <code>&quot;Dot Esport&quot;</code>, and <code>&quot;Tuttosport&quot;</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage sourceName(String sourceName) {
+            this.sourceName = Optional.ofNullable(sourceName);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "source_name", nulls = Nulls.SKIP)
+        public _FinalStage sourceName(Optional<String> sourceName) {
+            this.sourceName = sourceName;
+            return this;
+        }
+
+        /**
+         * <p>Predefined top news sources per country.</p>
+         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>&quot;top 100 US&quot;</code></li>
+         * <li><code>&quot;top 33 AT&quot;</code></li>
+         * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
+         * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
+         * </ul>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage predefinedSources(String predefinedSources) {
+            this.predefinedSources = Optional.ofNullable(predefinedSources);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "predefined_sources", nulls = Nulls.SKIP)
+        public _FinalStage predefinedSources(Optional<String> predefinedSources) {
+            this.predefinedSources = predefinedSources;
+            return this;
+        }
+
+        /**
+         * <p>The article fields to search in. To search in multiple fields, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;title, summary&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>summary</code> option is available if NLP is enabled in your plan.</p>
+         * <p>Available options: <code>title</code>, <code>summary</code>, <code>content</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         public _FinalStage searchIn(String searchIn) {
             this.searchIn = Optional.ofNullable(searchIn);
@@ -1629,6 +2496,7 @@ public final class SearchGetRequest {
                     q,
                     searchIn,
                     predefinedSources,
+                    sourceName,
                     sources,
                     notSources,
                     lang,
@@ -1650,12 +2518,16 @@ public final class SearchGetRequest {
                     parentUrl,
                     allLinks,
                     allDomainLinks,
+                    additionalDomainInfo,
+                    isNewsDomain,
+                    newsDomainType,
+                    newsType,
                     wordCountMin,
                     wordCountMax,
                     page,
                     pageSize,
-                    clusteringVariable,
                     clusteringEnabled,
+                    clusteringVariable,
                     clusteringThreshold,
                     includeNlpData,
                     hasNlp,
@@ -1671,14 +2543,10 @@ public final class SearchGetRequest {
                     contentSentimentMax,
                     iptcTags,
                     notIptcTags,
-                    sourceName,
                     iabTags,
                     notIabTags,
+                    customTags,
                     excludeDuplicates,
-                    additionalDomainInfo,
-                    isNewsDomain,
-                    newsDomainType,
-                    newsType,
                     additionalProperties);
         }
     }
