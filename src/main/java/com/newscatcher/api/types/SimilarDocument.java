@@ -38,21 +38,33 @@ public final class SimilarDocument {
         this.additionalProperties = additionalProperties;
     }
 
+    /**
+     * @return The unique identifier of the similar document.
+     */
     @JsonProperty("id")
     public String getId() {
         return id;
     }
 
+    /**
+     * @return The relevance score of the similar document.
+     */
     @JsonProperty("score")
     public double getScore() {
         return score;
     }
 
+    /**
+     * @return The title of the similar document.
+     */
     @JsonProperty("title")
     public String getTitle() {
         return title;
     }
 
+    /**
+     * @return The link to the similar document.
+     */
     @JsonProperty("link")
     public String getLink() {
         return link;
@@ -133,6 +145,10 @@ public final class SimilarDocument {
             return this;
         }
 
+        /**
+         * <p>The unique identifier of the similar document.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         @JsonSetter("id")
         public ScoreStage id(@NotNull String id) {
@@ -140,6 +156,10 @@ public final class SimilarDocument {
             return this;
         }
 
+        /**
+         * <p>The relevance score of the similar document.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         @JsonSetter("score")
         public TitleStage score(double score) {
@@ -147,6 +167,10 @@ public final class SimilarDocument {
             return this;
         }
 
+        /**
+         * <p>The title of the similar document.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         @JsonSetter("title")
         public LinkStage title(@NotNull String title) {
@@ -154,6 +178,10 @@ public final class SimilarDocument {
             return this;
         }
 
+        /**
+         * <p>The link to the similar document.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
         @JsonSetter("link")
         public _FinalStage link(@NotNull String link) {

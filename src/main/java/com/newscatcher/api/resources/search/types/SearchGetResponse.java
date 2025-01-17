@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.newscatcher.api.core.ObjectMappers;
-import com.newscatcher.api.types.ClusteringSearchResponse;
-import com.newscatcher.api.types.SearchResponse;
+import com.newscatcher.api.types.ClusteredSearchResponseDto;
+import com.newscatcher.api.types.SearchResponseDto;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -33,9 +33,9 @@ public final class SearchGetResponse {
 
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
-            return visitor.visit((SearchResponse) this.value);
+            return visitor.visit((SearchResponseDto) this.value);
         } else if (this.type == 1) {
-            return visitor.visit((ClusteringSearchResponse) this.value);
+            return visitor.visit((ClusteredSearchResponseDto) this.value);
         }
         throw new IllegalStateException("Failed to visit value. This should never happen.");
     }
@@ -60,18 +60,18 @@ public final class SearchGetResponse {
         return this.value.toString();
     }
 
-    public static SearchGetResponse of(SearchResponse value) {
+    public static SearchGetResponse of(SearchResponseDto value) {
         return new SearchGetResponse(value, 0);
     }
 
-    public static SearchGetResponse of(ClusteringSearchResponse value) {
+    public static SearchGetResponse of(ClusteredSearchResponseDto value) {
         return new SearchGetResponse(value, 1);
     }
 
     public interface Visitor<T> {
-        T visit(SearchResponse value);
+        T visit(SearchResponseDto value);
 
-        T visit(ClusteringSearchResponse value);
+        T visit(ClusteredSearchResponseDto value);
     }
 
     static final class Deserializer extends StdDeserializer<SearchGetResponse> {
@@ -83,11 +83,11 @@ public final class SearchGetResponse {
         public SearchGetResponse deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, SearchResponse.class));
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, SearchResponseDto.class));
             } catch (IllegalArgumentException e) {
             }
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ClusteringSearchResponse.class));
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ClusteredSearchResponseDto.class));
             } catch (IllegalArgumentException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");

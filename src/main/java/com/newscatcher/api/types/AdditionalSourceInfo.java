@@ -51,31 +51,49 @@ public final class AdditionalSourceInfo {
         this.additionalProperties = additionalProperties;
     }
 
+    /**
+     * @return The number of articles published by the source in the last seven days.
+     */
     @JsonProperty("nb_articles_for_7d")
     public Optional<Integer> getNbArticlesFor7D() {
         return nbArticlesFor7D;
     }
 
+    /**
+     * @return The country of origin of the news source.
+     */
     @JsonProperty("country")
     public Optional<String> getCountry() {
         return country;
     }
 
+    /**
+     * @return The SEO rank of the news source.
+     */
     @JsonProperty("rank")
     public Optional<Integer> getRank() {
         return rank;
     }
 
+    /**
+     * @return Indicates whether the source is a news domain.
+     */
     @JsonProperty("is_news_domain")
     public Optional<Boolean> getIsNewsDomain() {
         return isNewsDomain;
     }
 
+    /**
+     * @return The type of news domain.
+     */
     @JsonProperty("news_domain_type")
     public Optional<String> getNewsDomainType() {
         return newsDomainType;
     }
 
+    /**
+     * @return The category of news provided by the source.
+     */
     @JsonProperty("news_type")
     public Optional<String> getNewsType() {
         return newsType;

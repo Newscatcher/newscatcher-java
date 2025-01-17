@@ -9,15 +9,15 @@ import com.newscatcher.api.core.Environment;
 public final class NewscatcherApiClientBuilder {
     private ClientOptions.Builder clientOptionsBuilder = ClientOptions.builder();
 
-    private String apiToken = null;
+    private String apiKey = null;
 
     private Environment environment = Environment.DEFAULT;
 
     /**
-     * Sets apiToken
+     * Sets apiKey
      */
-    public NewscatcherApiClientBuilder apiToken(String apiToken) {
-        this.apiToken = apiToken;
+    public NewscatcherApiClientBuilder apiKey(String apiKey) {
+        this.apiKey = apiKey;
         return this;
     }
 
@@ -40,10 +40,10 @@ public final class NewscatcherApiClientBuilder {
     }
 
     public NewscatcherApiClient build() {
-        if (apiToken == null) {
-            throw new RuntimeException("Please provide apiToken");
+        if (apiKey == null) {
+            throw new RuntimeException("Please provide apiKey");
         }
-        this.clientOptionsBuilder.addHeader("x-api-token", this.apiToken);
+        this.clientOptionsBuilder.addHeader("x-api-token", this.apiKey);
         clientOptionsBuilder.environment(this.environment);
         return new NewscatcherApiClient(clientOptionsBuilder.build());
     }

@@ -10,12 +10,18 @@ import com.newscatcher.api.core.NewscatcherApiApiException;
 import com.newscatcher.api.core.NewscatcherApiException;
 import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.core.RequestOptions;
+import com.newscatcher.api.errors.BadRequestError;
+import com.newscatcher.api.errors.ForbiddenError;
+import com.newscatcher.api.errors.InternalServerError;
+import com.newscatcher.api.errors.RequestTimeoutError;
+import com.newscatcher.api.errors.TooManyRequestsError;
+import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
 import com.newscatcher.api.resources.latestheadlines.requests.LatestHeadlinesGetRequest;
-import com.newscatcher.api.resources.latestheadlines.requests.LatestHeadlinesRequest;
+import com.newscatcher.api.resources.latestheadlines.requests.LatestHeadlinesPostRequest;
 import com.newscatcher.api.resources.latestheadlines.types.LatestHeadlinesGetResponse;
 import com.newscatcher.api.resources.latestheadlines.types.LatestHeadlinesPostResponse;
-import com.newscatcher.api.types.HttpValidationError;
+import com.newscatcher.api.types.Error;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -33,14 +39,21 @@ public class LatestheadlinesClient {
     }
 
     /**
-     * This endpoint allows you to get latest headlines. You need to specify since when you want to get the latest headlines. You can also filter by language, country, source, and more.
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
+    public LatestHeadlinesGetResponse get() {
+        return get(LatestHeadlinesGetRequest.builder().build());
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
     public LatestHeadlinesGetResponse get(LatestHeadlinesGetRequest request) {
         return get(request, null);
     }
 
     /**
-     * This endpoint allows you to get latest headlines. You need to specify since when you want to get the latest headlines. You can also filter by language, country, source, and more.
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
     public LatestHeadlinesGetResponse get(LatestHeadlinesGetRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
@@ -50,56 +63,81 @@ public class LatestheadlinesClient {
             httpUrl.addQueryParameter("when", request.getWhen().get());
         }
         if (request.getByParseDate().isPresent()) {
-            httpUrl.addQueryParameter("by_parse_date", request.getByParseDate().get());
+            httpUrl.addQueryParameter(
+                    "by_parse_date", request.getByParseDate().get().toString());
         }
-        if (request.getSortBy().isPresent()) {
-            httpUrl.addQueryParameter("sort_by", request.getSortBy().get());
+        if (request.getLang().isPresent()) {
+            httpUrl.addQueryParameter("lang", request.getLang().get());
         }
-        httpUrl.addQueryParameter("lang", request.getLang());
-        httpUrl.addQueryParameter("not_lang", request.getNotLang());
-        httpUrl.addQueryParameter("countries", request.getCountries());
-        httpUrl.addQueryParameter("not_countries", request.getNotCountries());
-        httpUrl.addQueryParameter("sources", request.getSources());
-        httpUrl.addQueryParameter("predefined_sources", request.getPredefinedSources());
-        httpUrl.addQueryParameter("not_sources", request.getNotSources());
-        httpUrl.addQueryParameter("not_author_name", request.getNotAuthorName());
+        if (request.getNotLang().isPresent()) {
+            httpUrl.addQueryParameter("not_lang", request.getNotLang().get());
+        }
+        if (request.getCountries().isPresent()) {
+            httpUrl.addQueryParameter("countries", request.getCountries().get());
+        }
+        if (request.getNotCountries().isPresent()) {
+            httpUrl.addQueryParameter("not_countries", request.getNotCountries().get());
+        }
+        if (request.getPredefinedSources().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "predefined_sources", request.getPredefinedSources().get());
+        }
+        if (request.getSources().isPresent()) {
+            httpUrl.addQueryParameter("sources", request.getSources().get());
+        }
+        if (request.getNotSources().isPresent()) {
+            httpUrl.addQueryParameter("not_sources", request.getNotSources().get());
+        }
+        if (request.getNotAuthorName().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "not_author_name", request.getNotAuthorName().get());
+        }
         if (request.getRankedOnly().isPresent()) {
-            httpUrl.addQueryParameter("ranked_only", request.getRankedOnly().get());
+            httpUrl.addQueryParameter(
+                    "ranked_only", request.getRankedOnly().get().toString());
         }
         if (request.getIsHeadline().isPresent()) {
-            httpUrl.addQueryParameter("is_headline", request.getIsHeadline().get());
+            httpUrl.addQueryParameter(
+                    "is_headline", request.getIsHeadline().get().toString());
         }
         if (request.getIsOpinion().isPresent()) {
-            httpUrl.addQueryParameter("is_opinion", request.getIsOpinion().get());
+            httpUrl.addQueryParameter("is_opinion", request.getIsOpinion().get().toString());
         }
         if (request.getIsPaidContent().isPresent()) {
             httpUrl.addQueryParameter(
-                    "is_paid_content", request.getIsPaidContent().get());
+                    "is_paid_content", request.getIsPaidContent().get().toString());
         }
-        httpUrl.addQueryParameter("parent_url", request.getParentUrl());
-        httpUrl.addQueryParameter("all_links", request.getAllLinks());
-        httpUrl.addQueryParameter("all_domain_links", request.getAllDomainLinks());
+        if (request.getParentUrl().isPresent()) {
+            httpUrl.addQueryParameter("parent_url", request.getParentUrl().get());
+        }
+        if (request.getAllLinks().isPresent()) {
+            httpUrl.addQueryParameter("all_links", request.getAllLinks().get());
+        }
+        if (request.getAllDomainLinks().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "all_domain_links", request.getAllDomainLinks().get());
+        }
         if (request.getWordCountMin().isPresent()) {
             httpUrl.addQueryParameter(
-                    "word_count_min", request.getWordCountMin().get());
+                    "word_count_min", request.getWordCountMin().get().toString());
         }
         if (request.getWordCountMax().isPresent()) {
             httpUrl.addQueryParameter(
-                    "word_count_max", request.getWordCountMax().get());
+                    "word_count_max", request.getWordCountMax().get().toString());
         }
         if (request.getPage().isPresent()) {
-            httpUrl.addQueryParameter("page", request.getPage().get());
+            httpUrl.addQueryParameter("page", request.getPage().get().toString());
         }
         if (request.getPageSize().isPresent()) {
-            httpUrl.addQueryParameter("page_size", request.getPageSize().get());
-        }
-        if (request.getClusteringVariable().isPresent()) {
-            httpUrl.addQueryParameter(
-                    "clustering_variable", request.getClusteringVariable().get());
+            httpUrl.addQueryParameter("page_size", request.getPageSize().get().toString());
         }
         if (request.getClusteringEnabled().isPresent()) {
             httpUrl.addQueryParameter(
-                    "clustering_enabled", request.getClusteringEnabled().get());
+                    "clustering_enabled", request.getClusteringEnabled().get().toString());
+        }
+        if (request.getClusteringVariable().isPresent()) {
+            httpUrl.addQueryParameter(
+                    "clustering_variable", request.getClusteringVariable().get().toString());
         }
         if (request.getClusteringThreshold().isPresent()) {
             httpUrl.addQueryParameter(
@@ -153,10 +191,21 @@ public class LatestheadlinesClient {
                     "content_sentiment_max",
                     request.getContentSentimentMax().get().toString());
         }
-        httpUrl.addQueryParameter("iptc_tags", request.getIptcTags());
-        httpUrl.addQueryParameter("not_iptc_tags", request.getNotIptcTags());
-        httpUrl.addQueryParameter("iab_tags", request.getIabTags());
-        httpUrl.addQueryParameter("not_iab_tags", request.getNotIabTags());
+        if (request.getIptcTags().isPresent()) {
+            httpUrl.addQueryParameter("iptc_tags", request.getIptcTags().get());
+        }
+        if (request.getNotIptcTags().isPresent()) {
+            httpUrl.addQueryParameter("not_iptc_tags", request.getNotIptcTags().get());
+        }
+        if (request.getIabTags().isPresent()) {
+            httpUrl.addQueryParameter("iab_tags", request.getIabTags().get());
+        }
+        if (request.getNotIabTags().isPresent()) {
+            httpUrl.addQueryParameter("not_iab_tags", request.getNotIabTags().get());
+        }
+        if (request.getCustomTags().isPresent()) {
+            httpUrl.addQueryParameter("custom_tags", request.getCustomTags().get());
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -174,9 +223,26 @@ public class LatestheadlinesClient {
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
-                if (response.code() == 422) {
-                    throw new UnprocessableEntityError(
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, HttpValidationError.class));
+                switch (response.code()) {
+                    case 400:
+                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 401:
+                        throw new UnauthorizedError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 403:
+                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 408:
+                        throw new RequestTimeoutError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 422:
+                        throw new UnprocessableEntityError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 429:
+                        throw new TooManyRequestsError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 500:
+                        throw new InternalServerError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
                 }
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
@@ -191,23 +257,23 @@ public class LatestheadlinesClient {
     }
 
     /**
-     * This endpoint allows you to get latest headlines. You need to specify since when you want to get the latest headlines. You can also filter by language, country, source, and more.
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
     public LatestHeadlinesPostResponse post() {
-        return post(LatestHeadlinesRequest.builder().build());
+        return post(LatestHeadlinesPostRequest.builder().build());
     }
 
     /**
-     * This endpoint allows you to get latest headlines. You need to specify since when you want to get the latest headlines. You can also filter by language, country, source, and more.
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
-    public LatestHeadlinesPostResponse post(LatestHeadlinesRequest request) {
+    public LatestHeadlinesPostResponse post(LatestHeadlinesPostRequest request) {
         return post(request, null);
     }
 
     /**
-     * This endpoint allows you to get latest headlines. You need to specify since when you want to get the latest headlines. You can also filter by language, country, source, and more.
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
-    public LatestHeadlinesPostResponse post(LatestHeadlinesRequest request, RequestOptions requestOptions) {
+    public LatestHeadlinesPostResponse post(LatestHeadlinesPostRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/latest_headlines")
@@ -236,9 +302,26 @@ public class LatestheadlinesClient {
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
-                if (response.code() == 422) {
-                    throw new UnprocessableEntityError(
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, HttpValidationError.class));
+                switch (response.code()) {
+                    case 400:
+                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 401:
+                        throw new UnauthorizedError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 403:
+                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 408:
+                        throw new RequestTimeoutError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 422:
+                        throw new UnprocessableEntityError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 429:
+                        throw new TooManyRequestsError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
+                    case 500:
+                        throw new InternalServerError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
                 }
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error

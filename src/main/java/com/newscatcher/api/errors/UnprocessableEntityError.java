@@ -4,15 +4,15 @@
 package com.newscatcher.api.errors;
 
 import com.newscatcher.api.core.NewscatcherApiApiException;
-import com.newscatcher.api.types.HttpValidationError;
+import com.newscatcher.api.types.Error;
 
 public final class UnprocessableEntityError extends NewscatcherApiApiException {
     /**
      * The body of the response that triggered the exception.
      */
-    private final HttpValidationError body;
+    private final Error body;
 
-    public UnprocessableEntityError(HttpValidationError body) {
+    public UnprocessableEntityError(Error body) {
         super("UnprocessableEntityError", 422, body);
         this.body = body;
     }
@@ -21,7 +21,7 @@ public final class UnprocessableEntityError extends NewscatcherApiApiException {
      * @return the body
      */
     @java.lang.Override
-    public HttpValidationError body() {
+    public Error body() {
         return this.body;
     }
 }

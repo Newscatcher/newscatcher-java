@@ -5,6 +5,7 @@ package com.newscatcher.api;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.Suppliers;
+import com.newscatcher.api.resources.aggregation.AggregationClient;
 import com.newscatcher.api.resources.authors.AuthorsClient;
 import com.newscatcher.api.resources.latestheadlines.LatestheadlinesClient;
 import com.newscatcher.api.resources.search.SearchClient;
@@ -29,6 +30,8 @@ public class NewscatcherApiClient {
 
     protected final Supplier<SourcesClient> sourcesClient;
 
+    protected final Supplier<AggregationClient> aggregationClient;
+
     protected final Supplier<SubscriptionClient> subscriptionClient;
 
     public NewscatcherApiClient(ClientOptions clientOptions) {
@@ -39,6 +42,7 @@ public class NewscatcherApiClient {
         this.searchLinkClient = Suppliers.memoize(() -> new SearchLinkClient(clientOptions));
         this.searchsimilarClient = Suppliers.memoize(() -> new SearchsimilarClient(clientOptions));
         this.sourcesClient = Suppliers.memoize(() -> new SourcesClient(clientOptions));
+        this.aggregationClient = Suppliers.memoize(() -> new AggregationClient(clientOptions));
         this.subscriptionClient = Suppliers.memoize(() -> new SubscriptionClient(clientOptions));
     }
 
@@ -64,6 +68,10 @@ public class NewscatcherApiClient {
 
     public SourcesClient sources() {
         return this.sourcesClient.get();
+    }
+
+    public AggregationClient aggregation() {
+        return this.aggregationClient.get();
     }
 
     public SubscriptionClient subscription() {
