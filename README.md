@@ -1,13 +1,16 @@
 # Newscatcher Java Library
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.newscatcherapi/newscatcher-sdk)](https://central.sonatype.com/artifact/com.newscatcherapi/newscatcher-sdk)
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-SDK%20generated%20by%20Fern-brightgreen)](https://github.com/fern-api/fern)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-SDK%20generated%20by%20Fern-brightgreen)](https://github.com/fern-api/fern) [![Maven Central](https://img.shields.io/maven-central/v/com.newscatcherapi/newscatcher-sdk)](https://central.sonatype.com/artifact/com.newscatcherapi/newscatcher-sdk)
 
-The Newscatcher Java SDK lets you access the Newscatcher API from Java or Kotlin applications.
+The Newscatcher Java library lets you access the Newscatcher API from Java or Kotlin.
 
 ## Documentation
 
 Find the complete API reference [here](https://www.newscatcherapi.com/docs/v3/api-reference).
+
+## Requirements
+
+This library requires Java 8 or above.
 
 ## Installation
 
@@ -17,7 +20,7 @@ Add this dependency to your `build.gradle`:
 
 ```groovy
 dependencies {
- implementation 'com.newscatcherapi:newscatcher-sdk:1.1.0'
+    implementation 'com.newscatcherapi:newscatcher-sdk:1.1.0'
 }
 ```
 
@@ -38,30 +41,26 @@ Add this dependency to your `pom.xml`:
 Build and use the client like this:
 
 ```java
-import com.newscatcherapi.api.NewscatcherApiClient;
-import com.newscatcherapi.api.resources.search.requests.SearchPostRequest;
+import com.newscatcher.api.NewscatcherApiClient;
+import com.newscatcher.api.resources.search.requests.SearchPostRequest;
+import java.util.Arrays;
 
 NewscatcherApiClient client = NewscatcherApiClient.builder()
- .apiKey("YOUR_API_KEY")
- .build();
+    .apiKey("YOUR_API_KEY")
+    .build();
 
 client.search().post(SearchPostRequest.builder()
- .q("renewable energy")
- .predefinedSources(Arrays.asList("top 50 US"))
- .lang(Arrays.asList("en"))
- .from(new Date("2024-01-01T00:00:00.000Z"))
- .to(new Date("2024-06-30T00:00:00.000Z"))
- .additionalDomainInfo(true)
- .isNewsDomain(true)
- .build());
+    .q("renewable energy")
+    .lang(Arrays.asList("en"))
+    .build());
 ```
 
-## Exception Handling
+## Error Handling
 
-The SDK throws a subclass of `NewscatcherApiApiException` when the API returns a non-success status code:
+When the API responds with a non-success status code, the SDK throws an exception.
 
 ```java
-import com.newscatcherapi.api.core.NewscatcherApiApiException;
+import com.newscatcher.api.core.NewscatcherApiApiException;
 
 try {
     client.search().post(...);
@@ -72,28 +71,34 @@ try {
 }
 ```
 
-Handle specific error cases using these exception types:
+The SDK provides specific error types for different cases:
 
 ```java
-import com.newscatcherapi.api.errors.BadRequestError;
-import com.newscatcherapi.api.errors.UnauthorizedError;
-import com.newscatcherapi.api.errors.ForbiddenError;
-import com.newscatcherapi.api.errors.RequestTimeoutError;
-import com.newscatcherapi.api.errors.TooManyRequestsError;
-import com.newscatcherapi.api.errors.InternalServerError;
+import com.newscatcher.api.errors.BadRequestError;
+import com.newscatcher.api.errors.UnauthorizedError;
+import com.newscatcher.api.errors.ForbiddenError;
+import com.newscatcher.api.errors.UnprocessableEntityError;
+import com.newscatcher.api.errors.RequestTimeoutError;
+import com.newscatcher.api.errors.TooManyRequestsError;
+import com.newscatcher.api.errors.InternalServerError;
 
 try {
     client.search().post(...);
 } catch (BadRequestError e) {
-    // Handle 400 error
+    // Handle 400 error - Bad request
+    Error errorBody = e.body();
 } catch (UnauthorizedError e) {
-    // Handle 401 error
+    // Handle 401 error - Authentication failed
 } catch (ForbiddenError e) {
-    // Handle 403 error
+    // Handle 403 error - Server refuses action
+} catch (UnprocessableEntityError e) {
+    // Handle 422 error - Validation error
+} catch (RequestTimeoutError e) {
+    // Handle 408 error - Request timeout
 } catch (TooManyRequestsError e) {
-    // Handle 429 error
+    // Handle 429 error - Rate limit exceeded
 } catch (InternalServerError e) {
-    // Handle 500 error
+    // Handle 500 error - Internal server error
 }
 ```
 
@@ -107,23 +112,61 @@ The SDK automatically retries failed requests with exponential backoff. When a r
 - [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
 - [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) (Internal Server Errors)
 
-### Timeout Configuration
+### Client Configuration
 
-Set a custom timeout when building the client:
+Configure the client using the builder pattern:
 
 ```java
 NewscatcherApiClient client = NewscatcherApiClient.builder()
- .apiKey("YOUR_API_KEY")
- .timeout(60) // timeout in seconds
+ .apiKey("YOUR_API_KEY")          // Required
+ .timeout(60)                      // Optional: timeout in seconds
+ .url("https://custom-url.com")    // Optional: override API URL
+ .environment(Environment.DEFAULT) // Optional: use predefined environment
  .build();
+```
+
+Available configurations include:
+
+- `apiKey(String)`: Sets authentication key (required).
+- `timeout(int)`: Sets request timeout in seconds.
+- `url(String)`: Overrides API base URL with a custom URL
+- `environment(Environment)`: Uses a predefined environment configuration.
+
+> **Note**: You must provide an API key when building the client. Otherwise, a RuntimeException will be thrown.
+
+## Example Requests
+
+### Latest Headlines
+
+```java
+import com.newscatcher.api.resources.latestheadlines.requests.LatestHeadlinesPostRequest;
+
+client.latestHeadlines().post(LatestHeadlinesPostRequest.builder()
+    .when("7d")
+    .lang(Arrays.asList("en"))
+    .build());
+```
+
+### Search by Author
+
+```java
+import com.newscatcher.api.resources.authors.requests.AuthorsPostRequest;
+
+client.authors().post(AuthorsPostRequest.builder()
+    .authorName("Jane Smith")
+    .build());
 ```
 
 ## Contributing
 
 We generate this SDK programmatically, so we can't accept direct code contributions. Instead:
 
-1. Open an issue to discuss your ideas with us first
-2. If you want to show an implementation, create a PR as a proof of concept
-3. We'll work with you to implement the changes in our generator
+1. [Open an issue](https://github.com/Newscatcher/newscatcher-java/issues) to discuss your ideas with us first.
+2. If you want to show an implementation, create a PR as a proof of concept.
+3. We'll work with you to implement the changes in our generator.
 
-> **Note:** We always welcome contributions to this README!
+On the other hand, contributions to the README are always very welcome!
+
+## Release Notes
+
+For release notes and changelog, visit our [GitHub releases page](https://github.com/Newscatcher/newscatcher-java/releases).
