@@ -97,6 +97,8 @@ public final class AuthorsPostRequest {
 
     private final Optional<Integer> pageSize;
 
+    private final Optional<Boolean> includeTranslationFields;
+
     private final Optional<Boolean> includeNlpData;
 
     private final Optional<Boolean> hasNlp;
@@ -124,6 +126,8 @@ public final class AuthorsPostRequest {
     private final Optional<NotIabTags> notIabTags;
 
     private final Optional<CustomTags> customTags;
+
+    private final Optional<Boolean> robotsCompliant;
 
     private final Map<String, Object> additionalProperties;
 
@@ -155,6 +159,7 @@ public final class AuthorsPostRequest {
             Optional<Integer> wordCountMax,
             Optional<Integer> page,
             Optional<Integer> pageSize,
+            Optional<Boolean> includeTranslationFields,
             Optional<Boolean> includeNlpData,
             Optional<Boolean> hasNlp,
             Optional<Theme> theme,
@@ -169,6 +174,7 @@ public final class AuthorsPostRequest {
             Optional<IabTags> iabTags,
             Optional<NotIabTags> notIabTags,
             Optional<CustomTags> customTags,
+            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.authorName = authorName;
         this.notAuthorName = notAuthorName;
@@ -197,6 +203,7 @@ public final class AuthorsPostRequest {
         this.wordCountMax = wordCountMax;
         this.page = page;
         this.pageSize = pageSize;
+        this.includeTranslationFields = includeTranslationFields;
         this.includeNlpData = includeNlpData;
         this.hasNlp = hasNlp;
         this.theme = theme;
@@ -211,6 +218,7 @@ public final class AuthorsPostRequest {
         this.iabTags = iabTags;
         this.notIabTags = notIabTags;
         this.customTags = customTags;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -349,6 +357,11 @@ public final class AuthorsPostRequest {
         return pageSize;
     }
 
+    @JsonProperty("include_translation_fields")
+    public Optional<Boolean> getIncludeTranslationFields() {
+        return includeTranslationFields;
+    }
+
     @JsonProperty("include_nlp_data")
     public Optional<Boolean> getIncludeNlpData() {
         return includeNlpData;
@@ -419,6 +432,11 @@ public final class AuthorsPostRequest {
         return customTags;
     }
 
+    @JsonProperty("robots_compliant")
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -458,6 +476,7 @@ public final class AuthorsPostRequest {
                 && wordCountMax.equals(other.wordCountMax)
                 && page.equals(other.page)
                 && pageSize.equals(other.pageSize)
+                && includeTranslationFields.equals(other.includeTranslationFields)
                 && includeNlpData.equals(other.includeNlpData)
                 && hasNlp.equals(other.hasNlp)
                 && theme.equals(other.theme)
@@ -471,7 +490,8 @@ public final class AuthorsPostRequest {
                 && notIptcTags.equals(other.notIptcTags)
                 && iabTags.equals(other.iabTags)
                 && notIabTags.equals(other.notIabTags)
-                && customTags.equals(other.customTags);
+                && customTags.equals(other.customTags)
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
@@ -504,6 +524,7 @@ public final class AuthorsPostRequest {
                 this.wordCountMax,
                 this.page,
                 this.pageSize,
+                this.includeTranslationFields,
                 this.includeNlpData,
                 this.hasNlp,
                 this.theme,
@@ -517,7 +538,8 @@ public final class AuthorsPostRequest {
                 this.notIptcTags,
                 this.iabTags,
                 this.notIabTags,
-                this.customTags);
+                this.customTags,
+                this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -642,6 +664,10 @@ public final class AuthorsPostRequest {
 
         _FinalStage pageSize(Integer pageSize);
 
+        _FinalStage includeTranslationFields(Optional<Boolean> includeTranslationFields);
+
+        _FinalStage includeTranslationFields(Boolean includeTranslationFields);
+
         _FinalStage includeNlpData(Optional<Boolean> includeNlpData);
 
         _FinalStage includeNlpData(Boolean includeNlpData);
@@ -697,11 +723,17 @@ public final class AuthorsPostRequest {
         _FinalStage customTags(Optional<CustomTags> customTags);
 
         _FinalStage customTags(CustomTags customTags);
+
+        _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant);
+
+        _FinalStage robotsCompliant(Boolean robotsCompliant);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements AuthorNameStage, _FinalStage {
         private String authorName;
+
+        private Optional<Boolean> robotsCompliant = Optional.empty();
 
         private Optional<CustomTags> customTags = Optional.empty();
 
@@ -730,6 +762,8 @@ public final class AuthorsPostRequest {
         private Optional<Boolean> hasNlp = Optional.empty();
 
         private Optional<Boolean> includeNlpData = Optional.empty();
+
+        private Optional<Boolean> includeTranslationFields = Optional.empty();
 
         private Optional<Integer> pageSize = Optional.empty();
 
@@ -817,6 +851,7 @@ public final class AuthorsPostRequest {
             wordCountMax(other.getWordCountMax());
             page(other.getPage());
             pageSize(other.getPageSize());
+            includeTranslationFields(other.getIncludeTranslationFields());
             includeNlpData(other.getIncludeNlpData());
             hasNlp(other.getHasNlp());
             theme(other.getTheme());
@@ -831,6 +866,7 @@ public final class AuthorsPostRequest {
             iabTags(other.getIabTags());
             notIabTags(other.getNotIabTags());
             customTags(other.getCustomTags());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
@@ -838,6 +874,19 @@ public final class AuthorsPostRequest {
         @JsonSetter("author_name")
         public _FinalStage authorName(@NotNull String authorName) {
             this.authorName = Objects.requireNonNull(authorName, "authorName must not be null");
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
             return this;
         }
 
@@ -1020,6 +1069,19 @@ public final class AuthorsPostRequest {
         @JsonSetter(value = "include_nlp_data", nulls = Nulls.SKIP)
         public _FinalStage includeNlpData(Optional<Boolean> includeNlpData) {
             this.includeNlpData = includeNlpData;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage includeTranslationFields(Boolean includeTranslationFields) {
+            this.includeTranslationFields = Optional.ofNullable(includeTranslationFields);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "include_translation_fields", nulls = Nulls.SKIP)
+        public _FinalStage includeTranslationFields(Optional<Boolean> includeTranslationFields) {
+            this.includeTranslationFields = includeTranslationFields;
             return this;
         }
 
@@ -1391,6 +1453,7 @@ public final class AuthorsPostRequest {
                     wordCountMax,
                     page,
                     pageSize,
+                    includeTranslationFields,
                     includeNlpData,
                     hasNlp,
                     theme,
@@ -1405,6 +1468,7 @@ public final class AuthorsPostRequest {
                     iabTags,
                     notIabTags,
                     customTags,
+                    robotsCompliant,
                     additionalProperties);
         }
     }

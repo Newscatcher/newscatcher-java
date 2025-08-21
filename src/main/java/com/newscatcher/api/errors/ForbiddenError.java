@@ -5,6 +5,7 @@ package com.newscatcher.api.errors;
 
 import com.newscatcher.api.core.NewscatcherApiApiException;
 import com.newscatcher.api.types.Error;
+import okhttp3.Response;
 
 public final class ForbiddenError extends NewscatcherApiApiException {
     /**
@@ -14,6 +15,11 @@ public final class ForbiddenError extends NewscatcherApiApiException {
 
     public ForbiddenError(Error body) {
         super("ForbiddenError", 403, body);
+        this.body = body;
+    }
+
+    public ForbiddenError(Error body, Response rawResponse) {
+        super("ForbiddenError", 403, body, rawResponse);
         this.body = body;
     }
 

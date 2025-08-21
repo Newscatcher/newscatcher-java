@@ -69,6 +69,8 @@ public final class LatestHeadlinesGetRequest {
 
     private final Optional<Float> clusteringThreshold;
 
+    private final Optional<Boolean> includeTranslationFields;
+
     private final Optional<Boolean> includeNlpData;
 
     private final Optional<Boolean> hasNlp;
@@ -103,6 +105,8 @@ public final class LatestHeadlinesGetRequest {
 
     private final Optional<String> customTags;
 
+    private final Optional<Boolean> robotsCompliant;
+
     private final Map<String, Object> additionalProperties;
 
     private LatestHeadlinesGetRequest(
@@ -130,6 +134,7 @@ public final class LatestHeadlinesGetRequest {
             Optional<Boolean> clusteringEnabled,
             Optional<LatestHeadlinesGetRequestClusteringVariable> clusteringVariable,
             Optional<Float> clusteringThreshold,
+            Optional<Boolean> includeTranslationFields,
             Optional<Boolean> includeNlpData,
             Optional<Boolean> hasNlp,
             Optional<String> theme,
@@ -147,6 +152,7 @@ public final class LatestHeadlinesGetRequest {
             Optional<String> iabTags,
             Optional<String> notIabTags,
             Optional<String> customTags,
+            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.when = when;
         this.byParseDate = byParseDate;
@@ -172,6 +178,7 @@ public final class LatestHeadlinesGetRequest {
         this.clusteringEnabled = clusteringEnabled;
         this.clusteringVariable = clusteringVariable;
         this.clusteringThreshold = clusteringThreshold;
+        this.includeTranslationFields = includeTranslationFields;
         this.includeNlpData = includeNlpData;
         this.hasNlp = hasNlp;
         this.theme = theme;
@@ -189,6 +196,7 @@ public final class LatestHeadlinesGetRequest {
         this.iabTags = iabTags;
         this.notIabTags = notIabTags;
         this.customTags = customTags;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -435,30 +443,16 @@ public final class LatestHeadlinesGetRequest {
         return clusteringThreshold;
     }
 
-    /**
-     * @return If true, includes an NLP layer with each article in the response. This layer provides enhanced information such as theme classification, article summary, sentiment analysis, tags, and named entity recognition.
-     * <p>The NLP layer includes:</p>
-     * <ul>
-     * <li>Theme: General topic of the article.</li>
-     * <li>Summary: A concise overview of the article content.</li>
-     * <li>Sentiment: Separate scores for title and content (range: -1 to 1).</li>
-     * <li>Named entities: Identified persons (PER), organizations (ORG), locations (LOC), and miscellaneous entities (MISC).</li>
-     * <li>IPTC tags: Standardized news category tags.</li>
-     * <li>IAB tags: Content categories for digital advertising.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>include_nlp_data</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
+    @JsonProperty("include_translation_fields")
+    public Optional<Boolean> getIncludeTranslationFields() {
+        return includeTranslationFields;
+    }
+
     @JsonProperty("include_nlp_data")
     public Optional<Boolean> getIncludeNlpData() {
         return includeNlpData;
     }
 
-    /**
-     * @return If true, filters the results to include only articles with an NLP layer. This allows you to focus on articles that have been processed with advanced NLP techniques.
-     * <p><strong>Note</strong>: The <code>has_nlp</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("has_nlp")
     public Optional<Boolean> getHasNlp() {
         return hasNlp;
@@ -488,7 +482,7 @@ public final class LatestHeadlinesGetRequest {
     }
 
     /**
-     * @return Filters articles that mention specific organization names, as identified by NLP analysis. To specify multiple organizations, use a comma-separated string.
+     * @return Filters articles that mention specific organization names, as identified by NLP analysis. To specify multiple organizations, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).
      * <p>Example: <code>&quot;Apple, Microsoft&quot;</code></p>
      * <p><strong>Note</strong>: The <code>ORG_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
      * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
@@ -499,7 +493,7 @@ public final class LatestHeadlinesGetRequest {
     }
 
     /**
-     * @return Filters articles that mention specific person names, as identified by NLP analysis. To specify multiple names, use a comma-separated string.
+     * @return Filters articles that mention specific person names, as identified by NLP analysis. To specify multiple names, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).
      * <p>Example: <code>&quot;Elon Musk, Jeff Bezos&quot;</code></p>
      * <p><strong>Note</strong>: The <code>PER_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
      * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
@@ -510,7 +504,7 @@ public final class LatestHeadlinesGetRequest {
     }
 
     /**
-     * @return Filters articles that mention specific location names, as identified by NLP analysis. To specify multiple locations, use a comma-separated string.
+     * @return Filters articles that mention specific location names, as identified by NLP analysis. To specify multiple locations, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).
      * <p>Example: <code>&quot;California, New York&quot;</code></p>
      * <p><strong>Note</strong>: The <code>LOC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
      * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
@@ -521,7 +515,7 @@ public final class LatestHeadlinesGetRequest {
     }
 
     /**
-     * @return Filters articles that mention other named entities not falling under person, organization, or location categories. Includes events, nationalities, products, works of art, and more. To specify multiple entities, use a comma-separated string.
+     * @return Filters articles that mention other named entities not falling under person, organization, or location categories. Includes events, nationalities, products, works of art, and more. To specify multiple entities, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).
      * <p>Example: <code>&quot;Bitcoin, Blockchain&quot;</code></p>
      * <p><strong>Note</strong>: The <code>MISC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
      * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
@@ -598,7 +592,7 @@ public final class LatestHeadlinesGetRequest {
     /**
      * @return Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.
      * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
      */
     @JsonProperty("iptc_tags")
@@ -609,7 +603,7 @@ public final class LatestHeadlinesGetRequest {
     /**
      * @return Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.
      * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
      */
     @JsonProperty("not_iptc_tags")
@@ -620,7 +614,7 @@ public final class LatestHeadlinesGetRequest {
     /**
      * @return Filters articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories, use a comma-separated string.
      * <p>Example: <code>&quot;Business, Events&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
      */
     @JsonProperty("iab_tags")
@@ -631,7 +625,7 @@ public final class LatestHeadlinesGetRequest {
     /**
      * @return Inverse of the <code>iab_tags</code> parameter. Excludes articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories to exclude, use a comma-separated string.
      * <p>Example: <code>&quot;Agriculture, Metals&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available if tags are included in your subscription plan.</p>
+     * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
      */
     @JsonProperty("not_iab_tags")
@@ -650,6 +644,14 @@ public final class LatestHeadlinesGetRequest {
     @JsonProperty("custom_tags")
     public Optional<String> getCustomTags() {
         return customTags;
+    }
+
+    /**
+     * @return If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.
+     */
+    @JsonProperty("robots_compliant")
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
     }
 
     @java.lang.Override
@@ -688,6 +690,7 @@ public final class LatestHeadlinesGetRequest {
                 && clusteringEnabled.equals(other.clusteringEnabled)
                 && clusteringVariable.equals(other.clusteringVariable)
                 && clusteringThreshold.equals(other.clusteringThreshold)
+                && includeTranslationFields.equals(other.includeTranslationFields)
                 && includeNlpData.equals(other.includeNlpData)
                 && hasNlp.equals(other.hasNlp)
                 && theme.equals(other.theme)
@@ -704,7 +707,8 @@ public final class LatestHeadlinesGetRequest {
                 && notIptcTags.equals(other.notIptcTags)
                 && iabTags.equals(other.iabTags)
                 && notIabTags.equals(other.notIabTags)
-                && customTags.equals(other.customTags);
+                && customTags.equals(other.customTags)
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
@@ -734,6 +738,7 @@ public final class LatestHeadlinesGetRequest {
                 this.clusteringEnabled,
                 this.clusteringVariable,
                 this.clusteringThreshold,
+                this.includeTranslationFields,
                 this.includeNlpData,
                 this.hasNlp,
                 this.theme,
@@ -750,7 +755,8 @@ public final class LatestHeadlinesGetRequest {
                 this.notIptcTags,
                 this.iabTags,
                 this.notIabTags,
-                this.customTags);
+                this.customTags,
+                this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -812,6 +818,8 @@ public final class LatestHeadlinesGetRequest {
 
         private Optional<Float> clusteringThreshold = Optional.empty();
 
+        private Optional<Boolean> includeTranslationFields = Optional.empty();
+
         private Optional<Boolean> includeNlpData = Optional.empty();
 
         private Optional<Boolean> hasNlp = Optional.empty();
@@ -846,6 +854,8 @@ public final class LatestHeadlinesGetRequest {
 
         private Optional<String> customTags = Optional.empty();
 
+        private Optional<Boolean> robotsCompliant = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -876,6 +886,7 @@ public final class LatestHeadlinesGetRequest {
             clusteringEnabled(other.getClusteringEnabled());
             clusteringVariable(other.getClusteringVariable());
             clusteringThreshold(other.getClusteringThreshold());
+            includeTranslationFields(other.getIncludeTranslationFields());
             includeNlpData(other.getIncludeNlpData());
             hasNlp(other.getHasNlp());
             theme(other.getTheme());
@@ -893,9 +904,20 @@ public final class LatestHeadlinesGetRequest {
             iabTags(other.getIabTags());
             notIabTags(other.getNotIabTags());
             customTags(other.getCustomTags());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
+        /**
+         * <p>The time period for which you want to get the latest headlines.</p>
+         * <p>Format examples:</p>
+         * <ul>
+         * <li><code>7d</code>: Last seven days</li>
+         * <li><code>30d</code>: Last 30 days</li>
+         * <li><code>1h</code>: Last hour</li>
+         * <li><code>24h</code>: Last 24 hours</li>
+         * </ul>
+         */
         @JsonSetter(value = "when", nulls = Nulls.SKIP)
         public Builder when(Optional<String> when) {
             this.when = when;
@@ -907,6 +929,9 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.</p>
+         */
         @JsonSetter(value = "by_parse_date", nulls = Nulls.SKIP)
         public Builder byParseDate(Optional<Boolean> byParseDate) {
             this.byParseDate = byParseDate;
@@ -918,6 +943,11 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;en, es&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         */
         @JsonSetter(value = "lang", nulls = Nulls.SKIP)
         public Builder lang(Optional<String> lang) {
             this.lang = lang;
@@ -929,6 +959,11 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;fr, de&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         */
         @JsonSetter(value = "not_lang", nulls = Nulls.SKIP)
         public Builder notLang(Optional<String> notLang) {
             this.notLang = notLang;
@@ -940,6 +975,11 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;US, CA&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         */
         @JsonSetter(value = "countries", nulls = Nulls.SKIP)
         public Builder countries(Optional<String> countries) {
             this.countries = countries;
@@ -951,6 +991,11 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.</p>
+         * <p>Example:<code>&quot;US, CA&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         */
         @JsonSetter(value = "not_countries", nulls = Nulls.SKIP)
         public Builder notCountries(Optional<String> notCountries) {
             this.notCountries = notCountries;
@@ -962,6 +1007,17 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Predefined top news sources per country.</p>
+         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>&quot;top 100 US&quot;</code></li>
+         * <li><code>&quot;top 33 AT&quot;</code></li>
+         * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
+         * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
+         * </ul>
+         */
         @JsonSetter(value = "predefined_sources", nulls = Nulls.SKIP)
         public Builder predefinedSources(Optional<String> predefinedSources) {
             this.predefinedSources = predefinedSources;
@@ -973,6 +1029,14 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>&quot;nytimes.com&quot;</code></li>
+         * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
+         * </ul>
+         */
         @JsonSetter(value = "sources", nulls = Nulls.SKIP)
         public Builder sources(Optional<String> sources) {
             this.sources = sources;
@@ -984,6 +1048,10 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
+         */
         @JsonSetter(value = "not_sources", nulls = Nulls.SKIP)
         public Builder notSources(Optional<String> notSources) {
             this.notSources = notSources;
@@ -995,6 +1063,10 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;John Doe, Jane Doe&quot;</code></p>
+         */
         @JsonSetter(value = "not_author_name", nulls = Nulls.SKIP)
         public Builder notAuthorName(Optional<String> notAuthorName) {
             this.notAuthorName = notAuthorName;
@@ -1006,6 +1078,9 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.</p>
+         */
         @JsonSetter(value = "ranked_only", nulls = Nulls.SKIP)
         public Builder rankedOnly(Optional<Boolean> rankedOnly) {
             this.rankedOnly = rankedOnly;
@@ -1017,6 +1092,9 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, only returns articles that were posted on the home page of a given news domain.</p>
+         */
         @JsonSetter(value = "is_headline", nulls = Nulls.SKIP)
         public Builder isHeadline(Optional<Boolean> isHeadline) {
             this.isHeadline = isHeadline;
@@ -1028,6 +1106,9 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.</p>
+         */
         @JsonSetter(value = "is_opinion", nulls = Nulls.SKIP)
         public Builder isOpinion(Optional<Boolean> isOpinion) {
             this.isOpinion = isOpinion;
@@ -1039,6 +1120,9 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.</p>
+         */
         @JsonSetter(value = "is_paid_content", nulls = Nulls.SKIP)
         public Builder isPaidContent(Optional<Boolean> isPaidContent) {
             this.isPaidContent = isPaidContent;
@@ -1050,6 +1134,10 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
+         */
         @JsonSetter(value = "parent_url", nulls = Nulls.SKIP)
         public Builder parentUrl(Optional<String> parentUrl) {
             this.parentUrl = parentUrl;
@@ -1061,6 +1149,11 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
+         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         */
         @JsonSetter(value = "all_links", nulls = Nulls.SKIP)
         public Builder allLinks(Optional<String> allLinks) {
             this.allLinks = allLinks;
@@ -1072,6 +1165,11 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
+         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         */
         @JsonSetter(value = "all_domain_links", nulls = Nulls.SKIP)
         public Builder allDomainLinks(Optional<String> allDomainLinks) {
             this.allDomainLinks = allDomainLinks;
@@ -1083,6 +1181,9 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The minimum number of words an article must contain. To be used for avoiding articles with small content.</p>
+         */
         @JsonSetter(value = "word_count_min", nulls = Nulls.SKIP)
         public Builder wordCountMin(Optional<Integer> wordCountMin) {
             this.wordCountMin = wordCountMin;
@@ -1094,6 +1195,9 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The maximum number of words an article can contain. To be used for avoiding articles with large content.</p>
+         */
         @JsonSetter(value = "word_count_max", nulls = Nulls.SKIP)
         public Builder wordCountMax(Optional<Integer> wordCountMax) {
             this.wordCountMax = wordCountMax;
@@ -1105,6 +1209,10 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.</p>
+         * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
+         */
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public Builder page(Optional<Integer> page) {
             this.page = page;
@@ -1116,6 +1224,9 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The number of articles to return per page.</p>
+         */
         @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
         public Builder pageSize(Optional<Integer> pageSize) {
             this.pageSize = pageSize;
@@ -1127,6 +1238,10 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Determines whether to group similar articles into clusters. If true, the API returns clustered results.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+         */
         @JsonSetter(value = "clustering_enabled", nulls = Nulls.SKIP)
         public Builder clusteringEnabled(Optional<Boolean> clusteringEnabled) {
             this.clusteringEnabled = clusteringEnabled;
@@ -1138,6 +1253,16 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Specifies which part of the article to use for determining similarity when clustering.</p>
+         * <p>Possible values are:</p>
+         * <ul>
+         * <li><code>content</code>: Uses the full article content (default).</li>
+         * <li><code>title</code>: Uses only the article title.</li>
+         * <li><code>summary</code>: Uses the article summary.</li>
+         * </ul>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+         */
         @JsonSetter(value = "clustering_variable", nulls = Nulls.SKIP)
         public Builder clusteringVariable(Optional<LatestHeadlinesGetRequestClusteringVariable> clusteringVariable) {
             this.clusteringVariable = clusteringVariable;
@@ -1149,6 +1274,16 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Sets the similarity threshold for grouping articles into clusters. A lower value creates more inclusive clusters, while a higher value requires greater similarity between articles.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>0.3</code>: Results in larger, more diverse clusters.</li>
+         * <li><code>0.6</code>: Balances cluster size and article similarity (default).</li>
+         * <li><code>0.9</code>: Creates smaller, tightly related clusters.</li>
+         * </ul>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/clustering-news-articles">Clustering news articles</a>.</p>
+         */
         @JsonSetter(value = "clustering_threshold", nulls = Nulls.SKIP)
         public Builder clusteringThreshold(Optional<Float> clusteringThreshold) {
             this.clusteringThreshold = clusteringThreshold;
@@ -1157,6 +1292,17 @@ public final class LatestHeadlinesGetRequest {
 
         public Builder clusteringThreshold(Float clusteringThreshold) {
             this.clusteringThreshold = Optional.ofNullable(clusteringThreshold);
+            return this;
+        }
+
+        @JsonSetter(value = "include_translation_fields", nulls = Nulls.SKIP)
+        public Builder includeTranslationFields(Optional<Boolean> includeTranslationFields) {
+            this.includeTranslationFields = includeTranslationFields;
+            return this;
+        }
+
+        public Builder includeTranslationFields(Boolean includeTranslationFields) {
+            this.includeTranslationFields = Optional.ofNullable(includeTranslationFields);
             return this;
         }
 
@@ -1182,6 +1328,13 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
+         */
         @JsonSetter(value = "theme", nulls = Nulls.SKIP)
         public Builder theme(Optional<String> theme) {
             this.theme = theme;
@@ -1193,6 +1346,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         */
         @JsonSetter(value = "not_theme", nulls = Nulls.SKIP)
         public Builder notTheme(Optional<String> notTheme) {
             this.notTheme = notTheme;
@@ -1204,6 +1363,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles that mention specific organization names, as identified by NLP analysis. To specify multiple organizations, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).</p>
+         * <p>Example: <code>&quot;Apple, Microsoft&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>ORG_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+         */
         @JsonSetter(value = "ORG_entity_name", nulls = Nulls.SKIP)
         public Builder orgEntityName(Optional<String> orgEntityName) {
             this.orgEntityName = orgEntityName;
@@ -1215,6 +1380,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles that mention specific person names, as identified by NLP analysis. To specify multiple names, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).</p>
+         * <p>Example: <code>&quot;Elon Musk, Jeff Bezos&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>PER_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+         */
         @JsonSetter(value = "PER_entity_name", nulls = Nulls.SKIP)
         public Builder perEntityName(Optional<String> perEntityName) {
             this.perEntityName = perEntityName;
@@ -1226,6 +1397,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles that mention specific location names, as identified by NLP analysis. To specify multiple locations, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).</p>
+         * <p>Example: <code>&quot;California, New York&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>LOC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+         */
         @JsonSetter(value = "LOC_entity_name", nulls = Nulls.SKIP)
         public Builder locEntityName(Optional<String> locEntityName) {
             this.locEntityName = locEntityName;
@@ -1237,6 +1414,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles that mention other named entities not falling under person, organization, or location categories. Includes events, nationalities, products, works of art, and more. To specify multiple entities, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).</p>
+         * <p>Example: <code>&quot;Bitcoin, Blockchain&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>MISC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
+         */
         @JsonSetter(value = "MISC_entity_name", nulls = Nulls.SKIP)
         public Builder miscEntityName(Optional<String> miscEntityName) {
             this.miscEntityName = miscEntityName;
@@ -1248,6 +1431,17 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the minimum sentiment score of their titles.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         */
         @JsonSetter(value = "title_sentiment_min", nulls = Nulls.SKIP)
         public Builder titleSentimentMin(Optional<Float> titleSentimentMin) {
             this.titleSentimentMin = titleSentimentMin;
@@ -1259,6 +1453,17 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the maximum sentiment score of their titles.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         */
         @JsonSetter(value = "title_sentiment_max", nulls = Nulls.SKIP)
         public Builder titleSentimentMax(Optional<Float> titleSentimentMax) {
             this.titleSentimentMax = titleSentimentMax;
@@ -1270,6 +1475,17 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the minimum sentiment score of their content.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         */
         @JsonSetter(value = "content_sentiment_min", nulls = Nulls.SKIP)
         public Builder contentSentimentMin(Optional<Float> contentSentimentMin) {
             this.contentSentimentMin = contentSentimentMin;
@@ -1281,6 +1497,17 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on the maximum sentiment score of their content.</p>
+         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
+         * <ul>
+         * <li>Negative values indicate negative sentiment.</li>
+         * <li>Positive values indicate positive sentiment.</li>
+         * <li>Values close to 0 indicate neutral sentiment.</li>
+         * </ul>
+         * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
+         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
+         */
         @JsonSetter(value = "content_sentiment_max", nulls = Nulls.SKIP)
         public Builder contentSentimentMax(Optional<Float> contentSentimentMax) {
             this.contentSentimentMax = contentSentimentMax;
@@ -1292,6 +1519,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.</p>
+         * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
+         * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+         */
         @JsonSetter(value = "iptc_tags", nulls = Nulls.SKIP)
         public Builder iptcTags(Optional<String> iptcTags) {
             this.iptcTags = iptcTags;
@@ -1303,6 +1536,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.</p>
+         * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
+         * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
+         */
         @JsonSetter(value = "not_iptc_tags", nulls = Nulls.SKIP)
         public Builder notIptcTags(Optional<String> notIptcTags) {
             this.notIptcTags = notIptcTags;
@@ -1314,6 +1553,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Business, Events&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
+         * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
+         */
         @JsonSetter(value = "iab_tags", nulls = Nulls.SKIP)
         public Builder iabTags(Optional<String> iabTags) {
             this.iabTags = iabTags;
@@ -1325,6 +1570,12 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Inverse of the <code>iab_tags</code> parameter. Excludes articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories to exclude, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;Agriculture, Metals&quot;</code></p>
+         * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
+         * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
+         */
         @JsonSetter(value = "not_iab_tags", nulls = Nulls.SKIP)
         public Builder notIabTags(Optional<String> notIabTags) {
             this.notIabTags = notIabTags;
@@ -1336,6 +1587,14 @@ public final class LatestHeadlinesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:</p>
+         * <ul>
+         * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+         * </ul>
+         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
+         * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+         */
         @JsonSetter(value = "custom_tags", nulls = Nulls.SKIP)
         public Builder customTags(Optional<String> customTags) {
             this.customTags = customTags;
@@ -1344,6 +1603,20 @@ public final class LatestHeadlinesGetRequest {
 
         public Builder customTags(String customTags) {
             this.customTags = Optional.ofNullable(customTags);
+            return this;
+        }
+
+        /**
+         * <p>If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.</p>
+         */
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public Builder robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
+            return this;
+        }
+
+        public Builder robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
             return this;
         }
 
@@ -1373,6 +1646,7 @@ public final class LatestHeadlinesGetRequest {
                     clusteringEnabled,
                     clusteringVariable,
                     clusteringThreshold,
+                    includeTranslationFields,
                     includeNlpData,
                     hasNlp,
                     theme,
@@ -1390,6 +1664,7 @@ public final class LatestHeadlinesGetRequest {
                     iabTags,
                     notIabTags,
                     customTags,
+                    robotsCompliant,
                     additionalProperties);
         }
     }

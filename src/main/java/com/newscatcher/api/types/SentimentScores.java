@@ -94,6 +94,9 @@ public final class SentimentScores {
             return this;
         }
 
+        /**
+         * <p>The sentiment score for the article title (-1.0 to 1.0).</p>
+         */
         @JsonSetter(value = "title", nulls = Nulls.SKIP)
         public Builder title(Optional<Float> title) {
             this.title = title;
@@ -105,6 +108,9 @@ public final class SentimentScores {
             return this;
         }
 
+        /**
+         * <p>The sentiment score for the article content (-1.0 to 1.0).</p>
+         */
         @JsonSetter(value = "content", nulls = Nulls.SKIP)
         public Builder content(Optional<Float> content) {
             this.content = content;

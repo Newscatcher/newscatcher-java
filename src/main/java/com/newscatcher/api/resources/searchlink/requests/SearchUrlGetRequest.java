@@ -34,6 +34,8 @@ public final class SearchUrlGetRequest {
 
     private final Optional<Integer> pageSize;
 
+    private final Optional<Boolean> robotsCompliant;
+
     private final Map<String, Object> additionalProperties;
 
     private SearchUrlGetRequest(
@@ -43,6 +45,7 @@ public final class SearchUrlGetRequest {
             Optional<To> to,
             Optional<Integer> page,
             Optional<Integer> pageSize,
+            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.ids = ids;
         this.links = links;
@@ -50,6 +53,7 @@ public final class SearchUrlGetRequest {
         this.to = to;
         this.page = page;
         this.pageSize = pageSize;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -100,6 +104,14 @@ public final class SearchUrlGetRequest {
         return pageSize;
     }
 
+    /**
+     * @return If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.
+     */
+    @JsonProperty("robots_compliant")
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -117,12 +129,13 @@ public final class SearchUrlGetRequest {
                 && from.equals(other.from)
                 && to.equals(other.to)
                 && page.equals(other.page)
-                && pageSize.equals(other.pageSize);
+                && pageSize.equals(other.pageSize)
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.ids, this.links, this.from, this.to, this.page, this.pageSize);
+        return Objects.hash(this.ids, this.links, this.from, this.to, this.page, this.pageSize, this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -148,6 +161,8 @@ public final class SearchUrlGetRequest {
 
         private Optional<Integer> pageSize = Optional.empty();
 
+        private Optional<Boolean> robotsCompliant = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -160,9 +175,15 @@ public final class SearchUrlGetRequest {
             to(other.getTo());
             page(other.getPage());
             pageSize(other.getPageSize());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
+        /**
+         * <p>The Newscatcher article ID (corresponds to the <code>_id</code> field in API response) or a list of article IDs to search for. To specify multiple IDs, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;1234567890abcdef, abcdef1234567890&quot;</code></p>
+         * <p><strong>Caution</strong>: You can use either the <code>links</code> or the <code>ids</code> parameter, but not both at the same time.</p>
+         */
         @JsonSetter(value = "ids", nulls = Nulls.SKIP)
         public Builder ids(Optional<String> ids) {
             this.ids = ids;
@@ -174,6 +195,11 @@ public final class SearchUrlGetRequest {
             return this;
         }
 
+        /**
+         * <p>The article link or list of article links to search for. To specify multiple links, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;https://example.com/article1, https://example.com/article2&quot;</code></p>
+         * <p><strong>Caution</strong>: You can use either the <code>links</code> or the <code>ids</code> parameter, but not both at the same time.</p>
+         */
         @JsonSetter(value = "links", nulls = Nulls.SKIP)
         public Builder links(Optional<String> links) {
             this.links = links;
@@ -207,6 +233,10 @@ public final class SearchUrlGetRequest {
             return this;
         }
 
+        /**
+         * <p>The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.</p>
+         * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
+         */
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public Builder page(Optional<Integer> page) {
             this.page = page;
@@ -218,6 +248,9 @@ public final class SearchUrlGetRequest {
             return this;
         }
 
+        /**
+         * <p>The number of articles to return per page.</p>
+         */
         @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
         public Builder pageSize(Optional<Integer> pageSize) {
             this.pageSize = pageSize;
@@ -229,8 +262,22 @@ public final class SearchUrlGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.</p>
+         */
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public Builder robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
+            return this;
+        }
+
+        public Builder robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
         public SearchUrlGetRequest build() {
-            return new SearchUrlGetRequest(ids, links, from, to, page, pageSize, additionalProperties);
+            return new SearchUrlGetRequest(ids, links, from, to, page, pageSize, robotsCompliant, additionalProperties);
         }
     }
 }

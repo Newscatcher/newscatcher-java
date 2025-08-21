@@ -29,6 +29,7 @@ public final class SourcesResponseDtoSourcesItem {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((SourceInfo) this.value);
@@ -78,15 +79,16 @@ public final class SourcesResponseDtoSourcesItem {
         }
 
         @java.lang.Override
-        public SourcesResponseDtoSourcesItem deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        public SourcesResponseDtoSourcesItem deserialize(JsonParser p, DeserializationContext context)
+                throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, SourceInfo.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }

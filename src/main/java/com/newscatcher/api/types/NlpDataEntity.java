@@ -21,6 +21,8 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = NlpDataEntity.Builder.class)
 public final class NlpDataEntity {
+    private final Optional<String> summaryTranslated;
+
     private final Optional<String> theme;
 
     private final Optional<String> summary;
@@ -37,6 +39,14 @@ public final class NlpDataEntity {
 
     private final Optional<List<NamedEntityListItem>> nerLoc;
 
+    private final Optional<List<NamedEntityListItem>> translationNerPer;
+
+    private final Optional<List<NamedEntityListItem>> translationNerOrg;
+
+    private final Optional<List<NamedEntityListItem>> translationNerMisc;
+
+    private final Optional<List<NamedEntityListItem>> translationNerLoc;
+
     private final Optional<List<String>> iptcTagsName;
 
     private final Optional<List<String>> iptcTagsId;
@@ -46,6 +56,7 @@ public final class NlpDataEntity {
     private final Map<String, Object> additionalProperties;
 
     private NlpDataEntity(
+            Optional<String> summaryTranslated,
             Optional<String> theme,
             Optional<String> summary,
             Optional<SentimentScores> sentiment,
@@ -54,10 +65,15 @@ public final class NlpDataEntity {
             Optional<List<NamedEntityListItem>> nerOrg,
             Optional<List<NamedEntityListItem>> nerMisc,
             Optional<List<NamedEntityListItem>> nerLoc,
+            Optional<List<NamedEntityListItem>> translationNerPer,
+            Optional<List<NamedEntityListItem>> translationNerOrg,
+            Optional<List<NamedEntityListItem>> translationNerMisc,
+            Optional<List<NamedEntityListItem>> translationNerLoc,
             Optional<List<String>> iptcTagsName,
             Optional<List<String>> iptcTagsId,
             Optional<List<String>> iabTagsName,
             Map<String, Object> additionalProperties) {
+        this.summaryTranslated = summaryTranslated;
         this.theme = theme;
         this.summary = summary;
         this.sentiment = sentiment;
@@ -66,10 +82,22 @@ public final class NlpDataEntity {
         this.nerOrg = nerOrg;
         this.nerMisc = nerMisc;
         this.nerLoc = nerLoc;
+        this.translationNerPer = translationNerPer;
+        this.translationNerOrg = translationNerOrg;
+        this.translationNerMisc = translationNerMisc;
+        this.translationNerLoc = translationNerLoc;
         this.iptcTagsName = iptcTagsName;
         this.iptcTagsId = iptcTagsId;
         this.iabTagsName = iabTagsName;
         this.additionalProperties = additionalProperties;
+    }
+
+    /**
+     * @return A brief AI-generated summary of the article's English translation.
+     */
+    @JsonProperty("summary_translated")
+    public Optional<String> getSummaryTranslated() {
+        return summaryTranslated;
     }
 
     /**
@@ -135,7 +163,40 @@ public final class NlpDataEntity {
     }
 
     /**
+     * @return Named Entity Recognition for person entities (individuals' names) extracted from the English translation of the article.
+     */
+    @JsonProperty("translation_ner_PER")
+    public Optional<List<NamedEntityListItem>> getTranslationNerPer() {
+        return translationNerPer;
+    }
+
+    /**
+     * @return Named Entity Recognition for organization entities (company names, institutions) extracted from the English translation of the article.
+     */
+    @JsonProperty("translation_ner_ORG")
+    public Optional<List<NamedEntityListItem>> getTranslationNerOrg() {
+        return translationNerOrg;
+    }
+
+    /**
+     * @return Named Entity Recognition for miscellaneous entities (events, nationalities, products) extracted from the English translation of the article.
+     */
+    @JsonProperty("translation_ner_MISC")
+    public Optional<List<NamedEntityListItem>> getTranslationNerMisc() {
+        return translationNerMisc;
+    }
+
+    /**
+     * @return Named Entity Recognition for location entities (cities, countries, geographic features) extracted from the English translation of the article.
+     */
+    @JsonProperty("translation_ner_LOC")
+    public Optional<List<NamedEntityListItem>> getTranslationNerLoc() {
+        return translationNerLoc;
+    }
+
+    /**
      * @return IPTC media topic taxonomy paths identified in the article content. Each path represents a hierarchical category following the IPTC standard.
+     * <p><strong>Note</strong>: The <code>iptc_tags_name</code> field is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      */
     @JsonProperty("iptc_tags_name")
     public Optional<List<String>> getIptcTagsName() {
@@ -144,6 +205,7 @@ public final class NlpDataEntity {
 
     /**
      * @return IPTC media topic numeric codes identified in the article content. These codes correspond to the standardized IPTC media topic taxonomy.
+     * <p><strong>Note</strong>: The <code>iptc_tags_id</code> field is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      */
     @JsonProperty("iptc_tags_id")
     public Optional<List<String>> getIptcTagsId() {
@@ -152,6 +214,7 @@ public final class NlpDataEntity {
 
     /**
      * @return IAB content taxonomy paths identified in the article content. Each path represents a hierarchical category following the IAB content standard.
+     * <p><strong>Note</strong>: The <code>iab_tags_name</code> field is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      */
     @JsonProperty("iab_tags_name")
     public Optional<List<String>> getIabTagsName() {
@@ -170,7 +233,8 @@ public final class NlpDataEntity {
     }
 
     private boolean equalTo(NlpDataEntity other) {
-        return theme.equals(other.theme)
+        return summaryTranslated.equals(other.summaryTranslated)
+                && theme.equals(other.theme)
                 && summary.equals(other.summary)
                 && sentiment.equals(other.sentiment)
                 && newEmbedding.equals(other.newEmbedding)
@@ -178,6 +242,10 @@ public final class NlpDataEntity {
                 && nerOrg.equals(other.nerOrg)
                 && nerMisc.equals(other.nerMisc)
                 && nerLoc.equals(other.nerLoc)
+                && translationNerPer.equals(other.translationNerPer)
+                && translationNerOrg.equals(other.translationNerOrg)
+                && translationNerMisc.equals(other.translationNerMisc)
+                && translationNerLoc.equals(other.translationNerLoc)
                 && iptcTagsName.equals(other.iptcTagsName)
                 && iptcTagsId.equals(other.iptcTagsId)
                 && iabTagsName.equals(other.iabTagsName);
@@ -186,6 +254,7 @@ public final class NlpDataEntity {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.summaryTranslated,
                 this.theme,
                 this.summary,
                 this.sentiment,
@@ -194,6 +263,10 @@ public final class NlpDataEntity {
                 this.nerOrg,
                 this.nerMisc,
                 this.nerLoc,
+                this.translationNerPer,
+                this.translationNerOrg,
+                this.translationNerMisc,
+                this.translationNerLoc,
                 this.iptcTagsName,
                 this.iptcTagsId,
                 this.iabTagsName);
@@ -210,6 +283,8 @@ public final class NlpDataEntity {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
+        private Optional<String> summaryTranslated = Optional.empty();
+
         private Optional<String> theme = Optional.empty();
 
         private Optional<String> summary = Optional.empty();
@@ -226,6 +301,14 @@ public final class NlpDataEntity {
 
         private Optional<List<NamedEntityListItem>> nerLoc = Optional.empty();
 
+        private Optional<List<NamedEntityListItem>> translationNerPer = Optional.empty();
+
+        private Optional<List<NamedEntityListItem>> translationNerOrg = Optional.empty();
+
+        private Optional<List<NamedEntityListItem>> translationNerMisc = Optional.empty();
+
+        private Optional<List<NamedEntityListItem>> translationNerLoc = Optional.empty();
+
         private Optional<List<String>> iptcTagsName = Optional.empty();
 
         private Optional<List<String>> iptcTagsId = Optional.empty();
@@ -238,6 +321,7 @@ public final class NlpDataEntity {
         private Builder() {}
 
         public Builder from(NlpDataEntity other) {
+            summaryTranslated(other.getSummaryTranslated());
             theme(other.getTheme());
             summary(other.getSummary());
             sentiment(other.getSentiment());
@@ -246,12 +330,33 @@ public final class NlpDataEntity {
             nerOrg(other.getNerOrg());
             nerMisc(other.getNerMisc());
             nerLoc(other.getNerLoc());
+            translationNerPer(other.getTranslationNerPer());
+            translationNerOrg(other.getTranslationNerOrg());
+            translationNerMisc(other.getTranslationNerMisc());
+            translationNerLoc(other.getTranslationNerLoc());
             iptcTagsName(other.getIptcTagsName());
             iptcTagsId(other.getIptcTagsId());
             iabTagsName(other.getIabTagsName());
             return this;
         }
 
+        /**
+         * <p>A brief AI-generated summary of the article's English translation.</p>
+         */
+        @JsonSetter(value = "summary_translated", nulls = Nulls.SKIP)
+        public Builder summaryTranslated(Optional<String> summaryTranslated) {
+            this.summaryTranslated = summaryTranslated;
+            return this;
+        }
+
+        public Builder summaryTranslated(String summaryTranslated) {
+            this.summaryTranslated = Optional.ofNullable(summaryTranslated);
+            return this;
+        }
+
+        /**
+         * <p>The themes or categories identified in the article.</p>
+         */
         @JsonSetter(value = "theme", nulls = Nulls.SKIP)
         public Builder theme(Optional<String> theme) {
             this.theme = theme;
@@ -263,6 +368,9 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>A brief AI-generated summary of the article content.</p>
+         */
         @JsonSetter(value = "summary", nulls = Nulls.SKIP)
         public Builder summary(Optional<String> summary) {
             this.summary = summary;
@@ -285,6 +393,10 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>A dense 1024-dimensional vector representation of the article content, generated using  the <a href="https://huggingface.co/intfloat/multilingual-e5-large">multilingual-e5-large</a> model.</p>
+         * <p><strong>Note</strong>: The <code>new_embedding</code> field is only available in the <code>v3_local_news_nlp_embeddings</code> subscription plan.</p>
+         */
         @JsonSetter(value = "new_embedding", nulls = Nulls.SKIP)
         public Builder newEmbedding(Optional<List<Float>> newEmbedding) {
             this.newEmbedding = newEmbedding;
@@ -296,6 +408,9 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>Named Entity Recognition for person entities (individuals' names).</p>
+         */
         @JsonSetter(value = "ner_PER", nulls = Nulls.SKIP)
         public Builder nerPer(Optional<List<NamedEntityListItem>> nerPer) {
             this.nerPer = nerPer;
@@ -307,6 +422,9 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>Named Entity Recognition for organization entities (company names, institutions).</p>
+         */
         @JsonSetter(value = "ner_ORG", nulls = Nulls.SKIP)
         public Builder nerOrg(Optional<List<NamedEntityListItem>> nerOrg) {
             this.nerOrg = nerOrg;
@@ -318,6 +436,9 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>Named Entity Recognition for miscellaneous entities (events, nationalities, products).</p>
+         */
         @JsonSetter(value = "ner_MISC", nulls = Nulls.SKIP)
         public Builder nerMisc(Optional<List<NamedEntityListItem>> nerMisc) {
             this.nerMisc = nerMisc;
@@ -329,6 +450,9 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>Named Entity Recognition for location entities (cities, countries, geographic features).</p>
+         */
         @JsonSetter(value = "ner_LOC", nulls = Nulls.SKIP)
         public Builder nerLoc(Optional<List<NamedEntityListItem>> nerLoc) {
             this.nerLoc = nerLoc;
@@ -340,6 +464,66 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>Named Entity Recognition for person entities (individuals' names) extracted from the English translation of the article.</p>
+         */
+        @JsonSetter(value = "translation_ner_PER", nulls = Nulls.SKIP)
+        public Builder translationNerPer(Optional<List<NamedEntityListItem>> translationNerPer) {
+            this.translationNerPer = translationNerPer;
+            return this;
+        }
+
+        public Builder translationNerPer(List<NamedEntityListItem> translationNerPer) {
+            this.translationNerPer = Optional.ofNullable(translationNerPer);
+            return this;
+        }
+
+        /**
+         * <p>Named Entity Recognition for organization entities (company names, institutions) extracted from the English translation of the article.</p>
+         */
+        @JsonSetter(value = "translation_ner_ORG", nulls = Nulls.SKIP)
+        public Builder translationNerOrg(Optional<List<NamedEntityListItem>> translationNerOrg) {
+            this.translationNerOrg = translationNerOrg;
+            return this;
+        }
+
+        public Builder translationNerOrg(List<NamedEntityListItem> translationNerOrg) {
+            this.translationNerOrg = Optional.ofNullable(translationNerOrg);
+            return this;
+        }
+
+        /**
+         * <p>Named Entity Recognition for miscellaneous entities (events, nationalities, products) extracted from the English translation of the article.</p>
+         */
+        @JsonSetter(value = "translation_ner_MISC", nulls = Nulls.SKIP)
+        public Builder translationNerMisc(Optional<List<NamedEntityListItem>> translationNerMisc) {
+            this.translationNerMisc = translationNerMisc;
+            return this;
+        }
+
+        public Builder translationNerMisc(List<NamedEntityListItem> translationNerMisc) {
+            this.translationNerMisc = Optional.ofNullable(translationNerMisc);
+            return this;
+        }
+
+        /**
+         * <p>Named Entity Recognition for location entities (cities, countries, geographic features) extracted from the English translation of the article.</p>
+         */
+        @JsonSetter(value = "translation_ner_LOC", nulls = Nulls.SKIP)
+        public Builder translationNerLoc(Optional<List<NamedEntityListItem>> translationNerLoc) {
+            this.translationNerLoc = translationNerLoc;
+            return this;
+        }
+
+        public Builder translationNerLoc(List<NamedEntityListItem> translationNerLoc) {
+            this.translationNerLoc = Optional.ofNullable(translationNerLoc);
+            return this;
+        }
+
+        /**
+         * <p>IPTC media topic taxonomy paths identified in the article content. Each path represents a hierarchical category following the IPTC standard.</p>
+         * <p><strong>Note</strong>: The <code>iptc_tags_name</code> field is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
+         */
         @JsonSetter(value = "iptc_tags_name", nulls = Nulls.SKIP)
         public Builder iptcTagsName(Optional<List<String>> iptcTagsName) {
             this.iptcTagsName = iptcTagsName;
@@ -351,6 +535,10 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>IPTC media topic numeric codes identified in the article content. These codes correspond to the standardized IPTC media topic taxonomy.</p>
+         * <p><strong>Note</strong>: The <code>iptc_tags_id</code> field is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
+         */
         @JsonSetter(value = "iptc_tags_id", nulls = Nulls.SKIP)
         public Builder iptcTagsId(Optional<List<String>> iptcTagsId) {
             this.iptcTagsId = iptcTagsId;
@@ -362,6 +550,10 @@ public final class NlpDataEntity {
             return this;
         }
 
+        /**
+         * <p>IAB content taxonomy paths identified in the article content. Each path represents a hierarchical category following the IAB content standard.</p>
+         * <p><strong>Note</strong>: The <code>iab_tags_name</code> field is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
+         */
         @JsonSetter(value = "iab_tags_name", nulls = Nulls.SKIP)
         public Builder iabTagsName(Optional<List<String>> iabTagsName) {
             this.iabTagsName = iabTagsName;
@@ -375,6 +567,7 @@ public final class NlpDataEntity {
 
         public NlpDataEntity build() {
             return new NlpDataEntity(
+                    summaryTranslated,
                     theme,
                     summary,
                     sentiment,
@@ -383,6 +576,10 @@ public final class NlpDataEntity {
                     nerOrg,
                     nerMisc,
                     nerLoc,
+                    translationNerPer,
+                    translationNerOrg,
+                    translationNerMisc,
+                    translationNerLoc,
                     iptcTagsName,
                     iptcTagsId,
                     iabTagsName,

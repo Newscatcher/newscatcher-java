@@ -44,6 +44,8 @@ public final class SearchSimilarPostRequest {
 
     private final Optional<String> searchIn;
 
+    private final Optional<Boolean> includeTranslationFields;
+
     private final Optional<Boolean> includeSimilarDocuments;
 
     private final Optional<Integer> similarDocumentsNumber;
@@ -124,11 +126,14 @@ public final class SearchSimilarPostRequest {
 
     private final Optional<CustomTags> customTags;
 
+    private final Optional<Boolean> robotsCompliant;
+
     private final Map<String, Object> additionalProperties;
 
     private SearchSimilarPostRequest(
             String q,
             Optional<String> searchIn,
+            Optional<Boolean> includeTranslationFields,
             Optional<Boolean> includeSimilarDocuments,
             Optional<Integer> similarDocumentsNumber,
             Optional<String> similarDocumentsFields,
@@ -169,9 +174,11 @@ public final class SearchSimilarPostRequest {
             Optional<IptcTags> iptcTags,
             Optional<NotIptcTags> notIptcTags,
             Optional<CustomTags> customTags,
+            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.q = q;
         this.searchIn = searchIn;
+        this.includeTranslationFields = includeTranslationFields;
         this.includeSimilarDocuments = includeSimilarDocuments;
         this.similarDocumentsNumber = similarDocumentsNumber;
         this.similarDocumentsFields = similarDocumentsFields;
@@ -212,6 +219,7 @@ public final class SearchSimilarPostRequest {
         this.iptcTags = iptcTags;
         this.notIptcTags = notIptcTags;
         this.customTags = customTags;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -223,6 +231,11 @@ public final class SearchSimilarPostRequest {
     @JsonProperty("search_in")
     public Optional<String> getSearchIn() {
         return searchIn;
+    }
+
+    @JsonProperty("include_translation_fields")
+    public Optional<Boolean> getIncludeTranslationFields() {
+        return includeTranslationFields;
     }
 
     @JsonProperty("include_similar_documents")
@@ -425,6 +438,11 @@ public final class SearchSimilarPostRequest {
         return customTags;
     }
 
+    @JsonProperty("robots_compliant")
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -439,6 +457,7 @@ public final class SearchSimilarPostRequest {
     private boolean equalTo(SearchSimilarPostRequest other) {
         return q.equals(other.q)
                 && searchIn.equals(other.searchIn)
+                && includeTranslationFields.equals(other.includeTranslationFields)
                 && includeSimilarDocuments.equals(other.includeSimilarDocuments)
                 && similarDocumentsNumber.equals(other.similarDocumentsNumber)
                 && similarDocumentsFields.equals(other.similarDocumentsFields)
@@ -478,7 +497,8 @@ public final class SearchSimilarPostRequest {
                 && contentSentimentMax.equals(other.contentSentimentMax)
                 && iptcTags.equals(other.iptcTags)
                 && notIptcTags.equals(other.notIptcTags)
-                && customTags.equals(other.customTags);
+                && customTags.equals(other.customTags)
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
@@ -486,6 +506,7 @@ public final class SearchSimilarPostRequest {
         return Objects.hash(
                 this.q,
                 this.searchIn,
+                this.includeTranslationFields,
                 this.includeSimilarDocuments,
                 this.similarDocumentsNumber,
                 this.similarDocumentsFields,
@@ -525,7 +546,8 @@ public final class SearchSimilarPostRequest {
                 this.contentSentimentMax,
                 this.iptcTags,
                 this.notIptcTags,
-                this.customTags);
+                this.customTags,
+                this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -549,6 +571,10 @@ public final class SearchSimilarPostRequest {
         _FinalStage searchIn(Optional<String> searchIn);
 
         _FinalStage searchIn(String searchIn);
+
+        _FinalStage includeTranslationFields(Optional<Boolean> includeTranslationFields);
+
+        _FinalStage includeTranslationFields(Boolean includeTranslationFields);
 
         _FinalStage includeSimilarDocuments(Optional<Boolean> includeSimilarDocuments);
 
@@ -709,11 +735,17 @@ public final class SearchSimilarPostRequest {
         _FinalStage customTags(Optional<CustomTags> customTags);
 
         _FinalStage customTags(CustomTags customTags);
+
+        _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant);
+
+        _FinalStage robotsCompliant(Boolean robotsCompliant);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements QStage, _FinalStage {
         private String q;
+
+        private Optional<Boolean> robotsCompliant = Optional.empty();
 
         private Optional<CustomTags> customTags = Optional.empty();
 
@@ -795,6 +827,8 @@ public final class SearchSimilarPostRequest {
 
         private Optional<Boolean> includeSimilarDocuments = Optional.empty();
 
+        private Optional<Boolean> includeTranslationFields = Optional.empty();
+
         private Optional<String> searchIn = Optional.empty();
 
         @JsonAnySetter
@@ -806,6 +840,7 @@ public final class SearchSimilarPostRequest {
         public Builder from(SearchSimilarPostRequest other) {
             q(other.getQ());
             searchIn(other.getSearchIn());
+            includeTranslationFields(other.getIncludeTranslationFields());
             includeSimilarDocuments(other.getIncludeSimilarDocuments());
             similarDocumentsNumber(other.getSimilarDocumentsNumber());
             similarDocumentsFields(other.getSimilarDocumentsFields());
@@ -846,6 +881,7 @@ public final class SearchSimilarPostRequest {
             iptcTags(other.getIptcTags());
             notIptcTags(other.getNotIptcTags());
             customTags(other.getCustomTags());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
@@ -853,6 +889,19 @@ public final class SearchSimilarPostRequest {
         @JsonSetter("q")
         public _FinalStage q(@NotNull String q) {
             this.q = Objects.requireNonNull(q, "q must not be null");
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
             return this;
         }
 
@@ -1377,6 +1426,19 @@ public final class SearchSimilarPostRequest {
         }
 
         @java.lang.Override
+        public _FinalStage includeTranslationFields(Boolean includeTranslationFields) {
+            this.includeTranslationFields = Optional.ofNullable(includeTranslationFields);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "include_translation_fields", nulls = Nulls.SKIP)
+        public _FinalStage includeTranslationFields(Optional<Boolean> includeTranslationFields) {
+            this.includeTranslationFields = includeTranslationFields;
+            return this;
+        }
+
+        @java.lang.Override
         public _FinalStage searchIn(String searchIn) {
             this.searchIn = Optional.ofNullable(searchIn);
             return this;
@@ -1394,6 +1456,7 @@ public final class SearchSimilarPostRequest {
             return new SearchSimilarPostRequest(
                     q,
                     searchIn,
+                    includeTranslationFields,
                     includeSimilarDocuments,
                     similarDocumentsNumber,
                     similarDocumentsFields,
@@ -1434,6 +1497,7 @@ public final class SearchSimilarPostRequest {
                     iptcTags,
                     notIptcTags,
                     customTags,
+                    robotsCompliant,
                     additionalProperties);
         }
     }

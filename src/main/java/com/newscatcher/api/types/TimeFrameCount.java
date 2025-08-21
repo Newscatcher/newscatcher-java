@@ -78,12 +78,18 @@ public final class TimeFrameCount {
     }
 
     public interface TimeFrameStage {
+        /**
+         * <p>The timestamp for the aggregation period in format &quot;YYYY-MM-DD HH:mm:ss&quot;</p>
+         */
         ArticleCountStage timeFrame(@NotNull OffsetDateTime timeFrame);
 
         Builder from(TimeFrameCount other);
     }
 
     public interface ArticleCountStage {
+        /**
+         * <p>The number of articles published during this time frame</p>
+         */
         _FinalStage articleCount(int articleCount);
     }
 
@@ -111,6 +117,7 @@ public final class TimeFrameCount {
 
         /**
          * <p>The timestamp for the aggregation period in format &quot;YYYY-MM-DD HH:mm:ss&quot;</p>
+         * <p>The timestamp for the aggregation period in format &quot;YYYY-MM-DD HH:mm:ss&quot;</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -121,6 +128,7 @@ public final class TimeFrameCount {
         }
 
         /**
+         * <p>The number of articles published during this time frame</p>
          * <p>The number of articles published during this time frame</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */

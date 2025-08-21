@@ -15,13 +15,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@JsonDeserialize(using = MiscEntityName.Deserializer.class)
-public final class MiscEntityName {
+@JsonDeserialize(using = BreakingNewsArticleEntityAllLinks.Deserializer.class)
+public final class BreakingNewsArticleEntityAllLinks {
     private final Object value;
 
     private final int type;
 
-    private MiscEntityName(Object value, int type) {
+    private BreakingNewsArticleEntityAllLinks(Object value, int type) {
         this.value = value;
         this.type = type;
     }
@@ -31,11 +31,12 @@ public final class MiscEntityName {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
-            return visitor.visit((String) this.value);
-        } else if (this.type == 1) {
             return visitor.visit((List<String>) this.value);
+        } else if (this.type == 1) {
+            return visitor.visit((String) this.value);
         }
         throw new IllegalStateException("Failed to visit value. This should never happen.");
     }
@@ -43,10 +44,10 @@ public final class MiscEntityName {
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        return other instanceof MiscEntityName && equalTo((MiscEntityName) other);
+        return other instanceof BreakingNewsArticleEntityAllLinks && equalTo((BreakingNewsArticleEntityAllLinks) other);
     }
 
-    private boolean equalTo(MiscEntityName other) {
+    private boolean equalTo(BreakingNewsArticleEntityAllLinks other) {
         return value.equals(other.value);
     }
 
@@ -60,35 +61,36 @@ public final class MiscEntityName {
         return this.value.toString();
     }
 
-    public static MiscEntityName of(String value) {
-        return new MiscEntityName(value, 0);
+    public static BreakingNewsArticleEntityAllLinks of(List<String> value) {
+        return new BreakingNewsArticleEntityAllLinks(value, 0);
     }
 
-    public static MiscEntityName of(List<String> value) {
-        return new MiscEntityName(value, 1);
+    public static BreakingNewsArticleEntityAllLinks of(String value) {
+        return new BreakingNewsArticleEntityAllLinks(value, 1);
     }
 
     public interface Visitor<T> {
-        T visit(String value);
-
         T visit(List<String> value);
+
+        T visit(String value);
     }
 
-    static final class Deserializer extends StdDeserializer<MiscEntityName> {
+    static final class Deserializer extends StdDeserializer<BreakingNewsArticleEntityAllLinks> {
         Deserializer() {
-            super(MiscEntityName.class);
+            super(BreakingNewsArticleEntityAllLinks.class);
         }
 
         @java.lang.Override
-        public MiscEntityName deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        public BreakingNewsArticleEntityAllLinks deserialize(JsonParser p, DeserializationContext context)
+                throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
-            } catch (IllegalArgumentException e) {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<String>>() {}));
+            } catch (RuntimeException e) {
             }
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<String>>() {}));
-            } catch (IllegalArgumentException e) {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
+            } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }

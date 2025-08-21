@@ -21,8 +21,6 @@ import com.newscatcher.api.types.From;
 import com.newscatcher.api.types.IabTags;
 import com.newscatcher.api.types.IptcTags;
 import com.newscatcher.api.types.Lang;
-import com.newscatcher.api.types.LocEntityName;
-import com.newscatcher.api.types.MiscEntityName;
 import com.newscatcher.api.types.NewsDomainType;
 import com.newscatcher.api.types.NewsType;
 import com.newscatcher.api.types.NotAuthorName;
@@ -32,9 +30,7 @@ import com.newscatcher.api.types.NotIptcTags;
 import com.newscatcher.api.types.NotLang;
 import com.newscatcher.api.types.NotSources;
 import com.newscatcher.api.types.NotTheme;
-import com.newscatcher.api.types.OrgEntityName;
 import com.newscatcher.api.types.ParentUrl;
-import com.newscatcher.api.types.PerEntityName;
 import com.newscatcher.api.types.PredefinedSources;
 import com.newscatcher.api.types.PublishedDatePrecision;
 import com.newscatcher.api.types.SortBy;
@@ -54,6 +50,8 @@ public final class SearchPostRequest {
     private final String q;
 
     private final Optional<String> searchIn;
+
+    private final Optional<Boolean> includeTranslationFields;
 
     private final Optional<PredefinedSources> predefinedSources;
 
@@ -131,13 +129,13 @@ public final class SearchPostRequest {
 
     private final Optional<NotTheme> notTheme;
 
-    private final Optional<OrgEntityName> orgEntityName;
+    private final Optional<String> orgEntityName;
 
-    private final Optional<PerEntityName> perEntityName;
+    private final Optional<String> perEntityName;
 
-    private final Optional<LocEntityName> locEntityName;
+    private final Optional<String> locEntityName;
 
-    private final Optional<MiscEntityName> miscEntityName;
+    private final Optional<String> miscEntityName;
 
     private final Optional<Float> titleSentimentMin;
 
@@ -145,7 +143,7 @@ public final class SearchPostRequest {
 
     private final Optional<Float> contentSentimentMin;
 
-    private final Optional<Float> contentSentientMax;
+    private final Optional<Float> contentSentimentMax;
 
     private final Optional<IptcTags> iptcTags;
 
@@ -159,11 +157,14 @@ public final class SearchPostRequest {
 
     private final Optional<Boolean> excludeDuplicates;
 
+    private final Optional<Boolean> robotsCompliant;
+
     private final Map<String, Object> additionalProperties;
 
     private SearchPostRequest(
             String q,
             Optional<String> searchIn,
+            Optional<Boolean> includeTranslationFields,
             Optional<PredefinedSources> predefinedSources,
             Optional<SourceName> sourceName,
             Optional<Sources> sources,
@@ -202,23 +203,25 @@ public final class SearchPostRequest {
             Optional<Boolean> hasNlp,
             Optional<Theme> theme,
             Optional<NotTheme> notTheme,
-            Optional<OrgEntityName> orgEntityName,
-            Optional<PerEntityName> perEntityName,
-            Optional<LocEntityName> locEntityName,
-            Optional<MiscEntityName> miscEntityName,
+            Optional<String> orgEntityName,
+            Optional<String> perEntityName,
+            Optional<String> locEntityName,
+            Optional<String> miscEntityName,
             Optional<Float> titleSentimentMin,
             Optional<Float> titleSentimentMax,
             Optional<Float> contentSentimentMin,
-            Optional<Float> contentSentientMax,
+            Optional<Float> contentSentimentMax,
             Optional<IptcTags> iptcTags,
             Optional<NotIptcTags> notIptcTags,
             Optional<IabTags> iabTags,
             Optional<NotIabTags> notIabTags,
             Optional<CustomTags> customTags,
             Optional<Boolean> excludeDuplicates,
+            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.q = q;
         this.searchIn = searchIn;
+        this.includeTranslationFields = includeTranslationFields;
         this.predefinedSources = predefinedSources;
         this.sourceName = sourceName;
         this.sources = sources;
@@ -264,13 +267,14 @@ public final class SearchPostRequest {
         this.titleSentimentMin = titleSentimentMin;
         this.titleSentimentMax = titleSentimentMax;
         this.contentSentimentMin = contentSentimentMin;
-        this.contentSentientMax = contentSentientMax;
+        this.contentSentimentMax = contentSentimentMax;
         this.iptcTags = iptcTags;
         this.notIptcTags = notIptcTags;
         this.iabTags = iabTags;
         this.notIabTags = notIabTags;
         this.customTags = customTags;
         this.excludeDuplicates = excludeDuplicates;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -282,6 +286,11 @@ public final class SearchPostRequest {
     @JsonProperty("search_in")
     public Optional<String> getSearchIn() {
         return searchIn;
+    }
+
+    @JsonProperty("include_translation_fields")
+    public Optional<Boolean> getIncludeTranslationFields() {
+        return includeTranslationFields;
     }
 
     @JsonProperty("predefined_sources")
@@ -475,22 +484,22 @@ public final class SearchPostRequest {
     }
 
     @JsonProperty("ORG_entity_name")
-    public Optional<OrgEntityName> getOrgEntityName() {
+    public Optional<String> getOrgEntityName() {
         return orgEntityName;
     }
 
     @JsonProperty("PER_entity_name")
-    public Optional<PerEntityName> getPerEntityName() {
+    public Optional<String> getPerEntityName() {
         return perEntityName;
     }
 
     @JsonProperty("LOC_entity_name")
-    public Optional<LocEntityName> getLocEntityName() {
+    public Optional<String> getLocEntityName() {
         return locEntityName;
     }
 
     @JsonProperty("MISC_entity_name")
-    public Optional<MiscEntityName> getMiscEntityName() {
+    public Optional<String> getMiscEntityName() {
         return miscEntityName;
     }
 
@@ -509,9 +518,9 @@ public final class SearchPostRequest {
         return contentSentimentMin;
     }
 
-    @JsonProperty("content_sentient_max")
-    public Optional<Float> getContentSentientMax() {
-        return contentSentientMax;
+    @JsonProperty("content_sentiment_max")
+    public Optional<Float> getContentSentimentMax() {
+        return contentSentimentMax;
     }
 
     @JsonProperty("iptc_tags")
@@ -544,6 +553,11 @@ public final class SearchPostRequest {
         return excludeDuplicates;
     }
 
+    @JsonProperty("robots_compliant")
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -558,6 +572,7 @@ public final class SearchPostRequest {
     private boolean equalTo(SearchPostRequest other) {
         return q.equals(other.q)
                 && searchIn.equals(other.searchIn)
+                && includeTranslationFields.equals(other.includeTranslationFields)
                 && predefinedSources.equals(other.predefinedSources)
                 && sourceName.equals(other.sourceName)
                 && sources.equals(other.sources)
@@ -603,13 +618,14 @@ public final class SearchPostRequest {
                 && titleSentimentMin.equals(other.titleSentimentMin)
                 && titleSentimentMax.equals(other.titleSentimentMax)
                 && contentSentimentMin.equals(other.contentSentimentMin)
-                && contentSentientMax.equals(other.contentSentientMax)
+                && contentSentimentMax.equals(other.contentSentimentMax)
                 && iptcTags.equals(other.iptcTags)
                 && notIptcTags.equals(other.notIptcTags)
                 && iabTags.equals(other.iabTags)
                 && notIabTags.equals(other.notIabTags)
                 && customTags.equals(other.customTags)
-                && excludeDuplicates.equals(other.excludeDuplicates);
+                && excludeDuplicates.equals(other.excludeDuplicates)
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
@@ -617,6 +633,7 @@ public final class SearchPostRequest {
         return Objects.hash(
                 this.q,
                 this.searchIn,
+                this.includeTranslationFields,
                 this.predefinedSources,
                 this.sourceName,
                 this.sources,
@@ -662,13 +679,14 @@ public final class SearchPostRequest {
                 this.titleSentimentMin,
                 this.titleSentimentMax,
                 this.contentSentimentMin,
-                this.contentSentientMax,
+                this.contentSentimentMax,
                 this.iptcTags,
                 this.notIptcTags,
                 this.iabTags,
                 this.notIabTags,
                 this.customTags,
-                this.excludeDuplicates);
+                this.excludeDuplicates,
+                this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -692,6 +710,10 @@ public final class SearchPostRequest {
         _FinalStage searchIn(Optional<String> searchIn);
 
         _FinalStage searchIn(String searchIn);
+
+        _FinalStage includeTranslationFields(Optional<Boolean> includeTranslationFields);
+
+        _FinalStage includeTranslationFields(Boolean includeTranslationFields);
 
         _FinalStage predefinedSources(Optional<PredefinedSources> predefinedSources);
 
@@ -845,21 +867,21 @@ public final class SearchPostRequest {
 
         _FinalStage notTheme(NotTheme notTheme);
 
-        _FinalStage orgEntityName(Optional<OrgEntityName> orgEntityName);
+        _FinalStage orgEntityName(Optional<String> orgEntityName);
 
-        _FinalStage orgEntityName(OrgEntityName orgEntityName);
+        _FinalStage orgEntityName(String orgEntityName);
 
-        _FinalStage perEntityName(Optional<PerEntityName> perEntityName);
+        _FinalStage perEntityName(Optional<String> perEntityName);
 
-        _FinalStage perEntityName(PerEntityName perEntityName);
+        _FinalStage perEntityName(String perEntityName);
 
-        _FinalStage locEntityName(Optional<LocEntityName> locEntityName);
+        _FinalStage locEntityName(Optional<String> locEntityName);
 
-        _FinalStage locEntityName(LocEntityName locEntityName);
+        _FinalStage locEntityName(String locEntityName);
 
-        _FinalStage miscEntityName(Optional<MiscEntityName> miscEntityName);
+        _FinalStage miscEntityName(Optional<String> miscEntityName);
 
-        _FinalStage miscEntityName(MiscEntityName miscEntityName);
+        _FinalStage miscEntityName(String miscEntityName);
 
         _FinalStage titleSentimentMin(Optional<Float> titleSentimentMin);
 
@@ -873,9 +895,9 @@ public final class SearchPostRequest {
 
         _FinalStage contentSentimentMin(Float contentSentimentMin);
 
-        _FinalStage contentSentientMax(Optional<Float> contentSentientMax);
+        _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax);
 
-        _FinalStage contentSentientMax(Float contentSentientMax);
+        _FinalStage contentSentimentMax(Float contentSentimentMax);
 
         _FinalStage iptcTags(Optional<IptcTags> iptcTags);
 
@@ -900,11 +922,17 @@ public final class SearchPostRequest {
         _FinalStage excludeDuplicates(Optional<Boolean> excludeDuplicates);
 
         _FinalStage excludeDuplicates(Boolean excludeDuplicates);
+
+        _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant);
+
+        _FinalStage robotsCompliant(Boolean robotsCompliant);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements QStage, _FinalStage {
         private String q;
+
+        private Optional<Boolean> robotsCompliant = Optional.empty();
 
         private Optional<Boolean> excludeDuplicates = Optional.empty();
 
@@ -918,7 +946,7 @@ public final class SearchPostRequest {
 
         private Optional<IptcTags> iptcTags = Optional.empty();
 
-        private Optional<Float> contentSentientMax = Optional.empty();
+        private Optional<Float> contentSentimentMax = Optional.empty();
 
         private Optional<Float> contentSentimentMin = Optional.empty();
 
@@ -926,13 +954,13 @@ public final class SearchPostRequest {
 
         private Optional<Float> titleSentimentMin = Optional.empty();
 
-        private Optional<MiscEntityName> miscEntityName = Optional.empty();
+        private Optional<String> miscEntityName = Optional.empty();
 
-        private Optional<LocEntityName> locEntityName = Optional.empty();
+        private Optional<String> locEntityName = Optional.empty();
 
-        private Optional<PerEntityName> perEntityName = Optional.empty();
+        private Optional<String> perEntityName = Optional.empty();
 
-        private Optional<OrgEntityName> orgEntityName = Optional.empty();
+        private Optional<String> orgEntityName = Optional.empty();
 
         private Optional<NotTheme> notTheme = Optional.empty();
 
@@ -1010,6 +1038,8 @@ public final class SearchPostRequest {
 
         private Optional<PredefinedSources> predefinedSources = Optional.empty();
 
+        private Optional<Boolean> includeTranslationFields = Optional.empty();
+
         private Optional<String> searchIn = Optional.empty();
 
         @JsonAnySetter
@@ -1021,6 +1051,7 @@ public final class SearchPostRequest {
         public Builder from(SearchPostRequest other) {
             q(other.getQ());
             searchIn(other.getSearchIn());
+            includeTranslationFields(other.getIncludeTranslationFields());
             predefinedSources(other.getPredefinedSources());
             sourceName(other.getSourceName());
             sources(other.getSources());
@@ -1066,13 +1097,14 @@ public final class SearchPostRequest {
             titleSentimentMin(other.getTitleSentimentMin());
             titleSentimentMax(other.getTitleSentimentMax());
             contentSentimentMin(other.getContentSentimentMin());
-            contentSentientMax(other.getContentSentientMax());
+            contentSentimentMax(other.getContentSentimentMax());
             iptcTags(other.getIptcTags());
             notIptcTags(other.getNotIptcTags());
             iabTags(other.getIabTags());
             notIabTags(other.getNotIabTags());
             customTags(other.getCustomTags());
             excludeDuplicates(other.getExcludeDuplicates());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
@@ -1080,6 +1112,19 @@ public final class SearchPostRequest {
         @JsonSetter("q")
         public _FinalStage q(@NotNull String q) {
             this.q = Objects.requireNonNull(q, "q must not be null");
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
             return this;
         }
 
@@ -1162,15 +1207,15 @@ public final class SearchPostRequest {
         }
 
         @java.lang.Override
-        public _FinalStage contentSentientMax(Float contentSentientMax) {
-            this.contentSentientMax = Optional.ofNullable(contentSentientMax);
+        public _FinalStage contentSentimentMax(Float contentSentimentMax) {
+            this.contentSentimentMax = Optional.ofNullable(contentSentimentMax);
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter(value = "content_sentient_max", nulls = Nulls.SKIP)
-        public _FinalStage contentSentientMax(Optional<Float> contentSentientMax) {
-            this.contentSentientMax = contentSentientMax;
+        @JsonSetter(value = "content_sentiment_max", nulls = Nulls.SKIP)
+        public _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax) {
+            this.contentSentimentMax = contentSentimentMax;
             return this;
         }
 
@@ -1214,53 +1259,53 @@ public final class SearchPostRequest {
         }
 
         @java.lang.Override
-        public _FinalStage miscEntityName(MiscEntityName miscEntityName) {
+        public _FinalStage miscEntityName(String miscEntityName) {
             this.miscEntityName = Optional.ofNullable(miscEntityName);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "MISC_entity_name", nulls = Nulls.SKIP)
-        public _FinalStage miscEntityName(Optional<MiscEntityName> miscEntityName) {
+        public _FinalStage miscEntityName(Optional<String> miscEntityName) {
             this.miscEntityName = miscEntityName;
             return this;
         }
 
         @java.lang.Override
-        public _FinalStage locEntityName(LocEntityName locEntityName) {
+        public _FinalStage locEntityName(String locEntityName) {
             this.locEntityName = Optional.ofNullable(locEntityName);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "LOC_entity_name", nulls = Nulls.SKIP)
-        public _FinalStage locEntityName(Optional<LocEntityName> locEntityName) {
+        public _FinalStage locEntityName(Optional<String> locEntityName) {
             this.locEntityName = locEntityName;
             return this;
         }
 
         @java.lang.Override
-        public _FinalStage perEntityName(PerEntityName perEntityName) {
+        public _FinalStage perEntityName(String perEntityName) {
             this.perEntityName = Optional.ofNullable(perEntityName);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "PER_entity_name", nulls = Nulls.SKIP)
-        public _FinalStage perEntityName(Optional<PerEntityName> perEntityName) {
+        public _FinalStage perEntityName(Optional<String> perEntityName) {
             this.perEntityName = perEntityName;
             return this;
         }
 
         @java.lang.Override
-        public _FinalStage orgEntityName(OrgEntityName orgEntityName) {
+        public _FinalStage orgEntityName(String orgEntityName) {
             this.orgEntityName = Optional.ofNullable(orgEntityName);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "ORG_entity_name", nulls = Nulls.SKIP)
-        public _FinalStage orgEntityName(Optional<OrgEntityName> orgEntityName) {
+        public _FinalStage orgEntityName(Optional<String> orgEntityName) {
             this.orgEntityName = orgEntityName;
             return this;
         }
@@ -1760,6 +1805,19 @@ public final class SearchPostRequest {
         }
 
         @java.lang.Override
+        public _FinalStage includeTranslationFields(Boolean includeTranslationFields) {
+            this.includeTranslationFields = Optional.ofNullable(includeTranslationFields);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "include_translation_fields", nulls = Nulls.SKIP)
+        public _FinalStage includeTranslationFields(Optional<Boolean> includeTranslationFields) {
+            this.includeTranslationFields = includeTranslationFields;
+            return this;
+        }
+
+        @java.lang.Override
         public _FinalStage searchIn(String searchIn) {
             this.searchIn = Optional.ofNullable(searchIn);
             return this;
@@ -1777,6 +1835,7 @@ public final class SearchPostRequest {
             return new SearchPostRequest(
                     q,
                     searchIn,
+                    includeTranslationFields,
                     predefinedSources,
                     sourceName,
                     sources,
@@ -1822,13 +1881,14 @@ public final class SearchPostRequest {
                     titleSentimentMin,
                     titleSentimentMax,
                     contentSentimentMin,
-                    contentSentientMax,
+                    contentSentimentMax,
                     iptcTags,
                     notIptcTags,
                     iabTags,
                     notIabTags,
                     customTags,
                     excludeDuplicates,
+                    robotsCompliant,
                     additionalProperties);
         }
     }

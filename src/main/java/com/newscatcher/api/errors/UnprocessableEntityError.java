@@ -5,6 +5,7 @@ package com.newscatcher.api.errors;
 
 import com.newscatcher.api.core.NewscatcherApiApiException;
 import com.newscatcher.api.types.Error;
+import okhttp3.Response;
 
 public final class UnprocessableEntityError extends NewscatcherApiApiException {
     /**
@@ -14,6 +15,11 @@ public final class UnprocessableEntityError extends NewscatcherApiApiException {
 
     public UnprocessableEntityError(Error body) {
         super("UnprocessableEntityError", 422, body);
+        this.body = body;
+    }
+
+    public UnprocessableEntityError(Error body, Response rawResponse) {
+        super("UnprocessableEntityError", 422, body, rawResponse);
         this.body = body;
     }
 

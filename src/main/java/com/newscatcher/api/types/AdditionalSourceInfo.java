@@ -163,6 +163,9 @@ public final class AdditionalSourceInfo {
             return this;
         }
 
+        /**
+         * <p>The number of articles published by the source in the last seven days.</p>
+         */
         @JsonSetter(value = "nb_articles_for_7d", nulls = Nulls.SKIP)
         public Builder nbArticlesFor7D(Optional<Integer> nbArticlesFor7D) {
             this.nbArticlesFor7D = nbArticlesFor7D;
@@ -174,6 +177,9 @@ public final class AdditionalSourceInfo {
             return this;
         }
 
+        /**
+         * <p>The country of origin of the news source.</p>
+         */
         @JsonSetter(value = "country", nulls = Nulls.SKIP)
         public Builder country(Optional<String> country) {
             this.country = country;
@@ -185,6 +191,9 @@ public final class AdditionalSourceInfo {
             return this;
         }
 
+        /**
+         * <p>The SEO rank of the news source.</p>
+         */
         @JsonSetter(value = "rank", nulls = Nulls.SKIP)
         public Builder rank(Optional<Integer> rank) {
             this.rank = rank;
@@ -196,6 +205,9 @@ public final class AdditionalSourceInfo {
             return this;
         }
 
+        /**
+         * <p>Indicates whether the source is a news domain.</p>
+         */
         @JsonSetter(value = "is_news_domain", nulls = Nulls.SKIP)
         public Builder isNewsDomain(Optional<Boolean> isNewsDomain) {
             this.isNewsDomain = isNewsDomain;
@@ -207,6 +219,9 @@ public final class AdditionalSourceInfo {
             return this;
         }
 
+        /**
+         * <p>The type of news domain.</p>
+         */
         @JsonSetter(value = "news_domain_type", nulls = Nulls.SKIP)
         public Builder newsDomainType(Optional<String> newsDomainType) {
             this.newsDomainType = newsDomainType;
@@ -218,6 +233,9 @@ public final class AdditionalSourceInfo {
             return this;
         }
 
+        /**
+         * <p>The category of news provided by the source.</p>
+         */
         @JsonSetter(value = "news_type", nulls = Nulls.SKIP)
         public Builder newsType(Optional<String> newsType) {
             this.newsType = newsType;

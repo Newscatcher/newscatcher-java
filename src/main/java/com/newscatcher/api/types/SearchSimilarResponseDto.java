@@ -152,30 +152,48 @@ public final class SearchSimilarResponseDto implements IBaseSearchResponseDto {
     }
 
     public interface StatusStage {
+        /**
+         * <p>The status of the response.</p>
+         */
         TotalHitsStage status(@NotNull String status);
 
         Builder from(SearchSimilarResponseDto other);
     }
 
     public interface TotalHitsStage {
+        /**
+         * <p>The total number of articles matching the search criteria.</p>
+         */
         PageStage totalHits(int totalHits);
     }
 
     public interface PageStage {
+        /**
+         * <p>The current page number of the results.</p>
+         */
         TotalPagesStage page(int page);
     }
 
     public interface TotalPagesStage {
+        /**
+         * <p>The total number of pages available for the given search criteria.</p>
+         */
         PageSizeStage totalPages(int totalPages);
     }
 
     public interface PageSizeStage {
+        /**
+         * <p>The number of articles per page.</p>
+         */
         _FinalStage pageSize(int pageSize);
     }
 
     public interface _FinalStage {
         SearchSimilarResponseDto build();
 
+        /**
+         * <p>A list of articles matching the search criteria.</p>
+         */
         _FinalStage articles(Optional<List<SimilarArticleEntity>> articles);
 
         _FinalStage articles(List<SimilarArticleEntity> articles);
@@ -221,6 +239,7 @@ public final class SearchSimilarResponseDto implements IBaseSearchResponseDto {
 
         /**
          * <p>The status of the response.</p>
+         * <p>The status of the response.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -231,6 +250,7 @@ public final class SearchSimilarResponseDto implements IBaseSearchResponseDto {
         }
 
         /**
+         * <p>The total number of articles matching the search criteria.</p>
          * <p>The total number of articles matching the search criteria.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -243,6 +263,7 @@ public final class SearchSimilarResponseDto implements IBaseSearchResponseDto {
 
         /**
          * <p>The current page number of the results.</p>
+         * <p>The current page number of the results.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -254,6 +275,7 @@ public final class SearchSimilarResponseDto implements IBaseSearchResponseDto {
 
         /**
          * <p>The total number of pages available for the given search criteria.</p>
+         * <p>The total number of pages available for the given search criteria.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -264,6 +286,7 @@ public final class SearchSimilarResponseDto implements IBaseSearchResponseDto {
         }
 
         /**
+         * <p>The number of articles per page.</p>
          * <p>The number of articles per page.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -297,6 +320,9 @@ public final class SearchSimilarResponseDto implements IBaseSearchResponseDto {
             return this;
         }
 
+        /**
+         * <p>A list of articles matching the search criteria.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "articles", nulls = Nulls.SKIP)
         public _FinalStage articles(Optional<List<SimilarArticleEntity>> articles) {

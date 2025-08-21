@@ -92,18 +92,27 @@ public final class ClusterEntity {
     }
 
     public interface ClusterIdStage {
+        /**
+         * <p>The unique identifier for the cluster.</p>
+         */
         ClusterSizeStage clusterId(@NotNull String clusterId);
 
         Builder from(ClusterEntity other);
     }
 
     public interface ClusterSizeStage {
+        /**
+         * <p>The number of articles in the cluster.</p>
+         */
         _FinalStage clusterSize(int clusterSize);
     }
 
     public interface _FinalStage {
         ClusterEntity build();
 
+        /**
+         * <p>A list of articles in the cluster.</p>
+         */
         _FinalStage articles(List<ArticleEntity> articles);
 
         _FinalStage addArticles(ArticleEntity articles);
@@ -134,6 +143,7 @@ public final class ClusterEntity {
 
         /**
          * <p>The unique identifier for the cluster.</p>
+         * <p>The unique identifier for the cluster.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -144,6 +154,7 @@ public final class ClusterEntity {
         }
 
         /**
+         * <p>The number of articles in the cluster.</p>
          * <p>The number of articles in the cluster.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -174,6 +185,9 @@ public final class ClusterEntity {
             return this;
         }
 
+        /**
+         * <p>A list of articles in the cluster.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "articles", nulls = Nulls.SKIP)
         public _FinalStage articles(List<ArticleEntity> articles) {

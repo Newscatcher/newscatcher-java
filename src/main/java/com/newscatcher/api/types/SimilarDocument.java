@@ -100,20 +100,32 @@ public final class SimilarDocument {
     }
 
     public interface IdStage {
+        /**
+         * <p>The unique identifier of the similar document.</p>
+         */
         ScoreStage id(@NotNull String id);
 
         Builder from(SimilarDocument other);
     }
 
     public interface ScoreStage {
+        /**
+         * <p>The relevance score of the similar document.</p>
+         */
         TitleStage score(double score);
     }
 
     public interface TitleStage {
+        /**
+         * <p>The title of the similar document.</p>
+         */
         LinkStage title(@NotNull String title);
     }
 
     public interface LinkStage {
+        /**
+         * <p>The link to the similar document.</p>
+         */
         _FinalStage link(@NotNull String link);
     }
 
@@ -147,6 +159,7 @@ public final class SimilarDocument {
 
         /**
          * <p>The unique identifier of the similar document.</p>
+         * <p>The unique identifier of the similar document.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -157,6 +170,7 @@ public final class SimilarDocument {
         }
 
         /**
+         * <p>The relevance score of the similar document.</p>
          * <p>The relevance score of the similar document.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -169,6 +183,7 @@ public final class SimilarDocument {
 
         /**
          * <p>The title of the similar document.</p>
+         * <p>The title of the similar document.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -179,6 +194,7 @@ public final class SimilarDocument {
         }
 
         /**
+         * <p>The link to the similar document.</p>
          * <p>The link to the similar document.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */

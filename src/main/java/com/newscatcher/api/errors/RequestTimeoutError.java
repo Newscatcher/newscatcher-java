@@ -5,6 +5,7 @@ package com.newscatcher.api.errors;
 
 import com.newscatcher.api.core.NewscatcherApiApiException;
 import com.newscatcher.api.types.Error;
+import okhttp3.Response;
 
 public final class RequestTimeoutError extends NewscatcherApiApiException {
     /**
@@ -14,6 +15,11 @@ public final class RequestTimeoutError extends NewscatcherApiApiException {
 
     public RequestTimeoutError(Error body) {
         super("RequestTimeoutError", 408, body);
+        this.body = body;
+    }
+
+    public RequestTimeoutError(Error body, Response rawResponse) {
+        super("RequestTimeoutError", 408, body, rawResponse);
         this.body = body;
     }
 

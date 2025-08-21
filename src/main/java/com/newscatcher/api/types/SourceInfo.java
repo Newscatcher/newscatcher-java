@@ -106,6 +106,9 @@ public final class SourceInfo {
     }
 
     public interface DomainUrlStage {
+        /**
+         * <p>The domain URL of the news source.</p>
+         */
         _FinalStage domainUrl(@NotNull String domainUrl);
 
         Builder from(SourceInfo other);
@@ -114,10 +117,16 @@ public final class SourceInfo {
     public interface _FinalStage {
         SourceInfo build();
 
+        /**
+         * <p>The name of the news source.</p>
+         */
         _FinalStage nameSource(Optional<String> nameSource);
 
         _FinalStage nameSource(String nameSource);
 
+        /**
+         * <p>The logo of the news source.</p>
+         */
         _FinalStage logo(Optional<String> logo);
 
         _FinalStage logo(String logo);
@@ -153,6 +162,7 @@ public final class SourceInfo {
 
         /**
          * <p>The domain URL of the news source.</p>
+         * <p>The domain URL of the news source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -185,6 +195,9 @@ public final class SourceInfo {
             return this;
         }
 
+        /**
+         * <p>The logo of the news source.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "logo", nulls = Nulls.SKIP)
         public _FinalStage logo(Optional<String> logo) {
@@ -202,6 +215,9 @@ public final class SourceInfo {
             return this;
         }
 
+        /**
+         * <p>The name of the news source.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "name_source", nulls = Nulls.SKIP)
         public _FinalStage nameSource(Optional<String> nameSource) {

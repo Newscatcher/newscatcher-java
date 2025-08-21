@@ -81,6 +81,9 @@ public final class AggregationItem {
             return this;
         }
 
+        /**
+         * <p>Array of time frames and their corresponding article counts</p>
+         */
         @JsonSetter(value = "aggregation_count", nulls = Nulls.SKIP)
         public Builder aggregationCount(List<TimeFrameCount> aggregationCount) {
             this.aggregationCount.clear();

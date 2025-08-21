@@ -4,6 +4,7 @@
 package com.newscatcher.api.errors;
 
 import com.newscatcher.api.core.NewscatcherApiApiException;
+import okhttp3.Response;
 
 public final class InternalServerError extends NewscatcherApiApiException {
     /**
@@ -13,6 +14,11 @@ public final class InternalServerError extends NewscatcherApiApiException {
 
     public InternalServerError(String body) {
         super("InternalServerError", 500, body);
+        this.body = body;
+    }
+
+    public InternalServerError(String body, Response rawResponse) {
+        super("InternalServerError", 500, body, rawResponse);
         this.body = body;
     }
 

@@ -5,6 +5,7 @@ package com.newscatcher.api.errors;
 
 import com.newscatcher.api.core.NewscatcherApiApiException;
 import com.newscatcher.api.types.Error;
+import okhttp3.Response;
 
 public final class TooManyRequestsError extends NewscatcherApiApiException {
     /**
@@ -14,6 +15,11 @@ public final class TooManyRequestsError extends NewscatcherApiApiException {
 
     public TooManyRequestsError(Error body) {
         super("TooManyRequestsError", 429, body);
+        this.body = body;
+    }
+
+    public TooManyRequestsError(Error body, Response rawResponse) {
+        super("TooManyRequestsError", 429, body, rawResponse);
         this.body = body;
     }
 

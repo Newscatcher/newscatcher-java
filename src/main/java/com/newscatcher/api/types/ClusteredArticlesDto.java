@@ -82,6 +82,9 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
     }
 
     public interface ClustersCountStage {
+        /**
+         * <p>The number of clusters in the search results.</p>
+         */
         _FinalStage clustersCount(int clustersCount);
 
         Builder from(ClusteredArticlesDto other);
@@ -90,6 +93,9 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
     public interface _FinalStage {
         ClusteredArticlesDto build();
 
+        /**
+         * <p>A list of clusters found in the search results.</p>
+         */
         _FinalStage clusters(List<ClusterEntity> clusters);
 
         _FinalStage addClusters(ClusterEntity clusters);
@@ -116,6 +122,7 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
         }
 
         /**
+         * <p>The number of clusters in the search results.</p>
          * <p>The number of clusters in the search results.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -146,6 +153,9 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
             return this;
         }
 
+        /**
+         * <p>A list of clusters found in the search results.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "clusters", nulls = Nulls.SKIP)
         public _FinalStage clusters(List<ClusterEntity> clusters) {

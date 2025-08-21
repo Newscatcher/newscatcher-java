@@ -31,6 +31,7 @@ public final class Aggregations {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((AggregationItem) this.value);
@@ -80,15 +81,15 @@ public final class Aggregations {
         }
 
         @java.lang.Override
-        public Aggregations deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        public Aggregations deserialize(JsonParser p, DeserializationContext context) throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, AggregationItem.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<AggregationItem>>() {}));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }
