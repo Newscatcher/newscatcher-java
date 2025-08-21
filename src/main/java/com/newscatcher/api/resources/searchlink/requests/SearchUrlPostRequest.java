@@ -36,6 +36,8 @@ public final class SearchUrlPostRequest {
 
     private final Optional<Integer> pageSize;
 
+    private final Optional<Boolean> robotsCompliant;
+
     private final Map<String, Object> additionalProperties;
 
     private SearchUrlPostRequest(
@@ -45,6 +47,7 @@ public final class SearchUrlPostRequest {
             Optional<To> to,
             Optional<Integer> page,
             Optional<Integer> pageSize,
+            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.ids = ids;
         this.links = links;
@@ -52,6 +55,7 @@ public final class SearchUrlPostRequest {
         this.to = to;
         this.page = page;
         this.pageSize = pageSize;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -89,7 +93,7 @@ public final class SearchUrlPostRequest {
      * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
      * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
      * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-     * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+     * <li>English phrases: <code>1 day ago</code>, <code>now</code></li>
      * </ul>
      */
     @JsonProperty("to_")
@@ -105,6 +109,11 @@ public final class SearchUrlPostRequest {
     @JsonProperty("page_size")
     public Optional<Integer> getPageSize() {
         return pageSize;
+    }
+
+    @JsonProperty("robots_compliant")
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
     }
 
     @java.lang.Override
@@ -124,12 +133,13 @@ public final class SearchUrlPostRequest {
                 && from.equals(other.from)
                 && to.equals(other.to)
                 && page.equals(other.page)
-                && pageSize.equals(other.pageSize);
+                && pageSize.equals(other.pageSize)
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.ids, this.links, this.from, this.to, this.page, this.pageSize);
+        return Objects.hash(this.ids, this.links, this.from, this.to, this.page, this.pageSize, this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -155,6 +165,8 @@ public final class SearchUrlPostRequest {
 
         private Optional<Integer> pageSize = Optional.empty();
 
+        private Optional<Boolean> robotsCompliant = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -167,6 +179,7 @@ public final class SearchUrlPostRequest {
             to(other.getTo());
             page(other.getPage());
             pageSize(other.getPageSize());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
@@ -192,6 +205,17 @@ public final class SearchUrlPostRequest {
             return this;
         }
 
+        /**
+         * <p>The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text strings. The default time zone is UTC.</p>
+         * <p>Formats with examples:</p>
+         * <ul>
+         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+         * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
+         * </ul>
+         */
         @JsonSetter(value = "from_", nulls = Nulls.SKIP)
         public Builder from(Optional<From> from) {
             this.from = from;
@@ -203,6 +227,17 @@ public final class SearchUrlPostRequest {
             return this;
         }
 
+        /**
+         * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text strings. The default time zone is UTC.</p>
+         * <p>Formats with examples:</p>
+         * <ul>
+         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
+         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
+         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
+         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
+         * <li>English phrases: <code>1 day ago</code>, <code>now</code></li>
+         * </ul>
+         */
         @JsonSetter(value = "to_", nulls = Nulls.SKIP)
         public Builder to(Optional<To> to) {
             this.to = to;
@@ -236,8 +271,20 @@ public final class SearchUrlPostRequest {
             return this;
         }
 
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public Builder robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
+            return this;
+        }
+
+        public Builder robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
         public SearchUrlPostRequest build() {
-            return new SearchUrlPostRequest(ids, links, from, to, page, pageSize, additionalProperties);
+            return new SearchUrlPostRequest(
+                    ids, links, from, to, page, pageSize, robotsCompliant, additionalProperties);
         }
     }
 }

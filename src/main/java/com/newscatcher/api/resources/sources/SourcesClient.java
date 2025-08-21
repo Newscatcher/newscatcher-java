@@ -3,225 +3,68 @@
  */
 package com.newscatcher.api.resources.sources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.newscatcher.api.core.ClientOptions;
-import com.newscatcher.api.core.MediaTypes;
-import com.newscatcher.api.core.NewscatcherApiApiException;
-import com.newscatcher.api.core.NewscatcherApiException;
-import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.errors.BadRequestError;
-import com.newscatcher.api.errors.ForbiddenError;
-import com.newscatcher.api.errors.InternalServerError;
-import com.newscatcher.api.errors.RequestTimeoutError;
-import com.newscatcher.api.errors.TooManyRequestsError;
-import com.newscatcher.api.errors.UnauthorizedError;
-import com.newscatcher.api.errors.UnprocessableEntityError;
 import com.newscatcher.api.resources.sources.requests.SourcesGetRequest;
 import com.newscatcher.api.resources.sources.requests.SourcesPostRequest;
-import com.newscatcher.api.types.Error;
 import com.newscatcher.api.types.SourcesResponseDto;
-import java.io.IOException;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class SourcesClient {
     protected final ClientOptions clientOptions;
 
+    private final RawSourcesClient rawClient;
+
     public SourcesClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new RawSourcesClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public RawSourcesClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
     public SourcesResponseDto get() {
-        return get(SourcesGetRequest.builder().build());
+        return this.rawClient.get().body();
     }
 
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
     public SourcesResponseDto get(SourcesGetRequest request) {
-        return get(request, null);
+        return this.rawClient.get(request).body();
     }
 
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
     public SourcesResponseDto get(SourcesGetRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("api/sources");
-        if (request.getLang().isPresent()) {
-            httpUrl.addQueryParameter("lang", request.getLang().get());
-        }
-        if (request.getCountries().isPresent()) {
-            httpUrl.addQueryParameter("countries", request.getCountries().get());
-        }
-        if (request.getPredefinedSources().isPresent()) {
-            httpUrl.addQueryParameter(
-                    "predefined_sources", request.getPredefinedSources().get());
-        }
-        if (request.getSourceName().isPresent()) {
-            httpUrl.addQueryParameter("source_name", request.getSourceName().get());
-        }
-        if (request.getSourceUrl().isPresent()) {
-            httpUrl.addQueryParameter("source_url", request.getSourceUrl().get());
-        }
-        if (request.getIncludeAdditionalInfo().isPresent()) {
-            httpUrl.addQueryParameter(
-                    "include_additional_info",
-                    request.getIncludeAdditionalInfo().get().toString());
-        }
-        if (request.getIsNewsDomain().isPresent()) {
-            httpUrl.addQueryParameter(
-                    "is_news_domain", request.getIsNewsDomain().get().toString());
-        }
-        if (request.getNewsDomainType().isPresent()) {
-            httpUrl.addQueryParameter(
-                    "news_domain_type", request.getNewsDomainType().get().toString());
-        }
-        if (request.getNewsType().isPresent()) {
-            httpUrl.addQueryParameter("news_type", request.getNewsType().get());
-        }
-        if (request.getFromRank().isPresent()) {
-            httpUrl.addQueryParameter("from_rank", request.getFromRank().get().toString());
-        }
-        if (request.getToRank().isPresent()) {
-            httpUrl.addQueryParameter("to_rank", request.getToRank().get().toString());
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SourcesResponseDto.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 408:
-                        throw new RequestTimeoutError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 422:
-                        throw new UnprocessableEntityError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 429:
-                        throw new TooManyRequestsError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 500:
-                        throw new InternalServerError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new NewscatcherApiException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.get(request, requestOptions).body();
     }
 
     /**
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
     public SourcesResponseDto post() {
-        return post(SourcesPostRequest.builder().build());
+        return this.rawClient.post().body();
     }
 
     /**
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
     public SourcesResponseDto post(SourcesPostRequest request) {
-        return post(request, null);
+        return this.rawClient.post(request).body();
     }
 
     /**
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
     public SourcesResponseDto post(SourcesPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("api/sources")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new NewscatcherApiException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SourcesResponseDto.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 408:
-                        throw new RequestTimeoutError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 422:
-                        throw new UnprocessableEntityError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 429:
-                        throw new TooManyRequestsError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 500:
-                        throw new InternalServerError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new NewscatcherApiException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.post(request, requestOptions).body();
     }
 }

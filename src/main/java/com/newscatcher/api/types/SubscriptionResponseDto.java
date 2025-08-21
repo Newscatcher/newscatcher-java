@@ -134,28 +134,46 @@ public final class SubscriptionResponseDto {
     }
 
     public interface ActiveStage {
+        /**
+         * <p>Indicates whether the subscription is currently active.</p>
+         */
         ConcurrentCallsStage active(boolean active);
 
         Builder from(SubscriptionResponseDto other);
     }
 
     public interface ConcurrentCallsStage {
+        /**
+         * <p>The number of API calls allowed per second allowed in the current plan.</p>
+         */
         PlanStage concurrentCalls(int concurrentCalls);
     }
 
     public interface PlanStage {
+        /**
+         * <p>The name of the subscription plan.</p>
+         */
         PlanCallsStage plan(@NotNull String plan);
     }
 
     public interface PlanCallsStage {
+        /**
+         * <p>The total number of API calls assigned to the current subscription.</p>
+         */
         RemainingCallsStage planCalls(int planCalls);
     }
 
     public interface RemainingCallsStage {
+        /**
+         * <p>The number of API calls remaining for the current subscription period.</p>
+         */
         HistoricalDaysStage remainingCalls(int remainingCalls);
     }
 
     public interface HistoricalDaysStage {
+        /**
+         * <p>The number of historical days accessible under the current subscription plan.</p>
+         */
         _FinalStage historicalDays(int historicalDays);
     }
 
@@ -202,6 +220,7 @@ public final class SubscriptionResponseDto {
 
         /**
          * <p>Indicates whether the subscription is currently active.</p>
+         * <p>Indicates whether the subscription is currently active.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -212,6 +231,7 @@ public final class SubscriptionResponseDto {
         }
 
         /**
+         * <p>The number of API calls allowed per second allowed in the current plan.</p>
          * <p>The number of API calls allowed per second allowed in the current plan.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -224,6 +244,7 @@ public final class SubscriptionResponseDto {
 
         /**
          * <p>The name of the subscription plan.</p>
+         * <p>The name of the subscription plan.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -234,6 +255,7 @@ public final class SubscriptionResponseDto {
         }
 
         /**
+         * <p>The total number of API calls assigned to the current subscription.</p>
          * <p>The total number of API calls assigned to the current subscription.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -246,6 +268,7 @@ public final class SubscriptionResponseDto {
 
         /**
          * <p>The number of API calls remaining for the current subscription period.</p>
+         * <p>The number of API calls remaining for the current subscription period.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -256,6 +279,7 @@ public final class SubscriptionResponseDto {
         }
 
         /**
+         * <p>The number of historical days accessible under the current subscription plan.</p>
          * <p>The number of historical days accessible under the current subscription plan.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */

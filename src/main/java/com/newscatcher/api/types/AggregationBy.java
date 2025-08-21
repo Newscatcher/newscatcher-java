@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum AggregationBy {
     DAY("day"),
 
-    HOUR("hour");
+    HOUR("hour"),
+
+    MONTH("month");
 
     private final String value;
 

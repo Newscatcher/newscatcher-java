@@ -96,6 +96,9 @@ public final class SourcesResponseDto {
     }
 
     public interface MessageStage {
+        /**
+         * <p>A message indicating the result of the request.</p>
+         */
         _FinalStage message(@NotNull String message);
 
         Builder from(SourcesResponseDto other);
@@ -104,12 +107,18 @@ public final class SourcesResponseDto {
     public interface _FinalStage {
         SourcesResponseDto build();
 
+        /**
+         * <p>A list of news sources that match the specified criteria.</p>
+         */
         _FinalStage sources(List<SourcesResponseDtoSourcesItem> sources);
 
         _FinalStage addSources(SourcesResponseDtoSourcesItem sources);
 
         _FinalStage addAllSources(List<SourcesResponseDtoSourcesItem> sources);
 
+        /**
+         * <p>The user input parameters for the request.</p>
+         */
         _FinalStage userInput(Map<String, Object> userInput);
 
         _FinalStage putAllUserInput(Map<String, Object> userInput);
@@ -140,6 +149,7 @@ public final class SourcesResponseDto {
 
         /**
          * <p>A message indicating the result of the request.</p>
+         * <p>A message indicating the result of the request.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -169,6 +179,9 @@ public final class SourcesResponseDto {
             return this;
         }
 
+        /**
+         * <p>The user input parameters for the request.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "user_input", nulls = Nulls.SKIP)
         public _FinalStage userInput(Map<String, Object> userInput) {
@@ -197,6 +210,9 @@ public final class SourcesResponseDto {
             return this;
         }
 
+        /**
+         * <p>A list of news sources that match the specified criteria.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "sources", nulls = Nulls.SKIP)
         public _FinalStage sources(List<SourcesResponseDtoSourcesItem> sources) {

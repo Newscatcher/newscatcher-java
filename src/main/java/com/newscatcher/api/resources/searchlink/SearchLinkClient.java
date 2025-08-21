@@ -3,205 +3,68 @@
  */
 package com.newscatcher.api.resources.searchlink;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.newscatcher.api.core.ClientOptions;
-import com.newscatcher.api.core.MediaTypes;
-import com.newscatcher.api.core.NewscatcherApiApiException;
-import com.newscatcher.api.core.NewscatcherApiException;
-import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.errors.BadRequestError;
-import com.newscatcher.api.errors.ForbiddenError;
-import com.newscatcher.api.errors.InternalServerError;
-import com.newscatcher.api.errors.RequestTimeoutError;
-import com.newscatcher.api.errors.TooManyRequestsError;
-import com.newscatcher.api.errors.UnauthorizedError;
-import com.newscatcher.api.errors.UnprocessableEntityError;
 import com.newscatcher.api.resources.searchlink.requests.SearchUrlGetRequest;
 import com.newscatcher.api.resources.searchlink.requests.SearchUrlPostRequest;
-import com.newscatcher.api.types.Error;
 import com.newscatcher.api.types.SearchResponseDto;
-import java.io.IOException;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class SearchLinkClient {
     protected final ClientOptions clientOptions;
 
+    private final RawSearchLinkClient rawClient;
+
     public SearchLinkClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new RawSearchLinkClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public RawSearchLinkClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
      * Searches for articles based on specified links or IDs. You can filter results by date range.
      */
     public SearchResponseDto searchUrlGet() {
-        return searchUrlGet(SearchUrlGetRequest.builder().build());
+        return this.rawClient.searchUrlGet().body();
     }
 
     /**
      * Searches for articles based on specified links or IDs. You can filter results by date range.
      */
     public SearchResponseDto searchUrlGet(SearchUrlGetRequest request) {
-        return searchUrlGet(request, null);
+        return this.rawClient.searchUrlGet(request).body();
     }
 
     /**
      * Searches for articles based on specified links or IDs. You can filter results by date range.
      */
     public SearchResponseDto searchUrlGet(SearchUrlGetRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("api/search_by_link");
-        if (request.getIds().isPresent()) {
-            httpUrl.addQueryParameter("ids", request.getIds().get());
-        }
-        if (request.getLinks().isPresent()) {
-            httpUrl.addQueryParameter("links", request.getLinks().get());
-        }
-        if (request.getFrom().isPresent()) {
-            httpUrl.addQueryParameter("from_", request.getFrom().get().toString());
-        }
-        if (request.getTo().isPresent()) {
-            httpUrl.addQueryParameter("to_", request.getTo().get().toString());
-        }
-        if (request.getPage().isPresent()) {
-            httpUrl.addQueryParameter("page", request.getPage().get().toString());
-        }
-        if (request.getPageSize().isPresent()) {
-            httpUrl.addQueryParameter("page_size", request.getPageSize().get().toString());
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SearchResponseDto.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 408:
-                        throw new RequestTimeoutError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 422:
-                        throw new UnprocessableEntityError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 429:
-                        throw new TooManyRequestsError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 500:
-                        throw new InternalServerError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new NewscatcherApiException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.searchUrlGet(request, requestOptions).body();
     }
 
     /**
      * Searches for articles using their ID(s) or link(s).
      */
     public SearchResponseDto searchUrlPost() {
-        return searchUrlPost(SearchUrlPostRequest.builder().build());
+        return this.rawClient.searchUrlPost().body();
     }
 
     /**
      * Searches for articles using their ID(s) or link(s).
      */
     public SearchResponseDto searchUrlPost(SearchUrlPostRequest request) {
-        return searchUrlPost(request, null);
+        return this.rawClient.searchUrlPost(request).body();
     }
 
     /**
      * Searches for articles using their ID(s) or link(s).
      */
     public SearchResponseDto searchUrlPost(SearchUrlPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("api/search_by_link")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new NewscatcherApiException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SearchResponseDto.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 408:
-                        throw new RequestTimeoutError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 422:
-                        throw new UnprocessableEntityError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 429:
-                        throw new TooManyRequestsError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 500:
-                        throw new InternalServerError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new NewscatcherApiException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.searchUrlPost(request, requestOptions).body();
     }
 }

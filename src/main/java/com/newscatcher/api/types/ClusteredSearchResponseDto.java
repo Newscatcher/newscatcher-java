@@ -175,34 +175,55 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
     }
 
     public interface StatusStage {
+        /**
+         * <p>The status of the response.</p>
+         */
         TotalHitsStage status(@NotNull String status);
 
         Builder from(ClusteredSearchResponseDto other);
     }
 
     public interface TotalHitsStage {
+        /**
+         * <p>The total number of articles matching the search criteria.</p>
+         */
         PageStage totalHits(int totalHits);
     }
 
     public interface PageStage {
+        /**
+         * <p>The current page number of the results.</p>
+         */
         TotalPagesStage page(int page);
     }
 
     public interface TotalPagesStage {
+        /**
+         * <p>The total number of pages available for the given search criteria.</p>
+         */
         PageSizeStage totalPages(int totalPages);
     }
 
     public interface PageSizeStage {
+        /**
+         * <p>The number of articles per page.</p>
+         */
         ClustersCountStage pageSize(int pageSize);
     }
 
     public interface ClustersCountStage {
+        /**
+         * <p>The number of clusters in the search results.</p>
+         */
         _FinalStage clustersCount(int clustersCount);
     }
 
     public interface _FinalStage {
         ClusteredSearchResponseDto build();
 
+        /**
+         * <p>A list of clusters found in the search results.</p>
+         */
         _FinalStage clusters(List<ClusterEntity> clusters);
 
         _FinalStage addClusters(ClusterEntity clusters);
@@ -259,6 +280,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
 
         /**
          * <p>The status of the response.</p>
+         * <p>The status of the response.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -269,6 +291,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
         }
 
         /**
+         * <p>The total number of articles matching the search criteria.</p>
          * <p>The total number of articles matching the search criteria.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -281,6 +304,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
 
         /**
          * <p>The current page number of the results.</p>
+         * <p>The current page number of the results.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -291,6 +315,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
         }
 
         /**
+         * <p>The total number of pages available for the given search criteria.</p>
          * <p>The total number of pages available for the given search criteria.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -303,6 +328,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
 
         /**
          * <p>The number of articles per page.</p>
+         * <p>The number of articles per page.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -313,6 +339,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
         }
 
         /**
+         * <p>The number of clusters in the search results.</p>
          * <p>The number of clusters in the search results.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -356,6 +383,9 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
             return this;
         }
 
+        /**
+         * <p>A list of clusters found in the search results.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "clusters", nulls = Nulls.SKIP)
         public _FinalStage clusters(List<ClusterEntity> clusters) {

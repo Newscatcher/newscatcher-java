@@ -68,6 +68,10 @@ public final class ArticleEntity implements IArticleEntity {
 
     private final String content;
 
+    private final Optional<String> titleTranslatedEn;
+
+    private final Optional<String> contentTranslatedEn;
+
     private final Optional<Integer> wordCount;
 
     private final Optional<Boolean> isOpinion;
@@ -83,6 +87,8 @@ public final class ArticleEntity implements IArticleEntity {
     private final String id;
 
     private final double score;
+
+    private final Optional<Boolean> robotsCompliant;
 
     private final Optional<Map<String, List<String>>> customTags;
 
@@ -114,6 +120,8 @@ public final class ArticleEntity implements IArticleEntity {
             Optional<String> language,
             Optional<String> description,
             String content,
+            Optional<String> titleTranslatedEn,
+            Optional<String> contentTranslatedEn,
             Optional<Integer> wordCount,
             Optional<Boolean> isOpinion,
             Optional<String> twitterAccount,
@@ -122,6 +130,7 @@ public final class ArticleEntity implements IArticleEntity {
             Optional<NlpDataEntity> nlp,
             String id,
             double score,
+            Optional<Boolean> robotsCompliant,
             Optional<Map<String, List<String>>> customTags,
             Optional<AdditionalDomainInfoEntity> additionalDomainInfo,
             Map<String, Object> additionalProperties) {
@@ -148,6 +157,8 @@ public final class ArticleEntity implements IArticleEntity {
         this.language = language;
         this.description = description;
         this.content = content;
+        this.titleTranslatedEn = titleTranslatedEn;
+        this.contentTranslatedEn = contentTranslatedEn;
         this.wordCount = wordCount;
         this.isOpinion = isOpinion;
         this.twitterAccount = twitterAccount;
@@ -156,6 +167,7 @@ public final class ArticleEntity implements IArticleEntity {
         this.nlp = nlp;
         this.id = id;
         this.score = score;
+        this.robotsCompliant = robotsCompliant;
         this.customTags = customTags;
         this.additionalDomainInfo = additionalDomainInfo;
         this.additionalProperties = additionalProperties;
@@ -183,7 +195,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return A list of authors of the article.
      */
     @JsonProperty("authors")
-    @java.lang.Override
     public Optional<Authors> getAuthors() {
         return authors;
     }
@@ -192,7 +203,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return A list of journalists associated with the article.
      */
     @JsonProperty("journalists")
-    @java.lang.Override
     public Optional<Journalists> getJournalists() {
         return journalists;
     }
@@ -369,6 +379,24 @@ public final class ArticleEntity implements IArticleEntity {
     }
 
     /**
+     * @return English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.
+     */
+    @JsonProperty("title_translated_en")
+    @java.lang.Override
+    public Optional<String> getTitleTranslatedEn() {
+        return titleTranslatedEn;
+    }
+
+    /**
+     * @return English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.
+     */
+    @JsonProperty("content_translated_en")
+    @java.lang.Override
+    public Optional<String> getContentTranslatedEn() {
+        return contentTranslatedEn;
+    }
+
+    /**
      * @return The word count of the article.
      */
     @JsonProperty("word_count")
@@ -399,7 +427,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return A list of all URLs mentioned in the article.
      */
     @JsonProperty("all_links")
-    @java.lang.Override
     public Optional<ArticleEntityAllLinks> getAllLinks() {
         return allLinks;
     }
@@ -408,7 +435,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return A list of all domain URLs mentioned in the article.
      */
     @JsonProperty("all_domain_links")
-    @java.lang.Override
     public Optional<ArticleEntityAllDomainLinks> getAllDomainLinks() {
         return allDomainLinks;
     }
@@ -435,6 +461,15 @@ public final class ArticleEntity implements IArticleEntity {
     @java.lang.Override
     public double getScore() {
         return score;
+    }
+
+    /**
+     * @return True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.
+     */
+    @JsonProperty("robots_compliant")
+    @java.lang.Override
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
     }
 
     /**
@@ -487,6 +522,8 @@ public final class ArticleEntity implements IArticleEntity {
                 && language.equals(other.language)
                 && description.equals(other.description)
                 && content.equals(other.content)
+                && titleTranslatedEn.equals(other.titleTranslatedEn)
+                && contentTranslatedEn.equals(other.contentTranslatedEn)
                 && wordCount.equals(other.wordCount)
                 && isOpinion.equals(other.isOpinion)
                 && twitterAccount.equals(other.twitterAccount)
@@ -495,6 +532,7 @@ public final class ArticleEntity implements IArticleEntity {
                 && nlp.equals(other.nlp)
                 && id.equals(other.id)
                 && score == other.score
+                && robotsCompliant.equals(other.robotsCompliant)
                 && customTags.equals(other.customTags)
                 && additionalDomainInfo.equals(other.additionalDomainInfo);
     }
@@ -525,6 +563,8 @@ public final class ArticleEntity implements IArticleEntity {
                 this.language,
                 this.description,
                 this.content,
+                this.titleTranslatedEn,
+                this.contentTranslatedEn,
                 this.wordCount,
                 this.isOpinion,
                 this.twitterAccount,
@@ -533,6 +573,7 @@ public final class ArticleEntity implements IArticleEntity {
                 this.nlp,
                 this.id,
                 this.score,
+                this.robotsCompliant,
                 this.customTags,
                 this.additionalDomainInfo);
     }
@@ -547,126 +588,230 @@ public final class ArticleEntity implements IArticleEntity {
     }
 
     public interface TitleStage {
+        /**
+         * <p>The title of the article.</p>
+         */
         LinkStage title(@NotNull String title);
 
         Builder from(ArticleEntity other);
     }
 
     public interface LinkStage {
+        /**
+         * <p>The URL link to the article.</p>
+         */
         DomainUrlStage link(@NotNull String link);
     }
 
     public interface DomainUrlStage {
+        /**
+         * <p>The domain URL of the article.</p>
+         */
         FullDomainUrlStage domainUrl(@NotNull String domainUrl);
     }
 
     public interface FullDomainUrlStage {
+        /**
+         * <p>The full domain URL of the article.</p>
+         */
         ParentUrlStage fullDomainUrl(@NotNull String fullDomainUrl);
     }
 
     public interface ParentUrlStage {
+        /**
+         * <p>The categorical URL of the article.</p>
+         */
         RankStage parentUrl(@NotNull String parentUrl);
     }
 
     public interface RankStage {
+        /**
+         * <p>The rank of the article's source.</p>
+         */
         ContentStage rank(int rank);
     }
 
     public interface ContentStage {
+        /**
+         * <p>The content of the article.</p>
+         */
         IdStage content(@NotNull String content);
     }
 
     public interface IdStage {
+        /**
+         * <p>The unique identifier for the article.</p>
+         */
         ScoreStage id(@NotNull String id);
     }
 
     public interface ScoreStage {
+        /**
+         * <p>The relevance score of the article.</p>
+         */
         _FinalStage score(double score);
     }
 
     public interface _FinalStage {
         ArticleEntity build();
 
+        /**
+         * <p>The primary author of the article.</p>
+         */
         _FinalStage author(Optional<String> author);
 
         _FinalStage author(String author);
 
+        /**
+         * <p>A list of authors of the article.</p>
+         */
         _FinalStage authors(Optional<Authors> authors);
 
         _FinalStage authors(Authors authors);
 
+        /**
+         * <p>A list of journalists associated with the article.</p>
+         */
         _FinalStage journalists(Optional<Journalists> journalists);
 
         _FinalStage journalists(Journalists journalists);
 
+        /**
+         * <p>The date the article was published.</p>
+         */
         _FinalStage publishedDate(Optional<String> publishedDate);
 
         _FinalStage publishedDate(String publishedDate);
 
+        /**
+         * <p>The precision of the published date.</p>
+         */
         _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision);
 
         _FinalStage publishedDatePrecision(String publishedDatePrecision);
 
+        /**
+         * <p>The date the article was last updated.</p>
+         */
         _FinalStage updatedDate(Optional<String> updatedDate);
 
         _FinalStage updatedDate(String updatedDate);
 
+        /**
+         * <p>The precision of the updated date.</p>
+         */
         _FinalStage updatedDatePrecision(Optional<String> updatedDatePrecision);
 
         _FinalStage updatedDatePrecision(String updatedDatePrecision);
 
+        /**
+         * <p>The date the article was parsed.</p>
+         */
         _FinalStage parseDate(Optional<String> parseDate);
 
         _FinalStage parseDate(String parseDate);
 
+        /**
+         * <p>The name of the source where the article was published.</p>
+         */
         _FinalStage nameSource(Optional<String> nameSource);
 
         _FinalStage nameSource(String nameSource);
 
+        /**
+         * <p>Indicates if the article is a headline.</p>
+         */
         _FinalStage isHeadline(Optional<Boolean> isHeadline);
 
         _FinalStage isHeadline(Boolean isHeadline);
 
+        /**
+         * <p>Indicates if the article is paid content.</p>
+         */
         _FinalStage paidContent(Optional<Boolean> paidContent);
 
         _FinalStage paidContent(Boolean paidContent);
 
+        /**
+         * <p>The country where the article was published.</p>
+         */
         _FinalStage country(Optional<String> country);
 
         _FinalStage country(String country);
 
+        /**
+         * <p>The rights information for the article.</p>
+         */
         _FinalStage rights(Optional<String> rights);
 
         _FinalStage rights(String rights);
 
+        /**
+         * <p>The media associated with the article.</p>
+         */
         _FinalStage media(Optional<String> media);
 
         _FinalStage media(String media);
 
+        /**
+         * <p>The language in which the article is written.</p>
+         */
         _FinalStage language(Optional<String> language);
 
         _FinalStage language(String language);
 
+        /**
+         * <p>A brief description of the article.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        _FinalStage titleTranslatedEn(Optional<String> titleTranslatedEn);
+
+        _FinalStage titleTranslatedEn(String titleTranslatedEn);
+
+        /**
+         * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        _FinalStage contentTranslatedEn(Optional<String> contentTranslatedEn);
+
+        _FinalStage contentTranslatedEn(String contentTranslatedEn);
+
+        /**
+         * <p>The word count of the article.</p>
+         */
         _FinalStage wordCount(Optional<Integer> wordCount);
 
         _FinalStage wordCount(Integer wordCount);
 
+        /**
+         * <p>Indicates if the article is an opinion piece.</p>
+         */
         _FinalStage isOpinion(Optional<Boolean> isOpinion);
 
         _FinalStage isOpinion(Boolean isOpinion);
 
+        /**
+         * <p>The Twitter account associated with the article.</p>
+         */
         _FinalStage twitterAccount(Optional<String> twitterAccount);
 
         _FinalStage twitterAccount(String twitterAccount);
 
+        /**
+         * <p>A list of all URLs mentioned in the article.</p>
+         */
         _FinalStage allLinks(Optional<ArticleEntityAllLinks> allLinks);
 
         _FinalStage allLinks(ArticleEntityAllLinks allLinks);
 
+        /**
+         * <p>A list of all domain URLs mentioned in the article.</p>
+         */
         _FinalStage allDomainLinks(Optional<ArticleEntityAllDomainLinks> allDomainLinks);
 
         _FinalStage allDomainLinks(ArticleEntityAllDomainLinks allDomainLinks);
@@ -675,6 +820,16 @@ public final class ArticleEntity implements IArticleEntity {
 
         _FinalStage nlp(NlpDataEntity nlp);
 
+        /**
+         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
+         */
+        _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant);
+
+        _FinalStage robotsCompliant(Boolean robotsCompliant);
+
+        /**
+         * <p>An object that contains custom tags associated with an article, where each key is a taxonomy name, and the value is an array of tags.</p>
+         */
         _FinalStage customTags(Optional<Map<String, List<String>>> customTags);
 
         _FinalStage customTags(Map<String, List<String>> customTags);
@@ -718,6 +873,8 @@ public final class ArticleEntity implements IArticleEntity {
 
         private Optional<Map<String, List<String>>> customTags = Optional.empty();
 
+        private Optional<Boolean> robotsCompliant = Optional.empty();
+
         private Optional<NlpDataEntity> nlp = Optional.empty();
 
         private Optional<ArticleEntityAllDomainLinks> allDomainLinks = Optional.empty();
@@ -729,6 +886,10 @@ public final class ArticleEntity implements IArticleEntity {
         private Optional<Boolean> isOpinion = Optional.empty();
 
         private Optional<Integer> wordCount = Optional.empty();
+
+        private Optional<String> contentTranslatedEn = Optional.empty();
+
+        private Optional<String> titleTranslatedEn = Optional.empty();
 
         private Optional<String> description = Optional.empty();
 
@@ -792,6 +953,8 @@ public final class ArticleEntity implements IArticleEntity {
             language(other.getLanguage());
             description(other.getDescription());
             content(other.getContent());
+            titleTranslatedEn(other.getTitleTranslatedEn());
+            contentTranslatedEn(other.getContentTranslatedEn());
             wordCount(other.getWordCount());
             isOpinion(other.getIsOpinion());
             twitterAccount(other.getTwitterAccount());
@@ -800,12 +963,14 @@ public final class ArticleEntity implements IArticleEntity {
             nlp(other.getNlp());
             id(other.getId());
             score(other.getScore());
+            robotsCompliant(other.getRobotsCompliant());
             customTags(other.getCustomTags());
             additionalDomainInfo(other.getAdditionalDomainInfo());
             return this;
         }
 
         /**
+         * <p>The title of the article.</p>
          * <p>The title of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -818,6 +983,7 @@ public final class ArticleEntity implements IArticleEntity {
 
         /**
          * <p>The URL link to the article.</p>
+         * <p>The URL link to the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -828,6 +994,7 @@ public final class ArticleEntity implements IArticleEntity {
         }
 
         /**
+         * <p>The domain URL of the article.</p>
          * <p>The domain URL of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -840,6 +1007,7 @@ public final class ArticleEntity implements IArticleEntity {
 
         /**
          * <p>The full domain URL of the article.</p>
+         * <p>The full domain URL of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -850,6 +1018,7 @@ public final class ArticleEntity implements IArticleEntity {
         }
 
         /**
+         * <p>The categorical URL of the article.</p>
          * <p>The categorical URL of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -862,6 +1031,7 @@ public final class ArticleEntity implements IArticleEntity {
 
         /**
          * <p>The rank of the article's source.</p>
+         * <p>The rank of the article's source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -872,6 +1042,7 @@ public final class ArticleEntity implements IArticleEntity {
         }
 
         /**
+         * <p>The content of the article.</p>
          * <p>The content of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -884,6 +1055,7 @@ public final class ArticleEntity implements IArticleEntity {
 
         /**
          * <p>The unique identifier for the article.</p>
+         * <p>The unique identifier for the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -894,6 +1066,7 @@ public final class ArticleEntity implements IArticleEntity {
         }
 
         /**
+         * <p>The relevance score of the article.</p>
          * <p>The relevance score of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -927,10 +1100,33 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>An object that contains custom tags associated with an article, where each key is a taxonomy name, and the value is an array of tags.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "custom_tags", nulls = Nulls.SKIP)
         public _FinalStage customTags(Optional<Map<String, List<String>>> customTags) {
             this.customTags = customTags;
+            return this;
+        }
+
+        /**
+         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
+        /**
+         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
             return this;
         }
 
@@ -957,6 +1153,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>A list of all domain URLs mentioned in the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "all_domain_links", nulls = Nulls.SKIP)
         public _FinalStage allDomainLinks(Optional<ArticleEntityAllDomainLinks> allDomainLinks) {
@@ -974,6 +1173,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>A list of all URLs mentioned in the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "all_links", nulls = Nulls.SKIP)
         public _FinalStage allLinks(Optional<ArticleEntityAllLinks> allLinks) {
@@ -991,6 +1193,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The Twitter account associated with the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "twitter_account", nulls = Nulls.SKIP)
         public _FinalStage twitterAccount(Optional<String> twitterAccount) {
@@ -1008,6 +1213,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>Indicates if the article is an opinion piece.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "is_opinion", nulls = Nulls.SKIP)
         public _FinalStage isOpinion(Optional<Boolean> isOpinion) {
@@ -1025,10 +1233,53 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The word count of the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "word_count", nulls = Nulls.SKIP)
         public _FinalStage wordCount(Optional<Integer> wordCount) {
             this.wordCount = wordCount;
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage contentTranslatedEn(String contentTranslatedEn) {
+            this.contentTranslatedEn = Optional.ofNullable(contentTranslatedEn);
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "content_translated_en", nulls = Nulls.SKIP)
+        public _FinalStage contentTranslatedEn(Optional<String> contentTranslatedEn) {
+            this.contentTranslatedEn = contentTranslatedEn;
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage titleTranslatedEn(String titleTranslatedEn) {
+            this.titleTranslatedEn = Optional.ofNullable(titleTranslatedEn);
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "title_translated_en", nulls = Nulls.SKIP)
+        public _FinalStage titleTranslatedEn(Optional<String> titleTranslatedEn) {
+            this.titleTranslatedEn = titleTranslatedEn;
             return this;
         }
 
@@ -1042,6 +1293,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>A brief description of the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {
@@ -1059,6 +1313,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The language in which the article is written.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "language", nulls = Nulls.SKIP)
         public _FinalStage language(Optional<String> language) {
@@ -1076,6 +1333,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The media associated with the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "media", nulls = Nulls.SKIP)
         public _FinalStage media(Optional<String> media) {
@@ -1093,6 +1353,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The rights information for the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "rights", nulls = Nulls.SKIP)
         public _FinalStage rights(Optional<String> rights) {
@@ -1110,6 +1373,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The country where the article was published.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "country", nulls = Nulls.SKIP)
         public _FinalStage country(Optional<String> country) {
@@ -1127,6 +1393,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>Indicates if the article is paid content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "paid_content", nulls = Nulls.SKIP)
         public _FinalStage paidContent(Optional<Boolean> paidContent) {
@@ -1144,6 +1413,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>Indicates if the article is a headline.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "is_headline", nulls = Nulls.SKIP)
         public _FinalStage isHeadline(Optional<Boolean> isHeadline) {
@@ -1161,6 +1433,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The name of the source where the article was published.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "name_source", nulls = Nulls.SKIP)
         public _FinalStage nameSource(Optional<String> nameSource) {
@@ -1178,6 +1453,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The date the article was parsed.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parse_date", nulls = Nulls.SKIP)
         public _FinalStage parseDate(Optional<String> parseDate) {
@@ -1195,6 +1473,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The precision of the updated date.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_date_precision", nulls = Nulls.SKIP)
         public _FinalStage updatedDatePrecision(Optional<String> updatedDatePrecision) {
@@ -1212,6 +1493,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The date the article was last updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_date", nulls = Nulls.SKIP)
         public _FinalStage updatedDate(Optional<String> updatedDate) {
@@ -1229,6 +1513,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The precision of the published date.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "published_date_precision", nulls = Nulls.SKIP)
         public _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision) {
@@ -1246,6 +1533,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The date the article was published.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "published_date", nulls = Nulls.SKIP)
         public _FinalStage publishedDate(Optional<String> publishedDate) {
@@ -1263,6 +1553,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>A list of journalists associated with the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "journalists", nulls = Nulls.SKIP)
         public _FinalStage journalists(Optional<Journalists> journalists) {
@@ -1280,6 +1573,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>A list of authors of the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "authors", nulls = Nulls.SKIP)
         public _FinalStage authors(Optional<Authors> authors) {
@@ -1297,6 +1593,9 @@ public final class ArticleEntity implements IArticleEntity {
             return this;
         }
 
+        /**
+         * <p>The primary author of the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "author", nulls = Nulls.SKIP)
         public _FinalStage author(Optional<String> author) {
@@ -1330,6 +1629,8 @@ public final class ArticleEntity implements IArticleEntity {
                     language,
                     description,
                     content,
+                    titleTranslatedEn,
+                    contentTranslatedEn,
                     wordCount,
                     isOpinion,
                     twitterAccount,
@@ -1338,6 +1639,7 @@ public final class ArticleEntity implements IArticleEntity {
                     nlp,
                     id,
                     score,
+                    robotsCompliant,
                     customTags,
                     additionalDomainInfo,
                     additionalProperties);

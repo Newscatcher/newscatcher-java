@@ -114,6 +114,9 @@ public final class AdditionalDomainInfoEntity {
             return this;
         }
 
+        /**
+         * <p>Indicates whether the domain is a news domain.</p>
+         */
         @JsonSetter(value = "is_news_domain", nulls = Nulls.SKIP)
         public Builder isNewsDomain(Optional<Boolean> isNewsDomain) {
             this.isNewsDomain = isNewsDomain;
@@ -125,6 +128,9 @@ public final class AdditionalDomainInfoEntity {
             return this;
         }
 
+        /**
+         * <p>The type of news content provided by the domain.</p>
+         */
         @JsonSetter(value = "news_type", nulls = Nulls.SKIP)
         public Builder newsType(Optional<String> newsType) {
             this.newsType = newsType;
@@ -136,6 +142,9 @@ public final class AdditionalDomainInfoEntity {
             return this;
         }
 
+        /**
+         * <p>The type of news domain.</p>
+         */
         @JsonSetter(value = "news_domain_type", nulls = Nulls.SKIP)
         public Builder newsDomainType(Optional<String> newsDomainType) {
             this.newsDomainType = newsDomainType;

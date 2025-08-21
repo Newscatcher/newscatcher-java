@@ -7,6 +7,7 @@ import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.Suppliers;
 import com.newscatcher.api.resources.aggregation.AggregationClient;
 import com.newscatcher.api.resources.authors.AuthorsClient;
+import com.newscatcher.api.resources.breakingnews.BreakingNewsClient;
 import com.newscatcher.api.resources.latestheadlines.LatestheadlinesClient;
 import com.newscatcher.api.resources.search.SearchClient;
 import com.newscatcher.api.resources.searchlink.SearchLinkClient;
@@ -21,6 +22,8 @@ public class NewscatcherApiClient {
     protected final Supplier<SearchClient> searchClient;
 
     protected final Supplier<LatestheadlinesClient> latestheadlinesClient;
+
+    protected final Supplier<BreakingNewsClient> breakingNewsClient;
 
     protected final Supplier<AuthorsClient> authorsClient;
 
@@ -38,6 +41,7 @@ public class NewscatcherApiClient {
         this.clientOptions = clientOptions;
         this.searchClient = Suppliers.memoize(() -> new SearchClient(clientOptions));
         this.latestheadlinesClient = Suppliers.memoize(() -> new LatestheadlinesClient(clientOptions));
+        this.breakingNewsClient = Suppliers.memoize(() -> new BreakingNewsClient(clientOptions));
         this.authorsClient = Suppliers.memoize(() -> new AuthorsClient(clientOptions));
         this.searchLinkClient = Suppliers.memoize(() -> new SearchLinkClient(clientOptions));
         this.searchsimilarClient = Suppliers.memoize(() -> new SearchsimilarClient(clientOptions));
@@ -52,6 +56,10 @@ public class NewscatcherApiClient {
 
     public LatestheadlinesClient latestheadlines() {
         return this.latestheadlinesClient.get();
+    }
+
+    public BreakingNewsClient breakingNews() {
+        return this.breakingNewsClient.get();
     }
 
     public AuthorsClient authors() {

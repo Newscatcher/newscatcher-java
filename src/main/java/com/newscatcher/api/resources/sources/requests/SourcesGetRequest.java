@@ -287,6 +287,11 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;en, es&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         */
         @JsonSetter(value = "lang", nulls = Nulls.SKIP)
         public Builder lang(Optional<String> lang) {
             this.lang = lang;
@@ -298,6 +303,11 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;US, CA&quot;</code></p>
+         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         */
         @JsonSetter(value = "countries", nulls = Nulls.SKIP)
         public Builder countries(Optional<String> countries) {
             this.countries = countries;
@@ -309,6 +319,17 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Predefined top news sources per country.</p>
+         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
+         * <p>Examples:</p>
+         * <ul>
+         * <li><code>&quot;top 100 US&quot;</code></li>
+         * <li><code>&quot;top 33 AT&quot;</code></li>
+         * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
+         * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
+         * </ul>
+         */
         @JsonSetter(value = "predefined_sources", nulls = Nulls.SKIP)
         public Builder predefinedSources(Optional<String> predefinedSources) {
             this.predefinedSources = predefinedSources;
@@ -320,6 +341,11 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Word or phrase to search within the source names. To specify multiple values, use a comma-separated string.</p>
+         * <p>Example: <code>&quot;sport, tech&quot;</code></p>
+         * <p><strong>Note</strong>: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like <code>&quot;sport&quot;</code> or <code>&quot;new york times&quot;</code>. For example, <code>&quot;sport&quot;</code> returns sources such as <code>&quot;Motorsport&quot;</code>, <code>&quot;Dot Esport&quot;</code>, and <code>&quot;Tuttosport&quot;</code>.</p>
+         */
         @JsonSetter(value = "source_name", nulls = Nulls.SKIP)
         public Builder sourceName(Optional<String> sourceName) {
             this.sourceName = sourceName;
@@ -331,6 +357,11 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The domain(s) of the news publication to search for.</p>
+         * <p><strong>Caution</strong>:  When specifying the <code>source_url</code> parameter,
+         * you can only use <code>include_additional_info</code> as an extra parameter.</p>
+         */
         @JsonSetter(value = "source_url", nulls = Nulls.SKIP)
         public Builder sourceUrl(Optional<String> sourceUrl) {
             this.sourceUrl = sourceUrl;
@@ -342,6 +373,17 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, returns the following additional datapoints about each news source:</p>
+         * <ul>
+         * <li><code>nb_articles_for_7d</code>: The number of articles published by the source in the last week.</li>
+         * <li><code>country</code>: Source country of origin.</li>
+         * <li><code>rank</code>: SEO rank.</li>
+         * <li><code>is_news_domain</code>: Boolean indicating if the source is a news domain.</li>
+         * <li><code>news_domain_type</code>: Type of news domain (e.g., &quot;Original Content&quot;).</li>
+         * <li><code>news_type</code>: Category of news (e.g., &quot;General News Outlets&quot;).</li>
+         * </ul>
+         */
         @JsonSetter(value = "include_additional_info", nulls = Nulls.SKIP)
         public Builder includeAdditionalInfo(Optional<Boolean> includeAdditionalInfo) {
             this.includeAdditionalInfo = includeAdditionalInfo;
@@ -353,6 +395,9 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>If true, filters results to include only news domains.</p>
+         */
         @JsonSetter(value = "is_news_domain", nulls = Nulls.SKIP)
         public Builder isNewsDomain(Optional<Boolean> isNewsDomain) {
             this.isNewsDomain = isNewsDomain;
@@ -364,6 +409,16 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters results based on the news domain type. Possible values are:</p>
+         * <ul>
+         * <li><code>Original Content</code>: Sources that produce their own content.</li>
+         * <li><code>Aggregator</code>: Sources that collect content from various other sources.</li>
+         * <li><code>Press Releases</code>: Sources primarily publishing press releases.</li>
+         * <li><code>Republisher</code>: Sources that republish content from other sources.</li>
+         * <li><code>Other</code>: Sources that don't fit into main categories.</li>
+         * </ul>
+         */
         @JsonSetter(value = "news_domain_type", nulls = Nulls.SKIP)
         public Builder newsDomainType(Optional<SourcesGetRequestNewsDomainType> newsDomainType) {
             this.newsDomainType = newsDomainType;
@@ -375,6 +430,11 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>Filters results based on the news type. Multiple types can be specified using a comma-separated string.</p>
+         * <p>Example: <code>&quot;General News Outlets,Tech News and Updates&quot;</code></p>
+         * <p>For a complete list of available news types, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#news-type-news-type">Enumerated parameters &gt; News type</a>.</p>
+         */
         @JsonSetter(value = "news_type", nulls = Nulls.SKIP)
         public Builder newsType(Optional<String> newsType) {
             this.newsType = newsType;
@@ -386,6 +446,9 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
+         */
         @JsonSetter(value = "from_rank", nulls = Nulls.SKIP)
         public Builder fromRank(Optional<Integer> fromRank) {
             this.fromRank = fromRank;
@@ -397,6 +460,9 @@ public final class SourcesGetRequest {
             return this;
         }
 
+        /**
+         * <p>The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
+         */
         @JsonSetter(value = "to_rank", nulls = Nulls.SKIP)
         public Builder toRank(Optional<Integer> toRank) {
             this.toRank = toRank;

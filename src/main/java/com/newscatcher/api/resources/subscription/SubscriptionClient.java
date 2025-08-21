@@ -3,164 +3,52 @@
  */
 package com.newscatcher.api.resources.subscription;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.newscatcher.api.core.ClientOptions;
-import com.newscatcher.api.core.NewscatcherApiApiException;
-import com.newscatcher.api.core.NewscatcherApiException;
-import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.errors.BadRequestError;
-import com.newscatcher.api.errors.ForbiddenError;
-import com.newscatcher.api.errors.InternalServerError;
-import com.newscatcher.api.errors.RequestTimeoutError;
-import com.newscatcher.api.errors.TooManyRequestsError;
-import com.newscatcher.api.errors.UnauthorizedError;
-import com.newscatcher.api.errors.UnprocessableEntityError;
-import com.newscatcher.api.types.Error;
 import com.newscatcher.api.types.SubscriptionResponseDto;
-import java.io.IOException;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class SubscriptionClient {
     protected final ClientOptions clientOptions;
 
+    private final RawSubscriptionClient rawClient;
+
     public SubscriptionClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new RawSubscriptionClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public RawSubscriptionClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
      * Retrieves information about your subscription plan.
      */
     public SubscriptionResponseDto get() {
-        return get(null);
+        return this.rawClient.get().body();
     }
 
     /**
      * Retrieves information about your subscription plan.
      */
     public SubscriptionResponseDto get(RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("api/subscription")
-                .build();
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SubscriptionResponseDto.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 408:
-                        throw new RequestTimeoutError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 422:
-                        throw new UnprocessableEntityError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 429:
-                        throw new TooManyRequestsError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 500:
-                        throw new InternalServerError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new NewscatcherApiException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.get(requestOptions).body();
     }
 
     /**
      * Retrieves information about your subscription plan.
      */
     public SubscriptionResponseDto post() {
-        return post(null);
+        return this.rawClient.post().body();
     }
 
     /**
      * Retrieves information about your subscription plan.
      */
     public SubscriptionResponseDto post(RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("api/subscription")
-                .build();
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", RequestBody.create("", null))
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SubscriptionResponseDto.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 408:
-                        throw new RequestTimeoutError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 422:
-                        throw new UnprocessableEntityError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 429:
-                        throw new TooManyRequestsError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 500:
-                        throw new InternalServerError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, String.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new NewscatcherApiException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.post(requestOptions).body();
     }
 }

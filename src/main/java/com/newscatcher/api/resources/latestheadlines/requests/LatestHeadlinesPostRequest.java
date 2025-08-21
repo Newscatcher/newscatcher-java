@@ -20,8 +20,6 @@ import com.newscatcher.api.types.CustomTags;
 import com.newscatcher.api.types.IabTags;
 import com.newscatcher.api.types.IptcTags;
 import com.newscatcher.api.types.Lang;
-import com.newscatcher.api.types.LocEntityName;
-import com.newscatcher.api.types.MiscEntityName;
 import com.newscatcher.api.types.NotAuthorName;
 import com.newscatcher.api.types.NotCountries;
 import com.newscatcher.api.types.NotIabTags;
@@ -29,9 +27,7 @@ import com.newscatcher.api.types.NotIptcTags;
 import com.newscatcher.api.types.NotLang;
 import com.newscatcher.api.types.NotSources;
 import com.newscatcher.api.types.NotTheme;
-import com.newscatcher.api.types.OrgEntityName;
 import com.newscatcher.api.types.ParentUrl;
-import com.newscatcher.api.types.PerEntityName;
 import com.newscatcher.api.types.PredefinedSources;
 import com.newscatcher.api.types.Sources;
 import com.newscatcher.api.types.Theme;
@@ -91,6 +87,8 @@ public final class LatestHeadlinesPostRequest {
 
     private final Optional<Float> clusteringThreshold;
 
+    private final Optional<Boolean> includeTranslationFields;
+
     private final Optional<Boolean> includeNlpData;
 
     private final Optional<Boolean> hasNlp;
@@ -99,13 +97,13 @@ public final class LatestHeadlinesPostRequest {
 
     private final Optional<NotTheme> notTheme;
 
-    private final Optional<OrgEntityName> orgEntityName;
+    private final Optional<String> orgEntityName;
 
-    private final Optional<PerEntityName> perEntityName;
+    private final Optional<String> perEntityName;
 
-    private final Optional<LocEntityName> locEntityName;
+    private final Optional<String> locEntityName;
 
-    private final Optional<MiscEntityName> miscEntityName;
+    private final Optional<String> miscEntityName;
 
     private final Optional<Float> titleSentimentMin;
 
@@ -124,6 +122,8 @@ public final class LatestHeadlinesPostRequest {
     private final Optional<NotIabTags> notIabTags;
 
     private final Optional<CustomTags> customTags;
+
+    private final Optional<Boolean> robotsCompliant;
 
     private final Map<String, Object> additionalProperties;
 
@@ -152,14 +152,15 @@ public final class LatestHeadlinesPostRequest {
             Optional<Boolean> clusteringEnabled,
             Optional<ClusteringVariable> clusteringVariable,
             Optional<Float> clusteringThreshold,
+            Optional<Boolean> includeTranslationFields,
             Optional<Boolean> includeNlpData,
             Optional<Boolean> hasNlp,
             Optional<Theme> theme,
             Optional<NotTheme> notTheme,
-            Optional<OrgEntityName> orgEntityName,
-            Optional<PerEntityName> perEntityName,
-            Optional<LocEntityName> locEntityName,
-            Optional<MiscEntityName> miscEntityName,
+            Optional<String> orgEntityName,
+            Optional<String> perEntityName,
+            Optional<String> locEntityName,
+            Optional<String> miscEntityName,
             Optional<Float> titleSentimentMin,
             Optional<Float> titleSentimentMax,
             Optional<Float> contentSentimentMin,
@@ -169,6 +170,7 @@ public final class LatestHeadlinesPostRequest {
             Optional<IabTags> iabTags,
             Optional<NotIabTags> notIabTags,
             Optional<CustomTags> customTags,
+            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.when = when;
         this.byParseDate = byParseDate;
@@ -194,6 +196,7 @@ public final class LatestHeadlinesPostRequest {
         this.clusteringEnabled = clusteringEnabled;
         this.clusteringVariable = clusteringVariable;
         this.clusteringThreshold = clusteringThreshold;
+        this.includeTranslationFields = includeTranslationFields;
         this.includeNlpData = includeNlpData;
         this.hasNlp = hasNlp;
         this.theme = theme;
@@ -211,6 +214,7 @@ public final class LatestHeadlinesPostRequest {
         this.iabTags = iabTags;
         this.notIabTags = notIabTags;
         this.customTags = customTags;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -334,6 +338,11 @@ public final class LatestHeadlinesPostRequest {
         return clusteringThreshold;
     }
 
+    @JsonProperty("include_translation_fields")
+    public Optional<Boolean> getIncludeTranslationFields() {
+        return includeTranslationFields;
+    }
+
     @JsonProperty("include_nlp_data")
     public Optional<Boolean> getIncludeNlpData() {
         return includeNlpData;
@@ -355,22 +364,22 @@ public final class LatestHeadlinesPostRequest {
     }
 
     @JsonProperty("ORG_entity_name")
-    public Optional<OrgEntityName> getOrgEntityName() {
+    public Optional<String> getOrgEntityName() {
         return orgEntityName;
     }
 
     @JsonProperty("PER_entity_name")
-    public Optional<PerEntityName> getPerEntityName() {
+    public Optional<String> getPerEntityName() {
         return perEntityName;
     }
 
     @JsonProperty("LOC_entity_name")
-    public Optional<LocEntityName> getLocEntityName() {
+    public Optional<String> getLocEntityName() {
         return locEntityName;
     }
 
     @JsonProperty("MISC_entity_name")
-    public Optional<MiscEntityName> getMiscEntityName() {
+    public Optional<String> getMiscEntityName() {
         return miscEntityName;
     }
 
@@ -419,6 +428,11 @@ public final class LatestHeadlinesPostRequest {
         return customTags;
     }
 
+    @JsonProperty("robots_compliant")
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -455,6 +469,7 @@ public final class LatestHeadlinesPostRequest {
                 && clusteringEnabled.equals(other.clusteringEnabled)
                 && clusteringVariable.equals(other.clusteringVariable)
                 && clusteringThreshold.equals(other.clusteringThreshold)
+                && includeTranslationFields.equals(other.includeTranslationFields)
                 && includeNlpData.equals(other.includeNlpData)
                 && hasNlp.equals(other.hasNlp)
                 && theme.equals(other.theme)
@@ -471,7 +486,8 @@ public final class LatestHeadlinesPostRequest {
                 && notIptcTags.equals(other.notIptcTags)
                 && iabTags.equals(other.iabTags)
                 && notIabTags.equals(other.notIabTags)
-                && customTags.equals(other.customTags);
+                && customTags.equals(other.customTags)
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
@@ -501,6 +517,7 @@ public final class LatestHeadlinesPostRequest {
                 this.clusteringEnabled,
                 this.clusteringVariable,
                 this.clusteringThreshold,
+                this.includeTranslationFields,
                 this.includeNlpData,
                 this.hasNlp,
                 this.theme,
@@ -517,7 +534,8 @@ public final class LatestHeadlinesPostRequest {
                 this.notIptcTags,
                 this.iabTags,
                 this.notIabTags,
-                this.customTags);
+                this.customTags,
+                this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -579,6 +597,8 @@ public final class LatestHeadlinesPostRequest {
 
         private Optional<Float> clusteringThreshold = Optional.empty();
 
+        private Optional<Boolean> includeTranslationFields = Optional.empty();
+
         private Optional<Boolean> includeNlpData = Optional.empty();
 
         private Optional<Boolean> hasNlp = Optional.empty();
@@ -587,13 +607,13 @@ public final class LatestHeadlinesPostRequest {
 
         private Optional<NotTheme> notTheme = Optional.empty();
 
-        private Optional<OrgEntityName> orgEntityName = Optional.empty();
+        private Optional<String> orgEntityName = Optional.empty();
 
-        private Optional<PerEntityName> perEntityName = Optional.empty();
+        private Optional<String> perEntityName = Optional.empty();
 
-        private Optional<LocEntityName> locEntityName = Optional.empty();
+        private Optional<String> locEntityName = Optional.empty();
 
-        private Optional<MiscEntityName> miscEntityName = Optional.empty();
+        private Optional<String> miscEntityName = Optional.empty();
 
         private Optional<Float> titleSentimentMin = Optional.empty();
 
@@ -612,6 +632,8 @@ public final class LatestHeadlinesPostRequest {
         private Optional<NotIabTags> notIabTags = Optional.empty();
 
         private Optional<CustomTags> customTags = Optional.empty();
+
+        private Optional<Boolean> robotsCompliant = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -643,6 +665,7 @@ public final class LatestHeadlinesPostRequest {
             clusteringEnabled(other.getClusteringEnabled());
             clusteringVariable(other.getClusteringVariable());
             clusteringThreshold(other.getClusteringThreshold());
+            includeTranslationFields(other.getIncludeTranslationFields());
             includeNlpData(other.getIncludeNlpData());
             hasNlp(other.getHasNlp());
             theme(other.getTheme());
@@ -660,6 +683,7 @@ public final class LatestHeadlinesPostRequest {
             iabTags(other.getIabTags());
             notIabTags(other.getNotIabTags());
             customTags(other.getCustomTags());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
@@ -927,6 +951,17 @@ public final class LatestHeadlinesPostRequest {
             return this;
         }
 
+        @JsonSetter(value = "include_translation_fields", nulls = Nulls.SKIP)
+        public Builder includeTranslationFields(Optional<Boolean> includeTranslationFields) {
+            this.includeTranslationFields = includeTranslationFields;
+            return this;
+        }
+
+        public Builder includeTranslationFields(Boolean includeTranslationFields) {
+            this.includeTranslationFields = Optional.ofNullable(includeTranslationFields);
+            return this;
+        }
+
         @JsonSetter(value = "include_nlp_data", nulls = Nulls.SKIP)
         public Builder includeNlpData(Optional<Boolean> includeNlpData) {
             this.includeNlpData = includeNlpData;
@@ -972,45 +1007,45 @@ public final class LatestHeadlinesPostRequest {
         }
 
         @JsonSetter(value = "ORG_entity_name", nulls = Nulls.SKIP)
-        public Builder orgEntityName(Optional<OrgEntityName> orgEntityName) {
+        public Builder orgEntityName(Optional<String> orgEntityName) {
             this.orgEntityName = orgEntityName;
             return this;
         }
 
-        public Builder orgEntityName(OrgEntityName orgEntityName) {
+        public Builder orgEntityName(String orgEntityName) {
             this.orgEntityName = Optional.ofNullable(orgEntityName);
             return this;
         }
 
         @JsonSetter(value = "PER_entity_name", nulls = Nulls.SKIP)
-        public Builder perEntityName(Optional<PerEntityName> perEntityName) {
+        public Builder perEntityName(Optional<String> perEntityName) {
             this.perEntityName = perEntityName;
             return this;
         }
 
-        public Builder perEntityName(PerEntityName perEntityName) {
+        public Builder perEntityName(String perEntityName) {
             this.perEntityName = Optional.ofNullable(perEntityName);
             return this;
         }
 
         @JsonSetter(value = "LOC_entity_name", nulls = Nulls.SKIP)
-        public Builder locEntityName(Optional<LocEntityName> locEntityName) {
+        public Builder locEntityName(Optional<String> locEntityName) {
             this.locEntityName = locEntityName;
             return this;
         }
 
-        public Builder locEntityName(LocEntityName locEntityName) {
+        public Builder locEntityName(String locEntityName) {
             this.locEntityName = Optional.ofNullable(locEntityName);
             return this;
         }
 
         @JsonSetter(value = "MISC_entity_name", nulls = Nulls.SKIP)
-        public Builder miscEntityName(Optional<MiscEntityName> miscEntityName) {
+        public Builder miscEntityName(Optional<String> miscEntityName) {
             this.miscEntityName = miscEntityName;
             return this;
         }
 
-        public Builder miscEntityName(MiscEntityName miscEntityName) {
+        public Builder miscEntityName(String miscEntityName) {
             this.miscEntityName = Optional.ofNullable(miscEntityName);
             return this;
         }
@@ -1114,6 +1149,17 @@ public final class LatestHeadlinesPostRequest {
             return this;
         }
 
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public Builder robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
+            return this;
+        }
+
+        public Builder robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
         public LatestHeadlinesPostRequest build() {
             return new LatestHeadlinesPostRequest(
                     when,
@@ -1140,6 +1186,7 @@ public final class LatestHeadlinesPostRequest {
                     clusteringEnabled,
                     clusteringVariable,
                     clusteringThreshold,
+                    includeTranslationFields,
                     includeNlpData,
                     hasNlp,
                     theme,
@@ -1157,6 +1204,7 @@ public final class LatestHeadlinesPostRequest {
                     iabTags,
                     notIabTags,
                     customTags,
+                    robotsCompliant,
                     additionalProperties);
         }
     }

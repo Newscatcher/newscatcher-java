@@ -5,6 +5,7 @@ package com.newscatcher.api.errors;
 
 import com.newscatcher.api.core.NewscatcherApiApiException;
 import com.newscatcher.api.types.Error;
+import okhttp3.Response;
 
 public final class BadRequestError extends NewscatcherApiApiException {
     /**
@@ -14,6 +15,11 @@ public final class BadRequestError extends NewscatcherApiApiException {
 
     public BadRequestError(Error body) {
         super("BadRequestError", 400, body);
+        this.body = body;
+    }
+
+    public BadRequestError(Error body, Response rawResponse) {
+        super("BadRequestError", 400, body, rawResponse);
         this.body = body;
     }
 

@@ -19,17 +19,13 @@ import com.newscatcher.api.types.Countries;
 import com.newscatcher.api.types.From;
 import com.newscatcher.api.types.IptcTags;
 import com.newscatcher.api.types.Lang;
-import com.newscatcher.api.types.LocEntityName;
-import com.newscatcher.api.types.MiscEntityName;
 import com.newscatcher.api.types.NotAuthorName;
 import com.newscatcher.api.types.NotCountries;
 import com.newscatcher.api.types.NotIptcTags;
 import com.newscatcher.api.types.NotLang;
 import com.newscatcher.api.types.NotSources;
 import com.newscatcher.api.types.NotTheme;
-import com.newscatcher.api.types.OrgEntityName;
 import com.newscatcher.api.types.ParentUrl;
-import com.newscatcher.api.types.PerEntityName;
 import com.newscatcher.api.types.PredefinedSources;
 import com.newscatcher.api.types.PublishedDatePrecision;
 import com.newscatcher.api.types.SortBy;
@@ -46,6 +42,8 @@ import org.jetbrains.annotations.NotNull;
 @JsonDeserialize(builder = AggregationPostRequest.Builder.class)
 public final class AggregationPostRequest {
     private final String q;
+
+    private final Optional<AggregationBy> aggregationBy;
 
     private final Optional<String> searchIn;
 
@@ -109,13 +107,13 @@ public final class AggregationPostRequest {
 
     private final Optional<NotTheme> notTheme;
 
-    private final Optional<OrgEntityName> orgEntityName;
+    private final Optional<String> orgEntityName;
 
-    private final Optional<PerEntityName> perEntityName;
+    private final Optional<String> perEntityName;
 
-    private final Optional<LocEntityName> locEntityName;
+    private final Optional<String> locEntityName;
 
-    private final Optional<MiscEntityName> miscEntityName;
+    private final Optional<String> miscEntityName;
 
     private final Optional<Float> titleSentimentMin;
 
@@ -123,18 +121,19 @@ public final class AggregationPostRequest {
 
     private final Optional<Float> contentSentimentMin;
 
-    private final Optional<Float> contentSentientMax;
+    private final Optional<Float> contentSentimentMax;
 
     private final Optional<IptcTags> iptcTags;
 
     private final Optional<NotIptcTags> notIptcTags;
 
-    private final Optional<AggregationBy> aggregationBy;
+    private final Optional<Boolean> robotsCompliant;
 
     private final Map<String, Object> additionalProperties;
 
     private AggregationPostRequest(
             String q,
+            Optional<AggregationBy> aggregationBy,
             Optional<String> searchIn,
             Optional<PredefinedSources> predefinedSources,
             Optional<Sources> sources,
@@ -166,19 +165,20 @@ public final class AggregationPostRequest {
             Optional<Boolean> hasNlp,
             Optional<Theme> theme,
             Optional<NotTheme> notTheme,
-            Optional<OrgEntityName> orgEntityName,
-            Optional<PerEntityName> perEntityName,
-            Optional<LocEntityName> locEntityName,
-            Optional<MiscEntityName> miscEntityName,
+            Optional<String> orgEntityName,
+            Optional<String> perEntityName,
+            Optional<String> locEntityName,
+            Optional<String> miscEntityName,
             Optional<Float> titleSentimentMin,
             Optional<Float> titleSentimentMax,
             Optional<Float> contentSentimentMin,
-            Optional<Float> contentSentientMax,
+            Optional<Float> contentSentimentMax,
             Optional<IptcTags> iptcTags,
             Optional<NotIptcTags> notIptcTags,
-            Optional<AggregationBy> aggregationBy,
+            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.q = q;
+        this.aggregationBy = aggregationBy;
         this.searchIn = searchIn;
         this.predefinedSources = predefinedSources;
         this.sources = sources;
@@ -217,16 +217,21 @@ public final class AggregationPostRequest {
         this.titleSentimentMin = titleSentimentMin;
         this.titleSentimentMax = titleSentimentMax;
         this.contentSentimentMin = contentSentimentMin;
-        this.contentSentientMax = contentSentientMax;
+        this.contentSentimentMax = contentSentimentMax;
         this.iptcTags = iptcTags;
         this.notIptcTags = notIptcTags;
-        this.aggregationBy = aggregationBy;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
     @JsonProperty("q")
     public String getQ() {
         return q;
+    }
+
+    @JsonProperty("aggregation_by")
+    public Optional<AggregationBy> getAggregationBy() {
+        return aggregationBy;
     }
 
     @JsonProperty("search_in")
@@ -385,22 +390,22 @@ public final class AggregationPostRequest {
     }
 
     @JsonProperty("ORG_entity_name")
-    public Optional<OrgEntityName> getOrgEntityName() {
+    public Optional<String> getOrgEntityName() {
         return orgEntityName;
     }
 
     @JsonProperty("PER_entity_name")
-    public Optional<PerEntityName> getPerEntityName() {
+    public Optional<String> getPerEntityName() {
         return perEntityName;
     }
 
     @JsonProperty("LOC_entity_name")
-    public Optional<LocEntityName> getLocEntityName() {
+    public Optional<String> getLocEntityName() {
         return locEntityName;
     }
 
     @JsonProperty("MISC_entity_name")
-    public Optional<MiscEntityName> getMiscEntityName() {
+    public Optional<String> getMiscEntityName() {
         return miscEntityName;
     }
 
@@ -419,9 +424,9 @@ public final class AggregationPostRequest {
         return contentSentimentMin;
     }
 
-    @JsonProperty("content_sentient_max")
-    public Optional<Float> getContentSentientMax() {
-        return contentSentientMax;
+    @JsonProperty("content_sentiment_max")
+    public Optional<Float> getContentSentimentMax() {
+        return contentSentimentMax;
     }
 
     @JsonProperty("iptc_tags")
@@ -434,9 +439,9 @@ public final class AggregationPostRequest {
         return notIptcTags;
     }
 
-    @JsonProperty("aggregation_by")
-    public Optional<AggregationBy> getAggregationBy() {
-        return aggregationBy;
+    @JsonProperty("robots_compliant")
+    public Optional<Boolean> getRobotsCompliant() {
+        return robotsCompliant;
     }
 
     @java.lang.Override
@@ -452,6 +457,7 @@ public final class AggregationPostRequest {
 
     private boolean equalTo(AggregationPostRequest other) {
         return q.equals(other.q)
+                && aggregationBy.equals(other.aggregationBy)
                 && searchIn.equals(other.searchIn)
                 && predefinedSources.equals(other.predefinedSources)
                 && sources.equals(other.sources)
@@ -490,16 +496,17 @@ public final class AggregationPostRequest {
                 && titleSentimentMin.equals(other.titleSentimentMin)
                 && titleSentimentMax.equals(other.titleSentimentMax)
                 && contentSentimentMin.equals(other.contentSentimentMin)
-                && contentSentientMax.equals(other.contentSentientMax)
+                && contentSentimentMax.equals(other.contentSentimentMax)
                 && iptcTags.equals(other.iptcTags)
                 && notIptcTags.equals(other.notIptcTags)
-                && aggregationBy.equals(other.aggregationBy);
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
                 this.q,
+                this.aggregationBy,
                 this.searchIn,
                 this.predefinedSources,
                 this.sources,
@@ -538,10 +545,10 @@ public final class AggregationPostRequest {
                 this.titleSentimentMin,
                 this.titleSentimentMax,
                 this.contentSentimentMin,
-                this.contentSentientMax,
+                this.contentSentimentMax,
                 this.iptcTags,
                 this.notIptcTags,
-                this.aggregationBy);
+                this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -561,6 +568,10 @@ public final class AggregationPostRequest {
 
     public interface _FinalStage {
         AggregationPostRequest build();
+
+        _FinalStage aggregationBy(Optional<AggregationBy> aggregationBy);
+
+        _FinalStage aggregationBy(AggregationBy aggregationBy);
 
         _FinalStage searchIn(Optional<String> searchIn);
 
@@ -686,21 +697,21 @@ public final class AggregationPostRequest {
 
         _FinalStage notTheme(NotTheme notTheme);
 
-        _FinalStage orgEntityName(Optional<OrgEntityName> orgEntityName);
+        _FinalStage orgEntityName(Optional<String> orgEntityName);
 
-        _FinalStage orgEntityName(OrgEntityName orgEntityName);
+        _FinalStage orgEntityName(String orgEntityName);
 
-        _FinalStage perEntityName(Optional<PerEntityName> perEntityName);
+        _FinalStage perEntityName(Optional<String> perEntityName);
 
-        _FinalStage perEntityName(PerEntityName perEntityName);
+        _FinalStage perEntityName(String perEntityName);
 
-        _FinalStage locEntityName(Optional<LocEntityName> locEntityName);
+        _FinalStage locEntityName(Optional<String> locEntityName);
 
-        _FinalStage locEntityName(LocEntityName locEntityName);
+        _FinalStage locEntityName(String locEntityName);
 
-        _FinalStage miscEntityName(Optional<MiscEntityName> miscEntityName);
+        _FinalStage miscEntityName(Optional<String> miscEntityName);
 
-        _FinalStage miscEntityName(MiscEntityName miscEntityName);
+        _FinalStage miscEntityName(String miscEntityName);
 
         _FinalStage titleSentimentMin(Optional<Float> titleSentimentMin);
 
@@ -714,9 +725,9 @@ public final class AggregationPostRequest {
 
         _FinalStage contentSentimentMin(Float contentSentimentMin);
 
-        _FinalStage contentSentientMax(Optional<Float> contentSentientMax);
+        _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax);
 
-        _FinalStage contentSentientMax(Float contentSentientMax);
+        _FinalStage contentSentimentMax(Float contentSentimentMax);
 
         _FinalStage iptcTags(Optional<IptcTags> iptcTags);
 
@@ -726,22 +737,22 @@ public final class AggregationPostRequest {
 
         _FinalStage notIptcTags(NotIptcTags notIptcTags);
 
-        _FinalStage aggregationBy(Optional<AggregationBy> aggregationBy);
+        _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant);
 
-        _FinalStage aggregationBy(AggregationBy aggregationBy);
+        _FinalStage robotsCompliant(Boolean robotsCompliant);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements QStage, _FinalStage {
         private String q;
 
-        private Optional<AggregationBy> aggregationBy = Optional.empty();
+        private Optional<Boolean> robotsCompliant = Optional.empty();
 
         private Optional<NotIptcTags> notIptcTags = Optional.empty();
 
         private Optional<IptcTags> iptcTags = Optional.empty();
 
-        private Optional<Float> contentSentientMax = Optional.empty();
+        private Optional<Float> contentSentimentMax = Optional.empty();
 
         private Optional<Float> contentSentimentMin = Optional.empty();
 
@@ -749,13 +760,13 @@ public final class AggregationPostRequest {
 
         private Optional<Float> titleSentimentMin = Optional.empty();
 
-        private Optional<MiscEntityName> miscEntityName = Optional.empty();
+        private Optional<String> miscEntityName = Optional.empty();
 
-        private Optional<LocEntityName> locEntityName = Optional.empty();
+        private Optional<String> locEntityName = Optional.empty();
 
-        private Optional<PerEntityName> perEntityName = Optional.empty();
+        private Optional<String> perEntityName = Optional.empty();
 
-        private Optional<OrgEntityName> orgEntityName = Optional.empty();
+        private Optional<String> orgEntityName = Optional.empty();
 
         private Optional<NotTheme> notTheme = Optional.empty();
 
@@ -819,6 +830,8 @@ public final class AggregationPostRequest {
 
         private Optional<String> searchIn = Optional.empty();
 
+        private Optional<AggregationBy> aggregationBy = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -827,6 +840,7 @@ public final class AggregationPostRequest {
         @java.lang.Override
         public Builder from(AggregationPostRequest other) {
             q(other.getQ());
+            aggregationBy(other.getAggregationBy());
             searchIn(other.getSearchIn());
             predefinedSources(other.getPredefinedSources());
             sources(other.getSources());
@@ -865,10 +879,10 @@ public final class AggregationPostRequest {
             titleSentimentMin(other.getTitleSentimentMin());
             titleSentimentMax(other.getTitleSentimentMax());
             contentSentimentMin(other.getContentSentimentMin());
-            contentSentientMax(other.getContentSentientMax());
+            contentSentimentMax(other.getContentSentimentMax());
             iptcTags(other.getIptcTags());
             notIptcTags(other.getNotIptcTags());
-            aggregationBy(other.getAggregationBy());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
@@ -880,15 +894,15 @@ public final class AggregationPostRequest {
         }
 
         @java.lang.Override
-        public _FinalStage aggregationBy(AggregationBy aggregationBy) {
-            this.aggregationBy = Optional.ofNullable(aggregationBy);
+        public _FinalStage robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter(value = "aggregation_by", nulls = Nulls.SKIP)
-        public _FinalStage aggregationBy(Optional<AggregationBy> aggregationBy) {
-            this.aggregationBy = aggregationBy;
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
             return this;
         }
 
@@ -919,15 +933,15 @@ public final class AggregationPostRequest {
         }
 
         @java.lang.Override
-        public _FinalStage contentSentientMax(Float contentSentientMax) {
-            this.contentSentientMax = Optional.ofNullable(contentSentientMax);
+        public _FinalStage contentSentimentMax(Float contentSentimentMax) {
+            this.contentSentimentMax = Optional.ofNullable(contentSentimentMax);
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter(value = "content_sentient_max", nulls = Nulls.SKIP)
-        public _FinalStage contentSentientMax(Optional<Float> contentSentientMax) {
-            this.contentSentientMax = contentSentientMax;
+        @JsonSetter(value = "content_sentiment_max", nulls = Nulls.SKIP)
+        public _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax) {
+            this.contentSentimentMax = contentSentimentMax;
             return this;
         }
 
@@ -971,53 +985,53 @@ public final class AggregationPostRequest {
         }
 
         @java.lang.Override
-        public _FinalStage miscEntityName(MiscEntityName miscEntityName) {
+        public _FinalStage miscEntityName(String miscEntityName) {
             this.miscEntityName = Optional.ofNullable(miscEntityName);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "MISC_entity_name", nulls = Nulls.SKIP)
-        public _FinalStage miscEntityName(Optional<MiscEntityName> miscEntityName) {
+        public _FinalStage miscEntityName(Optional<String> miscEntityName) {
             this.miscEntityName = miscEntityName;
             return this;
         }
 
         @java.lang.Override
-        public _FinalStage locEntityName(LocEntityName locEntityName) {
+        public _FinalStage locEntityName(String locEntityName) {
             this.locEntityName = Optional.ofNullable(locEntityName);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "LOC_entity_name", nulls = Nulls.SKIP)
-        public _FinalStage locEntityName(Optional<LocEntityName> locEntityName) {
+        public _FinalStage locEntityName(Optional<String> locEntityName) {
             this.locEntityName = locEntityName;
             return this;
         }
 
         @java.lang.Override
-        public _FinalStage perEntityName(PerEntityName perEntityName) {
+        public _FinalStage perEntityName(String perEntityName) {
             this.perEntityName = Optional.ofNullable(perEntityName);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "PER_entity_name", nulls = Nulls.SKIP)
-        public _FinalStage perEntityName(Optional<PerEntityName> perEntityName) {
+        public _FinalStage perEntityName(Optional<String> perEntityName) {
             this.perEntityName = perEntityName;
             return this;
         }
 
         @java.lang.Override
-        public _FinalStage orgEntityName(OrgEntityName orgEntityName) {
+        public _FinalStage orgEntityName(String orgEntityName) {
             this.orgEntityName = Optional.ofNullable(orgEntityName);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "ORG_entity_name", nulls = Nulls.SKIP)
-        public _FinalStage orgEntityName(Optional<OrgEntityName> orgEntityName) {
+        public _FinalStage orgEntityName(Optional<String> orgEntityName) {
             this.orgEntityName = orgEntityName;
             return this;
         }
@@ -1426,9 +1440,23 @@ public final class AggregationPostRequest {
         }
 
         @java.lang.Override
+        public _FinalStage aggregationBy(AggregationBy aggregationBy) {
+            this.aggregationBy = Optional.ofNullable(aggregationBy);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "aggregation_by", nulls = Nulls.SKIP)
+        public _FinalStage aggregationBy(Optional<AggregationBy> aggregationBy) {
+            this.aggregationBy = aggregationBy;
+            return this;
+        }
+
+        @java.lang.Override
         public AggregationPostRequest build() {
             return new AggregationPostRequest(
                     q,
+                    aggregationBy,
                     searchIn,
                     predefinedSources,
                     sources,
@@ -1467,10 +1495,10 @@ public final class AggregationPostRequest {
                     titleSentimentMin,
                     titleSentimentMax,
                     contentSentimentMin,
-                    contentSentientMax,
+                    contentSentimentMax,
                     iptcTags,
                     notIptcTags,
-                    aggregationBy,
+                    robotsCompliant,
                     additionalProperties);
         }
     }

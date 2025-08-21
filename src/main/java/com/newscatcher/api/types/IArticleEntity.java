@@ -54,6 +54,10 @@ public interface IArticleEntity {
 
     String getContent();
 
+    Optional<String> getTitleTranslatedEn();
+
+    Optional<String> getContentTranslatedEn();
+
     Optional<Integer> getWordCount();
 
     Optional<Boolean> getIsOpinion();
@@ -69,6 +73,8 @@ public interface IArticleEntity {
     String getId();
 
     double getScore();
+
+    Optional<Boolean> getRobotsCompliant();
 
     Optional<Map<String, List<String>>> getCustomTags();
 

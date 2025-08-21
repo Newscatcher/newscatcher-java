@@ -5,6 +5,7 @@ package com.newscatcher.api.errors;
 
 import com.newscatcher.api.core.NewscatcherApiApiException;
 import com.newscatcher.api.types.Error;
+import okhttp3.Response;
 
 public final class UnauthorizedError extends NewscatcherApiApiException {
     /**
@@ -14,6 +15,11 @@ public final class UnauthorizedError extends NewscatcherApiApiException {
 
     public UnauthorizedError(Error body) {
         super("UnauthorizedError", 401, body);
+        this.body = body;
+    }
+
+    public UnauthorizedError(Error body, Response rawResponse) {
+        super("UnauthorizedError", 401, body, rawResponse);
         this.body = body;
     }
 

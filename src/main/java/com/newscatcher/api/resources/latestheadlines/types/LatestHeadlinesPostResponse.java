@@ -31,6 +31,7 @@ public final class LatestHeadlinesPostResponse {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((SearchResponseDto) this.value);
@@ -80,15 +81,16 @@ public final class LatestHeadlinesPostResponse {
         }
 
         @java.lang.Override
-        public LatestHeadlinesPostResponse deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        public LatestHeadlinesPostResponse deserialize(JsonParser p, DeserializationContext context)
+                throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, SearchResponseDto.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, ClusteredSearchResponseDto.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }

@@ -95,6 +95,9 @@ public final class NamedEntityListItem {
             return this;
         }
 
+        /**
+         * <p>The name of the entity identified in the article.</p>
+         */
         @JsonSetter(value = "entity_name", nulls = Nulls.SKIP)
         public Builder entityName(Optional<String> entityName) {
             this.entityName = entityName;
@@ -106,6 +109,9 @@ public final class NamedEntityListItem {
             return this;
         }
 
+        /**
+         * <p>The number of times this entity appears in the article.</p>
+         */
         @JsonSetter(value = "count", nulls = Nulls.SKIP)
         public Builder count(Optional<Integer> count) {
             this.count = count;
