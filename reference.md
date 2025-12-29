@@ -30,16 +30,36 @@ Searches for articles based on specified criteria such as keyword, language, cou
 client.search().get(
     SearchGetRequest
         .builder()
-        .q("technology AND (Apple OR Microsoft) NOT Google")
+        .q("\"supply chain\" AND Amazon NOT China")
         .searchIn("title_content, title_content_translated")
         .includeTranslationFields(true)
         .predefinedSources("top 100 US, top 5 GB")
-        .from(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
-        .to(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        .sourceName("sport")
+        .sources("nytimes.com")
+        .notSources("cnn.com")
+        .lang("en")
+        .notLang("fr")
+        .countries("US")
+        .notCountries("UK")
+        .notAuthorName("John Doe")
+        .from(
+            SearchGetRequestFrom.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        )
+        .to(
+            SearchGetRequestTo.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        )
+        .parentUrl("https://www.washingtonpost.com/politics")
+        .allLinks("https://aiindex.stanford.edu/report")
+        .allDomainLinks("nvidia.com")
+        .newsType("General News Outlets")
         .includeNlpData(true)
         .hasNlp(true)
         .theme("Business,Finance")
         .notTheme("Crime")
+        .orgEntityName("Apple")
+        .perEntityName("Elon Musk")
+        .locEntityName("California")
+        .miscEntityName("Bitcoin")
         .iptcTags("20000199,20000209")
         .notIptcTags("20000205,20000209")
         .iabTags("Business,Events")
@@ -62,17 +82,6 @@ client.search().get(
 <dd>
 
 **q:** `String` 
-
-The keyword(s) to search for in articles. Query syntax supports logical operators (`AND`, `OR`, `NOT`) and wildcards:
-
-- For an exact match, use double quotes. For example, `"technology news"`.
-- Use `*` to search for any keyword.
-- Use `+` to include and `-` to exclude specific words or phrases. 
-  For example, `+Apple`, `-Google`.
-- Use `AND`, `OR`, and `NOT` to refine search results. 
-  For example, `technology AND (Apple OR Microsoft) NOT Google`.
-
-For more details, see [Advanced querying](/docs/v3/documentation/guides-and-concepts/advanced-querying).
     
 </dd>
 </dl>
@@ -222,7 +231,7 @@ Example: `"John Doe, Jane Doe"`
 <dl>
 <dd>
 
-**from:** `Optional<OffsetDateTime>` 
+**from:** `Optional<SearchGetRequestFrom>` 
 
 The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC. 
 
@@ -241,7 +250,7 @@ Formats with examples:
 <dl>
 <dd>
 
-**to:** `Optional<OffsetDateTime>` 
+**to:** `Optional<SearchGetRequestTo>` 
 
 The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC. 
 
@@ -838,21 +847,8 @@ Searches for articles based on specified criteria such as keyword, language, cou
 client.search().post(
     SearchPostRequest
         .builder()
-        .q("renewable energy")
-        .predefinedSources(
-            PredefinedSources.of()
-        )
-        .lang(
-            Lang.of()
-        )
-        .from(
-            From.of(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-        )
-        .to(
-            To.of(OffsetDateTime.parse("2024-06-30T00:00:00Z"))
-        )
-        .additionalDomainInfo(true)
-        .isNewsDomain(true)
+        .q("\"supply chain\" AND Amazon NOT China")
+        .pageSize(1)
         .build()
 );
 ```
@@ -1352,12 +1348,27 @@ Retrieves the latest headlines for the specified time period. You can filter res
 client.latestheadlines().get(
     LatestHeadlinesGetRequest
         .builder()
+        .when("7d")
+        .lang("en")
+        .notLang("fr")
+        .countries("US")
+        .notCountries("UK")
         .predefinedSources("top 100 US, top 5 GB")
+        .sources("nytimes.com")
+        .notSources("cnn.com")
+        .notAuthorName("John Doe")
+        .parentUrl("https://www.washingtonpost.com/politics")
+        .allLinks("https://aiindex.stanford.edu/report")
+        .allDomainLinks("nvidia.com")
         .includeTranslationFields(true)
         .includeNlpData(true)
         .hasNlp(true)
         .theme("Business,Finance")
         .notTheme("Crime")
+        .orgEntityName("Apple")
+        .perEntityName("Elon Musk")
+        .locEntityName("California")
+        .miscEntityName("Bitcoin")
         .iptcTags("20000199,20000209")
         .notIptcTags("20000205,20000209")
         .iabTags("Business,Events")
@@ -1989,14 +2000,8 @@ Retrieves the latest headlines for the specified time period. You can filter res
 client.latestheadlines().post(
     LatestHeadlinesPostRequest
         .builder()
-        .lang(
-            Lang.of("en")
-        )
-        .predefinedSources(
-            PredefinedSources.of()
-        )
-        .isOpinion(false)
-        .pageSize(10)
+        .when("7d")
+        .pageSize(1)
         .build()
 );
 ```
@@ -2398,6 +2403,10 @@ client.breakingNews().breakingNewsGet(
         .hasNlp(true)
         .theme("Business,Finance")
         .notTheme("Crime")
+        .orgEntityName("Apple")
+        .perEntityName("Elon Musk")
+        .locEntityName("California")
+        .miscEntityName("Bitcoin")
         .build()
 );
 ```
@@ -2720,9 +2729,8 @@ client.breakingNews().breakingNewsPost(
     BreakingNewsPostRequest
         .builder()
         .sortBy(SortBy.RELEVANCY)
-        .page(1)
-        .pageSize(100)
-        .includeNlpData(true)
+        .rankedOnly(true)
+        .topNArticles(1)
         .build()
 );
 ```
@@ -2943,9 +2951,23 @@ client.authors().get(
     AuthorsGetRequest
         .builder()
         .authorName("Jane Smith")
+        .notAuthorName("John Doe")
         .predefinedSources("top 100 US, top 5 GB")
-        .from(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
-        .to(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        .sources("nytimes.com")
+        .notSources("cnn.com")
+        .lang("en")
+        .notLang("fr")
+        .countries("US")
+        .notCountries("UK")
+        .from(
+            AuthorsGetRequestFrom.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        )
+        .to(
+            AuthorsGetRequestTo.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        )
+        .parentUrl("https://www.washingtonpost.com/politics")
+        .allLinks("https://aiindex.stanford.edu/report")
+        .allDomainLinks("nvidia.com")
         .includeTranslationFields(true)
         .includeNlpData(true)
         .hasNlp(true)
@@ -3093,7 +3115,7 @@ To learn more, see [Enumerated parameters > Country](/docs/v3/api-reference/over
 <dl>
 <dd>
 
-**from:** `Optional<OffsetDateTime>` 
+**from:** `Optional<AuthorsGetRequestFrom>` 
 
 The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC. 
 
@@ -3112,7 +3134,7 @@ Formats with examples:
 <dl>
 <dd>
 
-**to:** `Optional<OffsetDateTime>` 
+**to:** `Optional<AuthorsGetRequestTo>` 
 
 The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC. 
 
@@ -3557,19 +3579,7 @@ Searches for articles by author. You can filter results by language, country, so
 client.authors().post(
     AuthorsPostRequest
         .builder()
-        .authorName("Joanna Stern")
-        .sources(
-            Sources.of()
-        )
-        .lang(
-            Lang.of("en")
-        )
-        .from(
-            From.of(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-        )
-        .to(
-            To.of(OffsetDateTime.parse("2024-06-30T00:00:00Z"))
-        )
+        .authorName("David Muir")
         .build()
 );
 ```
@@ -3965,6 +3975,9 @@ Searches for articles based on specified links or IDs. You can filter results by
 client.searchLink().searchUrlGet(
     SearchUrlGetRequest
         .builder()
+        .ids("5f8d0d55b6e45e00179c6e7e")
+        .links("https://nytimes.com/article1")
+        .source("articles.id,articles.title,articles.link,articles.published_date")
         .from(
             From.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
         )
@@ -4008,6 +4021,14 @@ The article link or list of article links to search for. To specify multiple lin
 Example: `"https://example.com/article1, https://example.com/article2"`
 
 **Caution**: You can use either the `links` or the `ids` parameter, but not both at the same time.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**source:** `Optional<String>` 
     
 </dd>
 </dl>
@@ -4093,12 +4114,10 @@ Searches for articles using their ID(s) or link(s).
 client.searchLink().searchUrlPost(
     SearchUrlPostRequest
         .builder()
-        .ids(
-            Ids.of()
-        )
         .links(
-            Links.of()
+            Links.of("https://www.reuters.com/business/energy/oil-prices-up-after-israeli-attacks-oversupply-caps-gains-2025-09-10/")
         )
+        .source("articles.id,articles.title,articles.link,articles.canonical_url")
         .build()
 );
 ```
@@ -4124,6 +4143,14 @@ client.searchLink().searchUrlPost(
 <dd>
 
 **links:** `Optional<Links>` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**source:** `Optional<String>` 
     
 </dd>
 </dl>
@@ -4224,13 +4251,26 @@ Searches for articles similar to a specified query.
 client.searchsimilar().get(
     SearchSimilarGetRequest
         .builder()
-        .q("technology AND (Apple OR Microsoft) NOT Google")
+        .q("\"supply chain\" AND Amazon NOT China")
         .searchIn("title_content, title_content_translated")
         .includeTranslationFields(true)
         .similarDocumentsFields("title,summary")
         .predefinedSources("top 100 US, top 5 GB")
-        .from(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
-        .to(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        .sources("nytimes.com")
+        .notSources("cnn.com")
+        .lang("en")
+        .notLang("fr")
+        .countries("US")
+        .notCountries("UK")
+        .from(
+            SearchSimilarGetRequestFrom.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        )
+        .to(
+            SearchSimilarGetRequestTo.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        )
+        .parentUrl("https://www.washingtonpost.com/politics")
+        .allLinks("https://aiindex.stanford.edu/report")
+        .allDomainLinks("nvidia.com")
         .includeNlpData(true)
         .hasNlp(true)
         .theme("Business,Finance")
@@ -4256,17 +4296,6 @@ client.searchsimilar().get(
 <dd>
 
 **q:** `String` 
-
-The keyword(s) to search for in articles. Query syntax supports logical operators (`AND`, `OR`, `NOT`) and wildcards:
-
-- For an exact match, use double quotes. For example, `"technology news"`.
-- Use `*` to search for any keyword.
-- Use `+` to include and `-` to exclude specific words or phrases. 
-  For example, `+Apple`, `-Google`.
-- Use `AND`, `OR`, and `NOT` to refine search results. 
-  For example, `technology AND (Apple OR Microsoft) NOT Google`.
-
-For more details, see [Advanced querying](/docs/v3/documentation/guides-and-concepts/advanced-querying).
     
 </dd>
 </dl>
@@ -4414,7 +4443,7 @@ To learn more, see [Enumerated parameters > Country](/docs/v3/api-reference/over
 <dl>
 <dd>
 
-**from:** `Optional<OffsetDateTime>` 
+**from:** `Optional<SearchSimilarGetRequestFrom>` 
 
 The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC. 
 
@@ -4433,7 +4462,7 @@ Formats with examples:
 <dl>
 <dd>
 
-**to:** `Optional<OffsetDateTime>` 
+**to:** `Optional<SearchSimilarGetRequestTo>` 
 
 The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC. 
 
@@ -4838,9 +4867,10 @@ Searches for articles similar to the specified query. You can filter results by 
 client.searchsimilar().post(
     SearchSimilarPostRequest
         .builder()
-        .q("artificial intelligence")
+        .q("\"supply chain\" AND Amazon NOT China")
         .includeSimilarDocuments(true)
         .similarDocumentsNumber(5)
+        .pageSize(10)
         .build()
 );
 ```
@@ -5244,8 +5274,12 @@ Retrieves a list of sources based on specified criteria such as language, countr
 client.sources().get(
     SourcesGetRequest
         .builder()
+        .lang("en")
+        .countries("US")
         .predefinedSources("top 100 US, top 5 GB")
+        .sourceName("sport")
         .sourceUrl("bbc.com")
+        .newsType("General News Outlets")
         .build()
 );
 ```
@@ -5439,13 +5473,7 @@ client.sources().post(
     SourcesPostRequest
         .builder()
         .predefinedSources(
-            PredefinedSources.of()
-        )
-        .includeAdditionalInfo(true)
-        .isNewsDomain(true)
-        .newsDomainType(NewsDomainType.ORIGINAL_CONTENT)
-        .newsType(
-            NewsType.of("General News Outlets")
+            PredefinedSources.of("top 10 US")
         )
         .build()
 );
@@ -5586,15 +5614,33 @@ Retrieves the count of articles aggregated by day or hour based on various searc
 client.aggregation().get(
     AggregationGetRequest
         .builder()
-        .q("technology AND (Apple OR Microsoft) NOT Google")
+        .q("\"supply chain\" AND Amazon NOT China")
         .searchIn("title_content, title_content_translated")
         .predefinedSources("top 100 US, top 5 GB")
-        .from(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
-        .to(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        .sources("nytimes.com")
+        .notSources("cnn.com")
+        .lang("en")
+        .notLang("fr")
+        .countries("US")
+        .notCountries("UK")
+        .notAuthorName("John Doe")
+        .from(
+            AggregationGetRequestFrom.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        )
+        .to(
+            AggregationGetRequestTo.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+        )
+        .parentUrl("https://www.washingtonpost.com/politics")
+        .allLinks("https://aiindex.stanford.edu/report")
+        .allDomainLinks("nvidia.com")
         .includeNlpData(true)
         .hasNlp(true)
         .theme("Business,Finance")
         .notTheme("Crime")
+        .orgEntityName("Apple")
+        .perEntityName("Elon Musk")
+        .locEntityName("California")
+        .miscEntityName("Bitcoin")
         .iptcTags("20000199,20000209")
         .notIptcTags("20000205,20000209")
         .build()
@@ -5614,17 +5660,6 @@ client.aggregation().get(
 <dd>
 
 **q:** `String` 
-
-The keyword(s) to search for in articles. Query syntax supports logical operators (`AND`, `OR`, `NOT`) and wildcards:
-
-- For an exact match, use double quotes. For example, `"technology news"`.
-- Use `*` to search for any keyword.
-- Use `+` to include and `-` to exclude specific words or phrases. 
-  For example, `+Apple`, `-Google`.
-- Use `AND`, `OR`, and `NOT` to refine search results. 
-  For example, `technology AND (Apple OR Microsoft) NOT Google`.
-
-For more details, see [Advanced querying](/docs/v3/documentation/guides-and-concepts/advanced-querying).
     
 </dd>
 </dl>
@@ -5760,7 +5795,7 @@ Example: `"John Doe, Jane Doe"`
 <dl>
 <dd>
 
-**from:** `Optional<OffsetDateTime>` 
+**from:** `Optional<AggregationGetRequestFrom>` 
 
 The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC. 
 
@@ -5779,7 +5814,7 @@ Formats with examples:
 <dl>
 <dd>
 
-**to:** `Optional<OffsetDateTime>` 
+**to:** `Optional<AggregationGetRequestTo>` 
 
 The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC. 
 
@@ -6220,17 +6255,8 @@ Retrieves the count of articles aggregated by day or hour based on various searc
 client.aggregation().post(
     AggregationPostRequest
         .builder()
-        .q("renewable energy")
+        .q("\"supply chain\" AND Amazon NOT China")
         .aggregationBy(AggregationBy.DAY)
-        .predefinedSources(
-            PredefinedSources.of("top 50 US")
-        )
-        .from(
-            From.of(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-        )
-        .to(
-            To.of(OffsetDateTime.parse("2024-06-30T00:00:00Z"))
-        )
         .build()
 );
 ```

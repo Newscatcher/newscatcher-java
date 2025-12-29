@@ -25,9 +25,9 @@ public final class BreakingNewsArticleEntity {
 
     private final Optional<String> author;
 
-    private final Optional<Authors> authors;
+    private final Optional<BreakingNewsArticleEntityAuthors> authors;
 
-    private final Optional<Journalists> journalists;
+    private final Optional<BreakingNewsArticleEntityJournalists> journalists;
 
     private final Optional<String> publishedDate;
 
@@ -90,8 +90,8 @@ public final class BreakingNewsArticleEntity {
     private BreakingNewsArticleEntity(
             String title,
             Optional<String> author,
-            Optional<Authors> authors,
-            Optional<Journalists> journalists,
+            Optional<BreakingNewsArticleEntityAuthors> authors,
+            Optional<BreakingNewsArticleEntityJournalists> journalists,
             Optional<String> publishedDate,
             Optional<String> publishedDatePrecision,
             Optional<String> updatedDate,
@@ -176,7 +176,7 @@ public final class BreakingNewsArticleEntity {
      * @return A list of authors of the article.
      */
     @JsonProperty("authors")
-    public Optional<Authors> getAuthors() {
+    public Optional<BreakingNewsArticleEntityAuthors> getAuthors() {
         return authors;
     }
 
@@ -184,7 +184,7 @@ public final class BreakingNewsArticleEntity {
      * @return A list of journalists associated with the article.
      */
     @JsonProperty("journalists")
-    public Optional<Journalists> getJournalists() {
+    public Optional<BreakingNewsArticleEntityJournalists> getJournalists() {
         return journalists;
     }
 
@@ -579,16 +579,16 @@ public final class BreakingNewsArticleEntity {
         /**
          * <p>A list of authors of the article.</p>
          */
-        _FinalStage authors(Optional<Authors> authors);
+        _FinalStage authors(Optional<BreakingNewsArticleEntityAuthors> authors);
 
-        _FinalStage authors(Authors authors);
+        _FinalStage authors(BreakingNewsArticleEntityAuthors authors);
 
         /**
          * <p>A list of journalists associated with the article.</p>
          */
-        _FinalStage journalists(Optional<Journalists> journalists);
+        _FinalStage journalists(Optional<BreakingNewsArticleEntityJournalists> journalists);
 
-        _FinalStage journalists(Journalists journalists);
+        _FinalStage journalists(BreakingNewsArticleEntityJournalists journalists);
 
         /**
          * <p>The date the article was published.</p>
@@ -798,9 +798,9 @@ public final class BreakingNewsArticleEntity {
 
         private Optional<String> publishedDate = Optional.empty();
 
-        private Optional<Journalists> journalists = Optional.empty();
+        private Optional<BreakingNewsArticleEntityJournalists> journalists = Optional.empty();
 
-        private Optional<Authors> authors = Optional.empty();
+        private Optional<BreakingNewsArticleEntityAuthors> authors = Optional.empty();
 
         private Optional<String> author = Optional.empty();
 
@@ -1352,7 +1352,7 @@ public final class BreakingNewsArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage journalists(Journalists journalists) {
+        public _FinalStage journalists(BreakingNewsArticleEntityJournalists journalists) {
             this.journalists = Optional.ofNullable(journalists);
             return this;
         }
@@ -1362,7 +1362,7 @@ public final class BreakingNewsArticleEntity {
          */
         @java.lang.Override
         @JsonSetter(value = "journalists", nulls = Nulls.SKIP)
-        public _FinalStage journalists(Optional<Journalists> journalists) {
+        public _FinalStage journalists(Optional<BreakingNewsArticleEntityJournalists> journalists) {
             this.journalists = journalists;
             return this;
         }
@@ -1372,7 +1372,7 @@ public final class BreakingNewsArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage authors(Authors authors) {
+        public _FinalStage authors(BreakingNewsArticleEntityAuthors authors) {
             this.authors = Optional.ofNullable(authors);
             return this;
         }
@@ -1382,7 +1382,7 @@ public final class BreakingNewsArticleEntity {
          */
         @java.lang.Override
         @JsonSetter(value = "authors", nulls = Nulls.SKIP)
-        public _FinalStage authors(Optional<Authors> authors) {
+        public _FinalStage authors(Optional<BreakingNewsArticleEntityAuthors> authors) {
             this.authors = authors;
             return this;
         }

@@ -3,24 +3,95 @@
  */
 package com.newscatcher.api.resources.aggregation.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum AggregationGetRequestPublishedDatePrecision {
-    FULL("full"),
+public final class AggregationGetRequestPublishedDatePrecision {
+    public static final AggregationGetRequestPublishedDatePrecision FULL =
+            new AggregationGetRequestPublishedDatePrecision(Value.FULL, "full");
 
-    TIMEZONE_UNKNOWN("timezone unknown"),
+    public static final AggregationGetRequestPublishedDatePrecision DATE =
+            new AggregationGetRequestPublishedDatePrecision(Value.DATE, "date");
 
-    DATE("date");
+    public static final AggregationGetRequestPublishedDatePrecision TIMEZONE_UNKNOWN =
+            new AggregationGetRequestPublishedDatePrecision(Value.TIMEZONE_UNKNOWN, "timezone unknown");
 
-    private final String value;
+    private final Value value;
 
-    AggregationGetRequestPublishedDatePrecision(String value) {
+    private final String string;
+
+    AggregationGetRequestPublishedDatePrecision(Value value, String string) {
         this.value = value;
+        this.string = string;
     }
 
-    @JsonValue
+    public Value getEnumValue() {
+        return value;
+    }
+
     @java.lang.Override
+    @JsonValue
     public String toString() {
-        return this.value;
+        return this.string;
+    }
+
+    @java.lang.Override
+    public boolean equals(Object other) {
+        return (this == other)
+                || (other instanceof AggregationGetRequestPublishedDatePrecision
+                        && this.string.equals(((AggregationGetRequestPublishedDatePrecision) other).string));
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return this.string.hashCode();
+    }
+
+    public <T> T visit(Visitor<T> visitor) {
+        switch (value) {
+            case FULL:
+                return visitor.visitFull();
+            case DATE:
+                return visitor.visitDate();
+            case TIMEZONE_UNKNOWN:
+                return visitor.visitTimezoneUnknown();
+            case UNKNOWN:
+            default:
+                return visitor.visitUnknown(string);
+        }
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static AggregationGetRequestPublishedDatePrecision valueOf(String value) {
+        switch (value) {
+            case "full":
+                return FULL;
+            case "date":
+                return DATE;
+            case "timezone unknown":
+                return TIMEZONE_UNKNOWN;
+            default:
+                return new AggregationGetRequestPublishedDatePrecision(Value.UNKNOWN, value);
+        }
+    }
+
+    public enum Value {
+        FULL,
+
+        TIMEZONE_UNKNOWN,
+
+        DATE,
+
+        UNKNOWN
+    }
+
+    public interface Visitor<T> {
+        T visitFull();
+
+        T visitTimezoneUnknown();
+
+        T visitDate();
+
+        T visitUnknown(String unknownType);
     }
 }
