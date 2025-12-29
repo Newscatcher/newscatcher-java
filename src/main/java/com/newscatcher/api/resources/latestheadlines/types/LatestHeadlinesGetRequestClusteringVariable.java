@@ -3,24 +3,95 @@
  */
 package com.newscatcher.api.resources.latestheadlines.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum LatestHeadlinesGetRequestClusteringVariable {
-    CONTENT("content"),
+public final class LatestHeadlinesGetRequestClusteringVariable {
+    public static final LatestHeadlinesGetRequestClusteringVariable CONTENT =
+            new LatestHeadlinesGetRequestClusteringVariable(Value.CONTENT, "content");
 
-    TITLE("title"),
+    public static final LatestHeadlinesGetRequestClusteringVariable TITLE =
+            new LatestHeadlinesGetRequestClusteringVariable(Value.TITLE, "title");
 
-    SUMMARY("summary");
+    public static final LatestHeadlinesGetRequestClusteringVariable SUMMARY =
+            new LatestHeadlinesGetRequestClusteringVariable(Value.SUMMARY, "summary");
 
-    private final String value;
+    private final Value value;
 
-    LatestHeadlinesGetRequestClusteringVariable(String value) {
+    private final String string;
+
+    LatestHeadlinesGetRequestClusteringVariable(Value value, String string) {
         this.value = value;
+        this.string = string;
     }
 
-    @JsonValue
+    public Value getEnumValue() {
+        return value;
+    }
+
     @java.lang.Override
+    @JsonValue
     public String toString() {
-        return this.value;
+        return this.string;
+    }
+
+    @java.lang.Override
+    public boolean equals(Object other) {
+        return (this == other)
+                || (other instanceof LatestHeadlinesGetRequestClusteringVariable
+                        && this.string.equals(((LatestHeadlinesGetRequestClusteringVariable) other).string));
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return this.string.hashCode();
+    }
+
+    public <T> T visit(Visitor<T> visitor) {
+        switch (value) {
+            case CONTENT:
+                return visitor.visitContent();
+            case TITLE:
+                return visitor.visitTitle();
+            case SUMMARY:
+                return visitor.visitSummary();
+            case UNKNOWN:
+            default:
+                return visitor.visitUnknown(string);
+        }
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static LatestHeadlinesGetRequestClusteringVariable valueOf(String value) {
+        switch (value) {
+            case "content":
+                return CONTENT;
+            case "title":
+                return TITLE;
+            case "summary":
+                return SUMMARY;
+            default:
+                return new LatestHeadlinesGetRequestClusteringVariable(Value.UNKNOWN, value);
+        }
+    }
+
+    public enum Value {
+        CONTENT,
+
+        TITLE,
+
+        SUMMARY,
+
+        UNKNOWN
+    }
+
+    public interface Visitor<T> {
+        T visitContent();
+
+        T visitTitle();
+
+        T visitSummary();
+
+        T visitUnknown(String unknownType);
     }
 }

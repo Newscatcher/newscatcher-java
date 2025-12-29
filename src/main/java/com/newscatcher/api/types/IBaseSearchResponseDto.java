@@ -3,14 +3,16 @@
  */
 package com.newscatcher.api.types;
 
+import java.util.Optional;
+
 public interface IBaseSearchResponseDto {
-    String getStatus();
+    Optional<String> getStatus();
 
-    int getTotalHits();
+    Optional<Integer> getTotalHits();
 
-    int getPage();
+    Optional<Integer> getPage();
 
-    int getTotalPages();
+    Optional<Integer> getTotalPages();
 
-    int getPageSize();
+    Optional<Integer> getPageSize();
 }
