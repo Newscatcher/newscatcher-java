@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface IArticleEntity {
-    String getTitle();
+    Optional<String> getTitle();
 
     Optional<String> getAuthor();
 
-    Optional<Authors> getAuthors();
+    Optional<ArticleEntityAuthors> getAuthors();
 
-    Optional<Journalists> getJournalists();
+    Optional<ArticleEntityJournalists> getJournalists();
 
     Optional<String> getPublishedDate();
 
@@ -26,11 +26,13 @@ public interface IArticleEntity {
 
     Optional<String> getParseDate();
 
-    String getLink();
+    Optional<String> getLink();
 
-    String getDomainUrl();
+    Optional<Boolean> getCanonicalUrl();
 
-    String getFullDomainUrl();
+    Optional<String> getDomainUrl();
+
+    Optional<String> getFullDomainUrl();
 
     Optional<String> getNameSource();
 
@@ -38,13 +40,13 @@ public interface IArticleEntity {
 
     Optional<Boolean> getPaidContent();
 
-    String getParentUrl();
+    Optional<String> getParentUrl();
 
     Optional<String> getCountry();
 
     Optional<String> getRights();
 
-    int getRank();
+    Optional<Integer> getRank();
 
     Optional<String> getMedia();
 
@@ -52,7 +54,7 @@ public interface IArticleEntity {
 
     Optional<String> getDescription();
 
-    String getContent();
+    Optional<String> getContent();
 
     Optional<String> getTitleTranslatedEn();
 
@@ -70,9 +72,9 @@ public interface IArticleEntity {
 
     Optional<NlpDataEntity> getNlp();
 
-    String getId();
+    Optional<String> getId();
 
-    double getScore();
+    Optional<Double> getScore();
 
     Optional<Boolean> getRobotsCompliant();
 

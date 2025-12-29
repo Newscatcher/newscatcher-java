@@ -3,24 +3,91 @@
  */
 package com.newscatcher.api.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum ClusteringVariable {
-    CONTENT("content"),
+public final class ClusteringVariable {
+    public static final ClusteringVariable CONTENT = new ClusteringVariable(Value.CONTENT, "content");
 
-    TITLE("title"),
+    public static final ClusteringVariable TITLE = new ClusteringVariable(Value.TITLE, "title");
 
-    SUMMARY("summary");
+    public static final ClusteringVariable SUMMARY = new ClusteringVariable(Value.SUMMARY, "summary");
 
-    private final String value;
+    private final Value value;
 
-    ClusteringVariable(String value) {
+    private final String string;
+
+    ClusteringVariable(Value value, String string) {
         this.value = value;
+        this.string = string;
     }
 
-    @JsonValue
+    public Value getEnumValue() {
+        return value;
+    }
+
     @java.lang.Override
+    @JsonValue
     public String toString() {
-        return this.value;
+        return this.string;
+    }
+
+    @java.lang.Override
+    public boolean equals(Object other) {
+        return (this == other)
+                || (other instanceof ClusteringVariable && this.string.equals(((ClusteringVariable) other).string));
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return this.string.hashCode();
+    }
+
+    public <T> T visit(Visitor<T> visitor) {
+        switch (value) {
+            case CONTENT:
+                return visitor.visitContent();
+            case TITLE:
+                return visitor.visitTitle();
+            case SUMMARY:
+                return visitor.visitSummary();
+            case UNKNOWN:
+            default:
+                return visitor.visitUnknown(string);
+        }
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static ClusteringVariable valueOf(String value) {
+        switch (value) {
+            case "content":
+                return CONTENT;
+            case "title":
+                return TITLE;
+            case "summary":
+                return SUMMARY;
+            default:
+                return new ClusteringVariable(Value.UNKNOWN, value);
+        }
+    }
+
+    public enum Value {
+        CONTENT,
+
+        TITLE,
+
+        SUMMARY,
+
+        UNKNOWN
+    }
+
+    public interface Visitor<T> {
+        T visitContent();
+
+        T visitTitle();
+
+        T visitSummary();
+
+        T visitUnknown(String unknownType);
     }
 }

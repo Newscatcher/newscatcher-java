@@ -9,34 +9,35 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = BaseSearchResponseDto.Builder.class)
 public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
-    private final String status;
+    private final Optional<String> status;
 
-    private final int totalHits;
+    private final Optional<Integer> totalHits;
 
-    private final int page;
+    private final Optional<Integer> page;
 
-    private final int totalPages;
+    private final Optional<Integer> totalPages;
 
-    private final int pageSize;
+    private final Optional<Integer> pageSize;
 
     private final Map<String, Object> additionalProperties;
 
     private BaseSearchResponseDto(
-            String status,
-            int totalHits,
-            int page,
-            int totalPages,
-            int pageSize,
+            Optional<String> status,
+            Optional<Integer> totalHits,
+            Optional<Integer> page,
+            Optional<Integer> totalPages,
+            Optional<Integer> pageSize,
             Map<String, Object> additionalProperties) {
         this.status = status;
         this.totalHits = totalHits;
@@ -51,7 +52,7 @@ public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
      */
     @JsonProperty("status")
     @java.lang.Override
-    public String getStatus() {
+    public Optional<String> getStatus() {
         return status;
     }
 
@@ -60,7 +61,7 @@ public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
      */
     @JsonProperty("total_hits")
     @java.lang.Override
-    public int getTotalHits() {
+    public Optional<Integer> getTotalHits() {
         return totalHits;
     }
 
@@ -69,7 +70,7 @@ public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
      */
     @JsonProperty("page")
     @java.lang.Override
-    public int getPage() {
+    public Optional<Integer> getPage() {
         return page;
     }
 
@@ -78,7 +79,7 @@ public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
      */
     @JsonProperty("total_pages")
     @java.lang.Override
-    public int getTotalPages() {
+    public Optional<Integer> getTotalPages() {
         return totalPages;
     }
 
@@ -87,7 +88,7 @@ public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
      */
     @JsonProperty("page_size")
     @java.lang.Override
-    public int getPageSize() {
+    public Optional<Integer> getPageSize() {
         return pageSize;
     }
 
@@ -104,10 +105,10 @@ public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
 
     private boolean equalTo(BaseSearchResponseDto other) {
         return status.equals(other.status)
-                && totalHits == other.totalHits
-                && page == other.page
-                && totalPages == other.totalPages
-                && pageSize == other.pageSize;
+                && totalHits.equals(other.totalHits)
+                && page.equals(other.page)
+                && totalPages.equals(other.totalPages)
+                && pageSize.equals(other.pageSize);
     }
 
     @java.lang.Override
@@ -120,70 +121,27 @@ public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
         return ObjectMappers.stringify(this);
     }
 
-    public static StatusStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface StatusStage {
-        /**
-         * <p>The status of the response.</p>
-         */
-        TotalHitsStage status(@NotNull String status);
-
-        Builder from(BaseSearchResponseDto other);
-    }
-
-    public interface TotalHitsStage {
-        /**
-         * <p>The total number of articles matching the search criteria.</p>
-         */
-        PageStage totalHits(int totalHits);
-    }
-
-    public interface PageStage {
-        /**
-         * <p>The current page number of the results.</p>
-         */
-        TotalPagesStage page(int page);
-    }
-
-    public interface TotalPagesStage {
-        /**
-         * <p>The total number of pages available for the given search criteria.</p>
-         */
-        PageSizeStage totalPages(int totalPages);
-    }
-
-    public interface PageSizeStage {
-        /**
-         * <p>The number of articles per page.</p>
-         */
-        _FinalStage pageSize(int pageSize);
-    }
-
-    public interface _FinalStage {
-        BaseSearchResponseDto build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements StatusStage, TotalHitsStage, PageStage, TotalPagesStage, PageSizeStage, _FinalStage {
-        private String status;
+    public static final class Builder {
+        private Optional<String> status = Optional.empty();
 
-        private int totalHits;
+        private Optional<Integer> totalHits = Optional.empty();
 
-        private int page;
+        private Optional<Integer> page = Optional.empty();
 
-        private int totalPages;
+        private Optional<Integer> totalPages = Optional.empty();
 
-        private int pageSize;
+        private Optional<Integer> pageSize = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(BaseSearchResponseDto other) {
             status(other.getStatus());
             totalHits(other.getTotalHits());
@@ -195,65 +153,74 @@ public final class BaseSearchResponseDto implements IBaseSearchResponseDto {
 
         /**
          * <p>The status of the response.</p>
-         * <p>The status of the response.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        @JsonSetter("status")
-        public TotalHitsStage status(@NotNull String status) {
-            this.status = Objects.requireNonNull(status, "status must not be null");
+        @JsonSetter(value = "status", nulls = Nulls.SKIP)
+        public Builder status(Optional<String> status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = Optional.ofNullable(status);
             return this;
         }
 
         /**
          * <p>The total number of articles matching the search criteria.</p>
-         * <p>The total number of articles matching the search criteria.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        @JsonSetter("total_hits")
-        public PageStage totalHits(int totalHits) {
+        @JsonSetter(value = "total_hits", nulls = Nulls.SKIP)
+        public Builder totalHits(Optional<Integer> totalHits) {
             this.totalHits = totalHits;
             return this;
         }
 
+        public Builder totalHits(Integer totalHits) {
+            this.totalHits = Optional.ofNullable(totalHits);
+            return this;
+        }
+
         /**
          * <p>The current page number of the results.</p>
-         * <p>The current page number of the results.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        @JsonSetter("page")
-        public TotalPagesStage page(int page) {
+        @JsonSetter(value = "page", nulls = Nulls.SKIP)
+        public Builder page(Optional<Integer> page) {
             this.page = page;
             return this;
         }
 
+        public Builder page(Integer page) {
+            this.page = Optional.ofNullable(page);
+            return this;
+        }
+
         /**
          * <p>The total number of pages available for the given search criteria.</p>
-         * <p>The total number of pages available for the given search criteria.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        @JsonSetter("total_pages")
-        public PageSizeStage totalPages(int totalPages) {
+        @JsonSetter(value = "total_pages", nulls = Nulls.SKIP)
+        public Builder totalPages(Optional<Integer> totalPages) {
             this.totalPages = totalPages;
             return this;
         }
 
+        public Builder totalPages(Integer totalPages) {
+            this.totalPages = Optional.ofNullable(totalPages);
+            return this;
+        }
+
         /**
          * <p>The number of articles per page.</p>
-         * <p>The number of articles per page.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        @JsonSetter("page_size")
-        public _FinalStage pageSize(int pageSize) {
+        @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
+        public Builder pageSize(Optional<Integer> pageSize) {
             this.pageSize = pageSize;
             return this;
         }
 
-        @java.lang.Override
+        public Builder pageSize(Integer pageSize) {
+            this.pageSize = Optional.ofNullable(pageSize);
+            return this;
+        }
+
         public BaseSearchResponseDto build() {
             return new BaseSearchResponseDto(status, totalHits, page, totalPages, pageSize, additionalProperties);
         }
