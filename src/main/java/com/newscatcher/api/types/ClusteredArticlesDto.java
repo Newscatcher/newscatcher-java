@@ -139,7 +139,9 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
          */
         @java.lang.Override
         public _FinalStage addAllClusters(List<ClusterEntity> clusters) {
-            this.clusters.addAll(clusters);
+            if (clusters != null) {
+                this.clusters.addAll(clusters);
+            }
             return this;
         }
 
@@ -160,7 +162,9 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
         @JsonSetter(value = "clusters", nulls = Nulls.SKIP)
         public _FinalStage clusters(List<ClusterEntity> clusters) {
             this.clusters.clear();
-            this.clusters.addAll(clusters);
+            if (clusters != null) {
+                this.clusters.addAll(clusters);
+            }
             return this;
         }
 

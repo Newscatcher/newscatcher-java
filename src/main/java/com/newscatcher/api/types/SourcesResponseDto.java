@@ -175,7 +175,9 @@ public final class SourcesResponseDto {
          */
         @java.lang.Override
         public _FinalStage putAllUserInput(Map<String, Object> userInput) {
-            this.userInput.putAll(userInput);
+            if (userInput != null) {
+                this.userInput.putAll(userInput);
+            }
             return this;
         }
 
@@ -186,7 +188,9 @@ public final class SourcesResponseDto {
         @JsonSetter(value = "user_input", nulls = Nulls.SKIP)
         public _FinalStage userInput(Map<String, Object> userInput) {
             this.userInput.clear();
-            this.userInput.putAll(userInput);
+            if (userInput != null) {
+                this.userInput.putAll(userInput);
+            }
             return this;
         }
 
@@ -196,7 +200,9 @@ public final class SourcesResponseDto {
          */
         @java.lang.Override
         public _FinalStage addAllSources(List<SourcesResponseDtoSourcesItem> sources) {
-            this.sources.addAll(sources);
+            if (sources != null) {
+                this.sources.addAll(sources);
+            }
             return this;
         }
 
@@ -217,7 +223,9 @@ public final class SourcesResponseDto {
         @JsonSetter(value = "sources", nulls = Nulls.SKIP)
         public _FinalStage sources(List<SourcesResponseDtoSourcesItem> sources) {
             this.sources.clear();
-            this.sources.addAll(sources);
+            if (sources != null) {
+                this.sources.addAll(sources);
+            }
             return this;
         }
 

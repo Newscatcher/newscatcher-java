@@ -55,6 +55,14 @@ public class AsyncRawLatestheadlinesClient {
      * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
     public CompletableFuture<NewscatcherApiHttpResponse<LatestHeadlinesGetResponse>> get(
+            RequestOptions requestOptions) {
+        return get(LatestHeadlinesGetRequest.builder().build(), requestOptions);
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
+    public CompletableFuture<NewscatcherApiHttpResponse<LatestHeadlinesGetResponse>> get(
             LatestHeadlinesGetRequest request) {
         return get(request, null);
     }
@@ -266,6 +274,11 @@ public class AsyncRawLatestheadlinesClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((key, value) -> {
+                httpUrl.addQueryParameter(key, value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -281,14 +294,14 @@ public class AsyncRawLatestheadlinesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), LatestHeadlinesGetResponse.class),
+                                        responseBodyString, LatestHeadlinesGetResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -330,11 +343,9 @@ public class AsyncRawLatestheadlinesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(
@@ -361,6 +372,14 @@ public class AsyncRawLatestheadlinesClient {
      * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
     public CompletableFuture<NewscatcherApiHttpResponse<LatestHeadlinesPostResponse>> post(
+            RequestOptions requestOptions) {
+        return post(LatestHeadlinesPostRequest.builder().build(), requestOptions);
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
+    public CompletableFuture<NewscatcherApiHttpResponse<LatestHeadlinesPostResponse>> post(
             LatestHeadlinesPostRequest request) {
         return post(request, null);
     }
@@ -370,10 +389,14 @@ public class AsyncRawLatestheadlinesClient {
      */
     public CompletableFuture<NewscatcherApiHttpResponse<LatestHeadlinesPostResponse>> post(
             LatestHeadlinesPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/latest_headlines")
-                .build();
+                .addPathSegments("api/latest_headlines");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((key, value) -> {
+                httpUrl.addQueryParameter(key, value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -382,7 +405,7 @@ public class AsyncRawLatestheadlinesClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -397,14 +420,14 @@ public class AsyncRawLatestheadlinesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), LatestHeadlinesPostResponse.class),
+                                        responseBodyString, LatestHeadlinesPostResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -446,11 +469,9 @@ public class AsyncRawLatestheadlinesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(

@@ -37,6 +37,13 @@ public class LatestheadlinesClient {
     /**
      * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
+    public LatestHeadlinesGetResponse get(RequestOptions requestOptions) {
+        return this.rawClient.get(requestOptions).body();
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
     public LatestHeadlinesGetResponse get(LatestHeadlinesGetRequest request) {
         return this.rawClient.get(request).body();
     }
@@ -53,6 +60,13 @@ public class LatestheadlinesClient {
      */
     public LatestHeadlinesPostResponse post() {
         return this.rawClient.post().body();
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
+    public LatestHeadlinesPostResponse post(RequestOptions requestOptions) {
+        return this.rawClient.post(requestOptions).body();
     }
 
     /**

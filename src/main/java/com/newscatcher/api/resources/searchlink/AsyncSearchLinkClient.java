@@ -37,6 +37,13 @@ public class AsyncSearchLinkClient {
     /**
      * Searches for articles based on specified links or IDs. You can filter results by date range.
      */
+    public CompletableFuture<SearchResponseDto> searchUrlGet(RequestOptions requestOptions) {
+        return this.rawClient.searchUrlGet(requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Searches for articles based on specified links or IDs. You can filter results by date range.
+     */
     public CompletableFuture<SearchResponseDto> searchUrlGet(SearchUrlGetRequest request) {
         return this.rawClient.searchUrlGet(request).thenApply(response -> response.body());
     }
@@ -54,6 +61,13 @@ public class AsyncSearchLinkClient {
      */
     public CompletableFuture<SearchResponseDto> searchUrlPost() {
         return this.rawClient.searchUrlPost().thenApply(response -> response.body());
+    }
+
+    /**
+     * Searches for articles using their ID(s) or link(s).
+     */
+    public CompletableFuture<SearchResponseDto> searchUrlPost(RequestOptions requestOptions) {
+        return this.rawClient.searchUrlPost(requestOptions).thenApply(response -> response.body());
     }
 
     /**

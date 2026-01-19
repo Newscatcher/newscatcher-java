@@ -15,13 +15,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@JsonDeserialize(using = Journalists.Deserializer.class)
-public final class Journalists {
+@JsonDeserialize(using = ArticleEntityAuthors.Deserializer.class)
+public final class ArticleEntityAuthors {
     private final Object value;
 
     private final int type;
 
-    private Journalists(Object value, int type) {
+    private ArticleEntityAuthors(Object value, int type) {
         this.value = value;
         this.type = type;
     }
@@ -44,10 +44,10 @@ public final class Journalists {
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        return other instanceof Journalists && equalTo((Journalists) other);
+        return other instanceof ArticleEntityAuthors && equalTo((ArticleEntityAuthors) other);
     }
 
-    private boolean equalTo(Journalists other) {
+    private boolean equalTo(ArticleEntityAuthors other) {
         return value.equals(other.value);
     }
 
@@ -61,12 +61,12 @@ public final class Journalists {
         return this.value.toString();
     }
 
-    public static Journalists of(List<String> value) {
-        return new Journalists(value, 0);
+    public static ArticleEntityAuthors of(List<String> value) {
+        return new ArticleEntityAuthors(value, 0);
     }
 
-    public static Journalists of(String value) {
-        return new Journalists(value, 1);
+    public static ArticleEntityAuthors of(String value) {
+        return new ArticleEntityAuthors(value, 1);
     }
 
     public interface Visitor<T> {
@@ -75,13 +75,13 @@ public final class Journalists {
         T visit(String value);
     }
 
-    static final class Deserializer extends StdDeserializer<Journalists> {
+    static final class Deserializer extends StdDeserializer<ArticleEntityAuthors> {
         Deserializer() {
-            super(Journalists.class);
+            super(ArticleEntityAuthors.class);
         }
 
         @java.lang.Override
-        public Journalists deserialize(JsonParser p, DeserializationContext context) throws IOException {
+        public ArticleEntityAuthors deserialize(JsonParser p, DeserializationContext context) throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<String>>() {}));
