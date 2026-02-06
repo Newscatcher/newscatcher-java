@@ -171,7 +171,9 @@ public final class ClusterEntity {
          */
         @java.lang.Override
         public _FinalStage addAllArticles(List<ArticleEntity> articles) {
-            this.articles.addAll(articles);
+            if (articles != null) {
+                this.articles.addAll(articles);
+            }
             return this;
         }
 
@@ -192,7 +194,9 @@ public final class ClusterEntity {
         @JsonSetter(value = "articles", nulls = Nulls.SKIP)
         public _FinalStage articles(List<ArticleEntity> articles) {
             this.articles.clear();
-            this.articles.addAll(articles);
+            if (articles != null) {
+                this.articles.addAll(articles);
+            }
             return this;
         }
 

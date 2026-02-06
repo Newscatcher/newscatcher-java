@@ -6,22 +6,21 @@ package com.newscatcher.api.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.newscatcher.api.core.ObjectMappers;
 import java.io.IOException;
-import java.util.List;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
-@JsonDeserialize(using = Authors.Deserializer.class)
-public final class Authors {
+@JsonDeserialize(using = SearchSimilarGetRequestFrom.Deserializer.class)
+public final class SearchSimilarGetRequestFrom {
     private final Object value;
 
     private final int type;
 
-    private Authors(Object value, int type) {
+    private SearchSimilarGetRequestFrom(Object value, int type) {
         this.value = value;
         this.type = type;
     }
@@ -34,7 +33,7 @@ public final class Authors {
     @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
-            return visitor.visit((List<String>) this.value);
+            return visitor.visit((OffsetDateTime) this.value);
         } else if (this.type == 1) {
             return visitor.visit((String) this.value);
         }
@@ -44,10 +43,10 @@ public final class Authors {
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        return other instanceof Authors && equalTo((Authors) other);
+        return other instanceof SearchSimilarGetRequestFrom && equalTo((SearchSimilarGetRequestFrom) other);
     }
 
-    private boolean equalTo(Authors other) {
+    private boolean equalTo(SearchSimilarGetRequestFrom other) {
         return value.equals(other.value);
     }
 
@@ -61,30 +60,31 @@ public final class Authors {
         return this.value.toString();
     }
 
-    public static Authors of(List<String> value) {
-        return new Authors(value, 0);
+    public static SearchSimilarGetRequestFrom of(OffsetDateTime value) {
+        return new SearchSimilarGetRequestFrom(value, 0);
     }
 
-    public static Authors of(String value) {
-        return new Authors(value, 1);
+    public static SearchSimilarGetRequestFrom of(String value) {
+        return new SearchSimilarGetRequestFrom(value, 1);
     }
 
     public interface Visitor<T> {
-        T visit(List<String> value);
+        T visit(OffsetDateTime value);
 
         T visit(String value);
     }
 
-    static final class Deserializer extends StdDeserializer<Authors> {
+    static final class Deserializer extends StdDeserializer<SearchSimilarGetRequestFrom> {
         Deserializer() {
-            super(Authors.class);
+            super(SearchSimilarGetRequestFrom.class);
         }
 
         @java.lang.Override
-        public Authors deserialize(JsonParser p, DeserializationContext context) throws IOException {
+        public SearchSimilarGetRequestFrom deserialize(JsonParser p, DeserializationContext context)
+                throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<String>>() {}));
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, OffsetDateTime.class));
             } catch (RuntimeException e) {
             }
             try {

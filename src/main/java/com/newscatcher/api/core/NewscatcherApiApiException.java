@@ -65,9 +65,9 @@ public class NewscatcherApiApiException extends NewscatcherApiException {
         return this.headers;
     }
 
-    @java.lang.Override
+    @Override
     public String toString() {
         return "NewscatcherApiApiException{" + "message: " + getMessage() + ", statusCode: " + statusCode + ", body: "
-                + body + "}";
+                + ObjectMappers.stringify(body) + "}";
     }
 }

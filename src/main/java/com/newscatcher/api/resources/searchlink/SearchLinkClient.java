@@ -36,6 +36,13 @@ public class SearchLinkClient {
     /**
      * Searches for articles based on specified links or IDs. You can filter results by date range.
      */
+    public SearchResponseDto searchUrlGet(RequestOptions requestOptions) {
+        return this.rawClient.searchUrlGet(requestOptions).body();
+    }
+
+    /**
+     * Searches for articles based on specified links or IDs. You can filter results by date range.
+     */
     public SearchResponseDto searchUrlGet(SearchUrlGetRequest request) {
         return this.rawClient.searchUrlGet(request).body();
     }
@@ -52,6 +59,13 @@ public class SearchLinkClient {
      */
     public SearchResponseDto searchUrlPost() {
         return this.rawClient.searchUrlPost().body();
+    }
+
+    /**
+     * Searches for articles using their ID(s) or link(s).
+     */
+    public SearchResponseDto searchUrlPost(RequestOptions requestOptions) {
+        return this.rawClient.searchUrlPost(requestOptions).body();
     }
 
     /**

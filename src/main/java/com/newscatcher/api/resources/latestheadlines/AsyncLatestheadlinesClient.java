@@ -38,6 +38,13 @@ public class AsyncLatestheadlinesClient {
     /**
      * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
+    public CompletableFuture<LatestHeadlinesGetResponse> get(RequestOptions requestOptions) {
+        return this.rawClient.get(requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
     public CompletableFuture<LatestHeadlinesGetResponse> get(LatestHeadlinesGetRequest request) {
         return this.rawClient.get(request).thenApply(response -> response.body());
     }
@@ -55,6 +62,13 @@ public class AsyncLatestheadlinesClient {
      */
     public CompletableFuture<LatestHeadlinesPostResponse> post() {
         return this.rawClient.post().thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
+    public CompletableFuture<LatestHeadlinesPostResponse> post(RequestOptions requestOptions) {
+        return this.rawClient.post(requestOptions).thenApply(response -> response.body());
     }
 
     /**

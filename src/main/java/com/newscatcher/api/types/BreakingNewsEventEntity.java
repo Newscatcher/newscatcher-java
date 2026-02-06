@@ -174,7 +174,9 @@ public final class BreakingNewsEventEntity {
          */
         @java.lang.Override
         public _FinalStage addAllArticles(List<BreakingNewsArticleEntity> articles) {
-            this.articles.addAll(articles);
+            if (articles != null) {
+                this.articles.addAll(articles);
+            }
             return this;
         }
 
@@ -195,7 +197,9 @@ public final class BreakingNewsEventEntity {
         @JsonSetter(value = "articles", nulls = Nulls.SKIP)
         public _FinalStage articles(List<BreakingNewsArticleEntity> articles) {
             this.articles.clear();
-            this.articles.addAll(articles);
+            if (articles != null) {
+                this.articles.addAll(articles);
+            }
             return this;
         }
 

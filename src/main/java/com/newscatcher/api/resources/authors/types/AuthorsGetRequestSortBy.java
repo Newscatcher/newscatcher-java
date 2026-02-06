@@ -3,24 +3,92 @@
  */
 package com.newscatcher.api.resources.authors.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum AuthorsGetRequestSortBy {
-    RELEVANCY("relevancy"),
+public final class AuthorsGetRequestSortBy {
+    public static final AuthorsGetRequestSortBy RANK = new AuthorsGetRequestSortBy(Value.RANK, "rank");
 
-    DATE("date"),
+    public static final AuthorsGetRequestSortBy DATE = new AuthorsGetRequestSortBy(Value.DATE, "date");
 
-    RANK("rank");
+    public static final AuthorsGetRequestSortBy RELEVANCY = new AuthorsGetRequestSortBy(Value.RELEVANCY, "relevancy");
 
-    private final String value;
+    private final Value value;
 
-    AuthorsGetRequestSortBy(String value) {
+    private final String string;
+
+    AuthorsGetRequestSortBy(Value value, String string) {
         this.value = value;
+        this.string = string;
     }
 
-    @JsonValue
+    public Value getEnumValue() {
+        return value;
+    }
+
     @java.lang.Override
+    @JsonValue
     public String toString() {
-        return this.value;
+        return this.string;
+    }
+
+    @java.lang.Override
+    public boolean equals(Object other) {
+        return (this == other)
+                || (other instanceof AuthorsGetRequestSortBy
+                        && this.string.equals(((AuthorsGetRequestSortBy) other).string));
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return this.string.hashCode();
+    }
+
+    public <T> T visit(Visitor<T> visitor) {
+        switch (value) {
+            case RANK:
+                return visitor.visitRank();
+            case DATE:
+                return visitor.visitDate();
+            case RELEVANCY:
+                return visitor.visitRelevancy();
+            case UNKNOWN:
+            default:
+                return visitor.visitUnknown(string);
+        }
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static AuthorsGetRequestSortBy valueOf(String value) {
+        switch (value) {
+            case "rank":
+                return RANK;
+            case "date":
+                return DATE;
+            case "relevancy":
+                return RELEVANCY;
+            default:
+                return new AuthorsGetRequestSortBy(Value.UNKNOWN, value);
+        }
+    }
+
+    public enum Value {
+        RELEVANCY,
+
+        DATE,
+
+        RANK,
+
+        UNKNOWN
+    }
+
+    public interface Visitor<T> {
+        T visitRelevancy();
+
+        T visitDate();
+
+        T visitRank();
+
+        T visitUnknown(String unknownType);
     }
 }

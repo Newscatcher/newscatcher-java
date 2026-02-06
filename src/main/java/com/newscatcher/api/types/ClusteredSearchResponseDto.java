@@ -18,20 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ClusteredSearchResponseDto.Builder.class)
 public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto, IClusteredArticlesDto {
-    private final String status;
+    private final Optional<String> status;
 
-    private final int totalHits;
+    private final Optional<Integer> totalHits;
 
-    private final int page;
+    private final Optional<Integer> page;
 
-    private final int totalPages;
+    private final Optional<Integer> totalPages;
 
-    private final int pageSize;
+    private final Optional<Integer> pageSize;
 
     private final int clustersCount;
 
@@ -42,11 +41,11 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
     private final Map<String, Object> additionalProperties;
 
     private ClusteredSearchResponseDto(
-            String status,
-            int totalHits,
-            int page,
-            int totalPages,
-            int pageSize,
+            Optional<String> status,
+            Optional<Integer> totalHits,
+            Optional<Integer> page,
+            Optional<Integer> totalPages,
+            Optional<Integer> pageSize,
             int clustersCount,
             List<ClusterEntity> clusters,
             Optional<Map<String, Object>> userInput,
@@ -67,7 +66,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
      */
     @JsonProperty("status")
     @java.lang.Override
-    public String getStatus() {
+    public Optional<String> getStatus() {
         return status;
     }
 
@@ -76,7 +75,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
      */
     @JsonProperty("total_hits")
     @java.lang.Override
-    public int getTotalHits() {
+    public Optional<Integer> getTotalHits() {
         return totalHits;
     }
 
@@ -85,7 +84,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
      */
     @JsonProperty("page")
     @java.lang.Override
-    public int getPage() {
+    public Optional<Integer> getPage() {
         return page;
     }
 
@@ -94,7 +93,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
      */
     @JsonProperty("total_pages")
     @java.lang.Override
-    public int getTotalPages() {
+    public Optional<Integer> getTotalPages() {
         return totalPages;
     }
 
@@ -103,7 +102,7 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
      */
     @JsonProperty("page_size")
     @java.lang.Override
-    public int getPageSize() {
+    public Optional<Integer> getPageSize() {
         return pageSize;
     }
 
@@ -143,10 +142,10 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
 
     private boolean equalTo(ClusteredSearchResponseDto other) {
         return status.equals(other.status)
-                && totalHits == other.totalHits
-                && page == other.page
-                && totalPages == other.totalPages
-                && pageSize == other.pageSize
+                && totalHits.equals(other.totalHits)
+                && page.equals(other.page)
+                && totalPages.equals(other.totalPages)
+                && pageSize.equals(other.pageSize)
                 && clustersCount == other.clustersCount
                 && clusters.equals(other.clusters)
                 && userInput.equals(other.userInput);
@@ -170,45 +169,8 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
         return ObjectMappers.stringify(this);
     }
 
-    public static StatusStage builder() {
+    public static ClustersCountStage builder() {
         return new Builder();
-    }
-
-    public interface StatusStage {
-        /**
-         * <p>The status of the response.</p>
-         */
-        TotalHitsStage status(@NotNull String status);
-
-        Builder from(ClusteredSearchResponseDto other);
-    }
-
-    public interface TotalHitsStage {
-        /**
-         * <p>The total number of articles matching the search criteria.</p>
-         */
-        PageStage totalHits(int totalHits);
-    }
-
-    public interface PageStage {
-        /**
-         * <p>The current page number of the results.</p>
-         */
-        TotalPagesStage page(int page);
-    }
-
-    public interface TotalPagesStage {
-        /**
-         * <p>The total number of pages available for the given search criteria.</p>
-         */
-        PageSizeStage totalPages(int totalPages);
-    }
-
-    public interface PageSizeStage {
-        /**
-         * <p>The number of articles per page.</p>
-         */
-        ClustersCountStage pageSize(int pageSize);
     }
 
     public interface ClustersCountStage {
@@ -216,10 +178,47 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
          * <p>The number of clusters in the search results.</p>
          */
         _FinalStage clustersCount(int clustersCount);
+
+        Builder from(ClusteredSearchResponseDto other);
     }
 
     public interface _FinalStage {
         ClusteredSearchResponseDto build();
+
+        /**
+         * <p>The status of the response.</p>
+         */
+        _FinalStage status(Optional<String> status);
+
+        _FinalStage status(String status);
+
+        /**
+         * <p>The total number of articles matching the search criteria.</p>
+         */
+        _FinalStage totalHits(Optional<Integer> totalHits);
+
+        _FinalStage totalHits(Integer totalHits);
+
+        /**
+         * <p>The current page number of the results.</p>
+         */
+        _FinalStage page(Optional<Integer> page);
+
+        _FinalStage page(Integer page);
+
+        /**
+         * <p>The total number of pages available for the given search criteria.</p>
+         */
+        _FinalStage totalPages(Optional<Integer> totalPages);
+
+        _FinalStage totalPages(Integer totalPages);
+
+        /**
+         * <p>The number of articles per page.</p>
+         */
+        _FinalStage pageSize(Optional<Integer> pageSize);
+
+        _FinalStage pageSize(Integer pageSize);
 
         /**
          * <p>A list of clusters found in the search results.</p>
@@ -236,29 +235,22 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements StatusStage,
-                    TotalHitsStage,
-                    PageStage,
-                    TotalPagesStage,
-                    PageSizeStage,
-                    ClustersCountStage,
-                    _FinalStage {
-        private String status;
-
-        private int totalHits;
-
-        private int page;
-
-        private int totalPages;
-
-        private int pageSize;
-
+    public static final class Builder implements ClustersCountStage, _FinalStage {
         private int clustersCount;
 
         private Optional<Map<String, Object>> userInput = Optional.empty();
 
         private List<ClusterEntity> clusters = new ArrayList<>();
+
+        private Optional<Integer> pageSize = Optional.empty();
+
+        private Optional<Integer> totalPages = Optional.empty();
+
+        private Optional<Integer> page = Optional.empty();
+
+        private Optional<Integer> totalHits = Optional.empty();
+
+        private Optional<String> status = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -275,66 +267,6 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
             clustersCount(other.getClustersCount());
             clusters(other.getClusters());
             userInput(other.getUserInput());
-            return this;
-        }
-
-        /**
-         * <p>The status of the response.</p>
-         * <p>The status of the response.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("status")
-        public TotalHitsStage status(@NotNull String status) {
-            this.status = Objects.requireNonNull(status, "status must not be null");
-            return this;
-        }
-
-        /**
-         * <p>The total number of articles matching the search criteria.</p>
-         * <p>The total number of articles matching the search criteria.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("total_hits")
-        public PageStage totalHits(int totalHits) {
-            this.totalHits = totalHits;
-            return this;
-        }
-
-        /**
-         * <p>The current page number of the results.</p>
-         * <p>The current page number of the results.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("page")
-        public TotalPagesStage page(int page) {
-            this.page = page;
-            return this;
-        }
-
-        /**
-         * <p>The total number of pages available for the given search criteria.</p>
-         * <p>The total number of pages available for the given search criteria.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("total_pages")
-        public PageSizeStage totalPages(int totalPages) {
-            this.totalPages = totalPages;
-            return this;
-        }
-
-        /**
-         * <p>The number of articles per page.</p>
-         * <p>The number of articles per page.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("page_size")
-        public ClustersCountStage pageSize(int pageSize) {
-            this.pageSize = pageSize;
             return this;
         }
 
@@ -369,7 +301,9 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
          */
         @java.lang.Override
         public _FinalStage addAllClusters(List<ClusterEntity> clusters) {
-            this.clusters.addAll(clusters);
+            if (clusters != null) {
+                this.clusters.addAll(clusters);
+            }
             return this;
         }
 
@@ -390,7 +324,109 @@ public final class ClusteredSearchResponseDto implements IBaseSearchResponseDto,
         @JsonSetter(value = "clusters", nulls = Nulls.SKIP)
         public _FinalStage clusters(List<ClusterEntity> clusters) {
             this.clusters.clear();
-            this.clusters.addAll(clusters);
+            if (clusters != null) {
+                this.clusters.addAll(clusters);
+            }
+            return this;
+        }
+
+        /**
+         * <p>The number of articles per page.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage pageSize(Integer pageSize) {
+            this.pageSize = Optional.ofNullable(pageSize);
+            return this;
+        }
+
+        /**
+         * <p>The number of articles per page.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
+        public _FinalStage pageSize(Optional<Integer> pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        /**
+         * <p>The total number of pages available for the given search criteria.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage totalPages(Integer totalPages) {
+            this.totalPages = Optional.ofNullable(totalPages);
+            return this;
+        }
+
+        /**
+         * <p>The total number of pages available for the given search criteria.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "total_pages", nulls = Nulls.SKIP)
+        public _FinalStage totalPages(Optional<Integer> totalPages) {
+            this.totalPages = totalPages;
+            return this;
+        }
+
+        /**
+         * <p>The current page number of the results.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage page(Integer page) {
+            this.page = Optional.ofNullable(page);
+            return this;
+        }
+
+        /**
+         * <p>The current page number of the results.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "page", nulls = Nulls.SKIP)
+        public _FinalStage page(Optional<Integer> page) {
+            this.page = page;
+            return this;
+        }
+
+        /**
+         * <p>The total number of articles matching the search criteria.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage totalHits(Integer totalHits) {
+            this.totalHits = Optional.ofNullable(totalHits);
+            return this;
+        }
+
+        /**
+         * <p>The total number of articles matching the search criteria.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "total_hits", nulls = Nulls.SKIP)
+        public _FinalStage totalHits(Optional<Integer> totalHits) {
+            this.totalHits = totalHits;
+            return this;
+        }
+
+        /**
+         * <p>The status of the response.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage status(String status) {
+            this.status = Optional.ofNullable(status);
+            return this;
+        }
+
+        /**
+         * <p>The status of the response.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "status", nulls = Nulls.SKIP)
+        public _FinalStage status(Optional<String> status) {
+            this.status = status;
             return this;
         }
 
