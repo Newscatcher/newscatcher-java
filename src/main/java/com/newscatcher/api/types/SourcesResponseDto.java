@@ -107,6 +107,10 @@ public final class SourcesResponseDto {
     public interface _FinalStage {
         SourcesResponseDto build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>A list of news sources that match the specified criteria.</p>
          */
@@ -175,7 +179,9 @@ public final class SourcesResponseDto {
          */
         @java.lang.Override
         public _FinalStage putAllUserInput(Map<String, Object> userInput) {
-            this.userInput.putAll(userInput);
+            if (userInput != null) {
+                this.userInput.putAll(userInput);
+            }
             return this;
         }
 
@@ -186,7 +192,9 @@ public final class SourcesResponseDto {
         @JsonSetter(value = "user_input", nulls = Nulls.SKIP)
         public _FinalStage userInput(Map<String, Object> userInput) {
             this.userInput.clear();
-            this.userInput.putAll(userInput);
+            if (userInput != null) {
+                this.userInput.putAll(userInput);
+            }
             return this;
         }
 
@@ -196,7 +204,9 @@ public final class SourcesResponseDto {
          */
         @java.lang.Override
         public _FinalStage addAllSources(List<SourcesResponseDtoSourcesItem> sources) {
-            this.sources.addAll(sources);
+            if (sources != null) {
+                this.sources.addAll(sources);
+            }
             return this;
         }
 
@@ -217,13 +227,27 @@ public final class SourcesResponseDto {
         @JsonSetter(value = "sources", nulls = Nulls.SKIP)
         public _FinalStage sources(List<SourcesResponseDtoSourcesItem> sources) {
             this.sources.clear();
-            this.sources.addAll(sources);
+            if (sources != null) {
+                this.sources.addAll(sources);
+            }
             return this;
         }
 
         @java.lang.Override
         public SourcesResponseDto build() {
             return new SourcesResponseDto(message, sources, userInput, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

@@ -110,6 +110,10 @@ public final class ClusterEntity {
     public interface _FinalStage {
         ClusterEntity build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>A list of articles in the cluster.</p>
          */
@@ -171,7 +175,9 @@ public final class ClusterEntity {
          */
         @java.lang.Override
         public _FinalStage addAllArticles(List<ArticleEntity> articles) {
-            this.articles.addAll(articles);
+            if (articles != null) {
+                this.articles.addAll(articles);
+            }
             return this;
         }
 
@@ -192,13 +198,27 @@ public final class ClusterEntity {
         @JsonSetter(value = "articles", nulls = Nulls.SKIP)
         public _FinalStage articles(List<ArticleEntity> articles) {
             this.articles.clear();
-            this.articles.addAll(articles);
+            if (articles != null) {
+                this.articles.addAll(articles);
+            }
             return this;
         }
 
         @java.lang.Override
         public ClusterEntity build() {
             return new ClusterEntity(clusterId, clusterSize, articles, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

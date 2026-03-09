@@ -568,6 +568,10 @@ public final class SearchSimilarPostRequest {
     public interface _FinalStage {
         SearchSimilarPostRequest build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         _FinalStage searchIn(Optional<String> searchIn);
 
         _FinalStage searchIn(String searchIn);
@@ -1499,6 +1503,18 @@ public final class SearchSimilarPostRequest {
                     customTags,
                     robotsCompliant,
                     additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

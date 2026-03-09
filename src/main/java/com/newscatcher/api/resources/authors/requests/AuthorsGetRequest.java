@@ -14,7 +14,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.resources.authors.types.AuthorsGetRequestPublishedDatePrecision;
 import com.newscatcher.api.resources.authors.types.AuthorsGetRequestSortBy;
-import java.time.OffsetDateTime;
+import com.newscatcher.api.types.AuthorsGetRequestFrom;
+import com.newscatcher.api.types.AuthorsGetRequestTo;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -42,9 +43,9 @@ public final class AuthorsGetRequest {
 
     private final Optional<String> notCountries;
 
-    private final Optional<OffsetDateTime> from;
+    private final Optional<AuthorsGetRequestFrom> from;
 
-    private final Optional<OffsetDateTime> to;
+    private final Optional<AuthorsGetRequestTo> to;
 
     private final Optional<AuthorsGetRequestPublishedDatePrecision> publishedDatePrecision;
 
@@ -122,8 +123,8 @@ public final class AuthorsGetRequest {
             Optional<String> notLang,
             Optional<String> countries,
             Optional<String> notCountries,
-            Optional<OffsetDateTime> from,
-            Optional<OffsetDateTime> to,
+            Optional<AuthorsGetRequestFrom> from,
+            Optional<AuthorsGetRequestTo> to,
             Optional<AuthorsGetRequestPublishedDatePrecision> publishedDatePrecision,
             Optional<Boolean> byParseDate,
             Optional<AuthorsGetRequestSortBy> sortBy,
@@ -311,7 +312,7 @@ public final class AuthorsGetRequest {
      * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
      */
     @JsonProperty("from_")
-    public Optional<OffsetDateTime> getFrom() {
+    public Optional<AuthorsGetRequestFrom> getFrom() {
         return from;
     }
 
@@ -328,7 +329,7 @@ public final class AuthorsGetRequest {
      * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
      */
     @JsonProperty("to_")
-    public Optional<OffsetDateTime> getTo() {
+    public Optional<AuthorsGetRequestTo> getTo() {
         return to;
     }
 
@@ -778,6 +779,10 @@ public final class AuthorsGetRequest {
     public interface _FinalStage {
         AuthorsGetRequest build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.</p>
          * <p>Example: <code>&quot;John Doe, Jane Doe&quot;</code></p>
@@ -869,9 +874,9 @@ public final class AuthorsGetRequest {
          * </ul>
          * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
          */
-        _FinalStage from(Optional<OffsetDateTime> from);
+        _FinalStage from(Optional<AuthorsGetRequestFrom> from);
 
-        _FinalStage from(OffsetDateTime from);
+        _FinalStage from(AuthorsGetRequestFrom from);
 
         /**
          * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
@@ -885,9 +890,9 @@ public final class AuthorsGetRequest {
          * </ul>
          * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
          */
-        _FinalStage to(Optional<OffsetDateTime> to);
+        _FinalStage to(Optional<AuthorsGetRequestTo> to);
 
-        _FinalStage to(OffsetDateTime to);
+        _FinalStage to(AuthorsGetRequestTo to);
 
         /**
          * <p>The precision of the published date. There are three types:</p>
@@ -1246,9 +1251,9 @@ public final class AuthorsGetRequest {
 
         private Optional<AuthorsGetRequestPublishedDatePrecision> publishedDatePrecision = Optional.empty();
 
-        private Optional<OffsetDateTime> to = Optional.empty();
+        private Optional<AuthorsGetRequestTo> to = Optional.empty();
 
-        private Optional<OffsetDateTime> from = Optional.empty();
+        private Optional<AuthorsGetRequestFrom> from = Optional.empty();
 
         private Optional<String> notCountries = Optional.empty();
 
@@ -2111,7 +2116,7 @@ public final class AuthorsGetRequest {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage to(OffsetDateTime to) {
+        public _FinalStage to(AuthorsGetRequestTo to) {
             this.to = Optional.ofNullable(to);
             return this;
         }
@@ -2130,7 +2135,7 @@ public final class AuthorsGetRequest {
          */
         @java.lang.Override
         @JsonSetter(value = "to_", nulls = Nulls.SKIP)
-        public _FinalStage to(Optional<OffsetDateTime> to) {
+        public _FinalStage to(Optional<AuthorsGetRequestTo> to) {
             this.to = to;
             return this;
         }
@@ -2149,7 +2154,7 @@ public final class AuthorsGetRequest {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage from(OffsetDateTime from) {
+        public _FinalStage from(AuthorsGetRequestFrom from) {
             this.from = Optional.ofNullable(from);
             return this;
         }
@@ -2168,7 +2173,7 @@ public final class AuthorsGetRequest {
          */
         @java.lang.Override
         @JsonSetter(value = "from_", nulls = Nulls.SKIP)
-        public _FinalStage from(Optional<OffsetDateTime> from) {
+        public _FinalStage from(Optional<AuthorsGetRequestFrom> from) {
             this.from = from;
             return this;
         }
@@ -2426,6 +2431,18 @@ public final class AuthorsGetRequest {
                     customTags,
                     robotsCompliant,
                     additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

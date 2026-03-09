@@ -6,22 +6,21 @@ package com.newscatcher.api.types;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.newscatcher.api.core.ObjectMappers;
 import java.io.IOException;
-import java.util.List;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
-@JsonDeserialize(using = Aggregations.Deserializer.class)
-public final class Aggregations {
+@JsonDeserialize(using = AggregationGetRequestTo.Deserializer.class)
+public final class AggregationGetRequestTo {
     private final Object value;
 
     private final int type;
 
-    private Aggregations(Object value, int type) {
+    private AggregationGetRequestTo(Object value, int type) {
         this.value = value;
         this.type = type;
     }
@@ -34,9 +33,9 @@ public final class Aggregations {
     @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
-            return visitor.visit((AggregationItem) this.value);
+            return visitor.visit((OffsetDateTime) this.value);
         } else if (this.type == 1) {
-            return visitor.visit((List<AggregationItem>) this.value);
+            return visitor.visit((String) this.value);
         }
         throw new IllegalStateException("Failed to visit value. This should never happen.");
     }
@@ -44,10 +43,10 @@ public final class Aggregations {
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        return other instanceof Aggregations && equalTo((Aggregations) other);
+        return other instanceof AggregationGetRequestTo && equalTo((AggregationGetRequestTo) other);
     }
 
-    private boolean equalTo(Aggregations other) {
+    private boolean equalTo(AggregationGetRequestTo other) {
         return value.equals(other.value);
     }
 
@@ -61,34 +60,34 @@ public final class Aggregations {
         return this.value.toString();
     }
 
-    public static Aggregations of(AggregationItem value) {
-        return new Aggregations(value, 0);
+    public static AggregationGetRequestTo of(OffsetDateTime value) {
+        return new AggregationGetRequestTo(value, 0);
     }
 
-    public static Aggregations of(List<AggregationItem> value) {
-        return new Aggregations(value, 1);
+    public static AggregationGetRequestTo of(String value) {
+        return new AggregationGetRequestTo(value, 1);
     }
 
     public interface Visitor<T> {
-        T visit(AggregationItem value);
+        T visit(OffsetDateTime value);
 
-        T visit(List<AggregationItem> value);
+        T visit(String value);
     }
 
-    static final class Deserializer extends StdDeserializer<Aggregations> {
+    static final class Deserializer extends StdDeserializer<AggregationGetRequestTo> {
         Deserializer() {
-            super(Aggregations.class);
+            super(AggregationGetRequestTo.class);
         }
 
         @java.lang.Override
-        public Aggregations deserialize(JsonParser p, DeserializationContext context) throws IOException {
+        public AggregationGetRequestTo deserialize(JsonParser p, DeserializationContext context) throws IOException {
             Object value = p.readValueAs(Object.class);
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, AggregationItem.class));
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, OffsetDateTime.class));
             } catch (RuntimeException e) {
             }
             try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<AggregationItem>>() {}));
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
             } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");

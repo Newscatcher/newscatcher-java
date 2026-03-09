@@ -26,6 +26,8 @@ public final class SearchUrlGetRequest {
 
     private final Optional<String> links;
 
+    private final Optional<String> source;
+
     private final Optional<From> from;
 
     private final Optional<To> to;
@@ -41,6 +43,7 @@ public final class SearchUrlGetRequest {
     private SearchUrlGetRequest(
             Optional<String> ids,
             Optional<String> links,
+            Optional<String> source,
             Optional<From> from,
             Optional<To> to,
             Optional<Integer> page,
@@ -49,6 +52,7 @@ public final class SearchUrlGetRequest {
             Map<String, Object> additionalProperties) {
         this.ids = ids;
         this.links = links;
+        this.source = source;
         this.from = from;
         this.to = to;
         this.page = page;
@@ -75,6 +79,11 @@ public final class SearchUrlGetRequest {
     @JsonProperty("links")
     public Optional<String> getLinks() {
         return links;
+    }
+
+    @JsonProperty("_source")
+    public Optional<String> getSource() {
+        return source;
     }
 
     @JsonProperty("from_")
@@ -126,6 +135,7 @@ public final class SearchUrlGetRequest {
     private boolean equalTo(SearchUrlGetRequest other) {
         return ids.equals(other.ids)
                 && links.equals(other.links)
+                && source.equals(other.source)
                 && from.equals(other.from)
                 && to.equals(other.to)
                 && page.equals(other.page)
@@ -135,7 +145,8 @@ public final class SearchUrlGetRequest {
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.ids, this.links, this.from, this.to, this.page, this.pageSize, this.robotsCompliant);
+        return Objects.hash(
+                this.ids, this.links, this.source, this.from, this.to, this.page, this.pageSize, this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -152,6 +163,8 @@ public final class SearchUrlGetRequest {
         private Optional<String> ids = Optional.empty();
 
         private Optional<String> links = Optional.empty();
+
+        private Optional<String> source = Optional.empty();
 
         private Optional<From> from = Optional.empty();
 
@@ -171,6 +184,7 @@ public final class SearchUrlGetRequest {
         public Builder from(SearchUrlGetRequest other) {
             ids(other.getIds());
             links(other.getLinks());
+            source(other.getSource());
             from(other.getFrom());
             to(other.getTo());
             page(other.getPage());
@@ -208,6 +222,17 @@ public final class SearchUrlGetRequest {
 
         public Builder links(String links) {
             this.links = Optional.ofNullable(links);
+            return this;
+        }
+
+        @JsonSetter(value = "_source", nulls = Nulls.SKIP)
+        public Builder source(Optional<String> source) {
+            this.source = source;
+            return this;
+        }
+
+        public Builder source(String source) {
+            this.source = Optional.ofNullable(source);
             return this;
         }
 
@@ -277,7 +302,18 @@ public final class SearchUrlGetRequest {
         }
 
         public SearchUrlGetRequest build() {
-            return new SearchUrlGetRequest(ids, links, from, to, page, pageSize, robotsCompliant, additionalProperties);
+            return new SearchUrlGetRequest(
+                    ids, links, source, from, to, page, pageSize, robotsCompliant, additionalProperties);
+        }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

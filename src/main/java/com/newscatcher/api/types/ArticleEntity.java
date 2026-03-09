@@ -17,18 +17,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ArticleEntity.Builder.class)
 public final class ArticleEntity implements IArticleEntity {
-    private final String title;
+    private final Optional<String> title;
 
     private final Optional<String> author;
 
-    private final Optional<Authors> authors;
+    private final Optional<ArticleEntityAuthors> authors;
 
-    private final Optional<Journalists> journalists;
+    private final Optional<ArticleEntityJournalists> journalists;
 
     private final Optional<String> publishedDate;
 
@@ -40,11 +39,13 @@ public final class ArticleEntity implements IArticleEntity {
 
     private final Optional<String> parseDate;
 
-    private final String link;
+    private final Optional<String> link;
 
-    private final String domainUrl;
+    private final Optional<Boolean> canonicalUrl;
 
-    private final String fullDomainUrl;
+    private final Optional<String> domainUrl;
+
+    private final Optional<String> fullDomainUrl;
 
     private final Optional<String> nameSource;
 
@@ -52,13 +53,13 @@ public final class ArticleEntity implements IArticleEntity {
 
     private final Optional<Boolean> paidContent;
 
-    private final String parentUrl;
+    private final Optional<String> parentUrl;
 
     private final Optional<String> country;
 
     private final Optional<String> rights;
 
-    private final int rank;
+    private final Optional<Integer> rank;
 
     private final Optional<String> media;
 
@@ -66,7 +67,7 @@ public final class ArticleEntity implements IArticleEntity {
 
     private final Optional<String> description;
 
-    private final String content;
+    private final Optional<String> content;
 
     private final Optional<String> titleTranslatedEn;
 
@@ -84,9 +85,9 @@ public final class ArticleEntity implements IArticleEntity {
 
     private final Optional<NlpDataEntity> nlp;
 
-    private final String id;
+    private final Optional<String> id;
 
-    private final double score;
+    private final Optional<Double> score;
 
     private final Optional<Boolean> robotsCompliant;
 
@@ -97,29 +98,30 @@ public final class ArticleEntity implements IArticleEntity {
     private final Map<String, Object> additionalProperties;
 
     private ArticleEntity(
-            String title,
+            Optional<String> title,
             Optional<String> author,
-            Optional<Authors> authors,
-            Optional<Journalists> journalists,
+            Optional<ArticleEntityAuthors> authors,
+            Optional<ArticleEntityJournalists> journalists,
             Optional<String> publishedDate,
             Optional<String> publishedDatePrecision,
             Optional<String> updatedDate,
             Optional<String> updatedDatePrecision,
             Optional<String> parseDate,
-            String link,
-            String domainUrl,
-            String fullDomainUrl,
+            Optional<String> link,
+            Optional<Boolean> canonicalUrl,
+            Optional<String> domainUrl,
+            Optional<String> fullDomainUrl,
             Optional<String> nameSource,
             Optional<Boolean> isHeadline,
             Optional<Boolean> paidContent,
-            String parentUrl,
+            Optional<String> parentUrl,
             Optional<String> country,
             Optional<String> rights,
-            int rank,
+            Optional<Integer> rank,
             Optional<String> media,
             Optional<String> language,
             Optional<String> description,
-            String content,
+            Optional<String> content,
             Optional<String> titleTranslatedEn,
             Optional<String> contentTranslatedEn,
             Optional<Integer> wordCount,
@@ -128,8 +130,8 @@ public final class ArticleEntity implements IArticleEntity {
             Optional<ArticleEntityAllLinks> allLinks,
             Optional<ArticleEntityAllDomainLinks> allDomainLinks,
             Optional<NlpDataEntity> nlp,
-            String id,
-            double score,
+            Optional<String> id,
+            Optional<Double> score,
             Optional<Boolean> robotsCompliant,
             Optional<Map<String, List<String>>> customTags,
             Optional<AdditionalDomainInfoEntity> additionalDomainInfo,
@@ -144,6 +146,7 @@ public final class ArticleEntity implements IArticleEntity {
         this.updatedDatePrecision = updatedDatePrecision;
         this.parseDate = parseDate;
         this.link = link;
+        this.canonicalUrl = canonicalUrl;
         this.domainUrl = domainUrl;
         this.fullDomainUrl = fullDomainUrl;
         this.nameSource = nameSource;
@@ -178,7 +181,7 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("title")
     @java.lang.Override
-    public String getTitle() {
+    public Optional<String> getTitle() {
         return title;
     }
 
@@ -195,7 +198,7 @@ public final class ArticleEntity implements IArticleEntity {
      * @return A list of authors of the article.
      */
     @JsonProperty("authors")
-    public Optional<Authors> getAuthors() {
+    public Optional<ArticleEntityAuthors> getAuthors() {
         return authors;
     }
 
@@ -203,7 +206,7 @@ public final class ArticleEntity implements IArticleEntity {
      * @return A list of journalists associated with the article.
      */
     @JsonProperty("journalists")
-    public Optional<Journalists> getJournalists() {
+    public Optional<ArticleEntityJournalists> getJournalists() {
         return journalists;
     }
 
@@ -257,8 +260,17 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("link")
     @java.lang.Override
-    public String getLink() {
+    public Optional<String> getLink() {
         return link;
+    }
+
+    /**
+     * @return Indicates whether the article URL is canonical.
+     */
+    @JsonProperty("canonical_url")
+    @java.lang.Override
+    public Optional<Boolean> getCanonicalUrl() {
+        return canonicalUrl;
     }
 
     /**
@@ -266,7 +278,7 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("domain_url")
     @java.lang.Override
-    public String getDomainUrl() {
+    public Optional<String> getDomainUrl() {
         return domainUrl;
     }
 
@@ -275,7 +287,7 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("full_domain_url")
     @java.lang.Override
-    public String getFullDomainUrl() {
+    public Optional<String> getFullDomainUrl() {
         return fullDomainUrl;
     }
 
@@ -311,7 +323,7 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("parent_url")
     @java.lang.Override
-    public String getParentUrl() {
+    public Optional<String> getParentUrl() {
         return parentUrl;
     }
 
@@ -338,7 +350,7 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("rank")
     @java.lang.Override
-    public int getRank() {
+    public Optional<Integer> getRank() {
         return rank;
     }
 
@@ -374,7 +386,7 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("content")
     @java.lang.Override
-    public String getContent() {
+    public Optional<String> getContent() {
         return content;
     }
 
@@ -450,7 +462,7 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("id")
     @java.lang.Override
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -459,7 +471,7 @@ public final class ArticleEntity implements IArticleEntity {
      */
     @JsonProperty("score")
     @java.lang.Override
-    public double getScore() {
+    public Optional<Double> getScore() {
         return score;
     }
 
@@ -509,6 +521,7 @@ public final class ArticleEntity implements IArticleEntity {
                 && updatedDatePrecision.equals(other.updatedDatePrecision)
                 && parseDate.equals(other.parseDate)
                 && link.equals(other.link)
+                && canonicalUrl.equals(other.canonicalUrl)
                 && domainUrl.equals(other.domainUrl)
                 && fullDomainUrl.equals(other.fullDomainUrl)
                 && nameSource.equals(other.nameSource)
@@ -517,7 +530,7 @@ public final class ArticleEntity implements IArticleEntity {
                 && parentUrl.equals(other.parentUrl)
                 && country.equals(other.country)
                 && rights.equals(other.rights)
-                && rank == other.rank
+                && rank.equals(other.rank)
                 && media.equals(other.media)
                 && language.equals(other.language)
                 && description.equals(other.description)
@@ -531,7 +544,7 @@ public final class ArticleEntity implements IArticleEntity {
                 && allDomainLinks.equals(other.allDomainLinks)
                 && nlp.equals(other.nlp)
                 && id.equals(other.id)
-                && score == other.score
+                && score.equals(other.score)
                 && robotsCompliant.equals(other.robotsCompliant)
                 && customTags.equals(other.customTags)
                 && additionalDomainInfo.equals(other.additionalDomainInfo);
@@ -550,6 +563,7 @@ public final class ArticleEntity implements IArticleEntity {
                 this.updatedDatePrecision,
                 this.parseDate,
                 this.link,
+                this.canonicalUrl,
                 this.domainUrl,
                 this.fullDomainUrl,
                 this.nameSource,
@@ -583,352 +597,91 @@ public final class ArticleEntity implements IArticleEntity {
         return ObjectMappers.stringify(this);
     }
 
-    public static TitleStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TitleStage {
-        /**
-         * <p>The title of the article.</p>
-         */
-        LinkStage title(@NotNull String title);
-
-        Builder from(ArticleEntity other);
-    }
-
-    public interface LinkStage {
-        /**
-         * <p>The URL link to the article.</p>
-         */
-        DomainUrlStage link(@NotNull String link);
-    }
-
-    public interface DomainUrlStage {
-        /**
-         * <p>The domain URL of the article.</p>
-         */
-        FullDomainUrlStage domainUrl(@NotNull String domainUrl);
-    }
-
-    public interface FullDomainUrlStage {
-        /**
-         * <p>The full domain URL of the article.</p>
-         */
-        ParentUrlStage fullDomainUrl(@NotNull String fullDomainUrl);
-    }
-
-    public interface ParentUrlStage {
-        /**
-         * <p>The categorical URL of the article.</p>
-         */
-        RankStage parentUrl(@NotNull String parentUrl);
-    }
-
-    public interface RankStage {
-        /**
-         * <p>The rank of the article's source.</p>
-         */
-        ContentStage rank(int rank);
-    }
-
-    public interface ContentStage {
-        /**
-         * <p>The content of the article.</p>
-         */
-        IdStage content(@NotNull String content);
-    }
-
-    public interface IdStage {
-        /**
-         * <p>The unique identifier for the article.</p>
-         */
-        ScoreStage id(@NotNull String id);
-    }
-
-    public interface ScoreStage {
-        /**
-         * <p>The relevance score of the article.</p>
-         */
-        _FinalStage score(double score);
-    }
-
-    public interface _FinalStage {
-        ArticleEntity build();
-
-        /**
-         * <p>The primary author of the article.</p>
-         */
-        _FinalStage author(Optional<String> author);
-
-        _FinalStage author(String author);
-
-        /**
-         * <p>A list of authors of the article.</p>
-         */
-        _FinalStage authors(Optional<Authors> authors);
-
-        _FinalStage authors(Authors authors);
-
-        /**
-         * <p>A list of journalists associated with the article.</p>
-         */
-        _FinalStage journalists(Optional<Journalists> journalists);
-
-        _FinalStage journalists(Journalists journalists);
-
-        /**
-         * <p>The date the article was published.</p>
-         */
-        _FinalStage publishedDate(Optional<String> publishedDate);
-
-        _FinalStage publishedDate(String publishedDate);
-
-        /**
-         * <p>The precision of the published date.</p>
-         */
-        _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision);
-
-        _FinalStage publishedDatePrecision(String publishedDatePrecision);
-
-        /**
-         * <p>The date the article was last updated.</p>
-         */
-        _FinalStage updatedDate(Optional<String> updatedDate);
-
-        _FinalStage updatedDate(String updatedDate);
-
-        /**
-         * <p>The precision of the updated date.</p>
-         */
-        _FinalStage updatedDatePrecision(Optional<String> updatedDatePrecision);
-
-        _FinalStage updatedDatePrecision(String updatedDatePrecision);
-
-        /**
-         * <p>The date the article was parsed.</p>
-         */
-        _FinalStage parseDate(Optional<String> parseDate);
-
-        _FinalStage parseDate(String parseDate);
-
-        /**
-         * <p>The name of the source where the article was published.</p>
-         */
-        _FinalStage nameSource(Optional<String> nameSource);
-
-        _FinalStage nameSource(String nameSource);
-
-        /**
-         * <p>Indicates if the article is a headline.</p>
-         */
-        _FinalStage isHeadline(Optional<Boolean> isHeadline);
-
-        _FinalStage isHeadline(Boolean isHeadline);
-
-        /**
-         * <p>Indicates if the article is paid content.</p>
-         */
-        _FinalStage paidContent(Optional<Boolean> paidContent);
-
-        _FinalStage paidContent(Boolean paidContent);
-
-        /**
-         * <p>The country where the article was published.</p>
-         */
-        _FinalStage country(Optional<String> country);
-
-        _FinalStage country(String country);
-
-        /**
-         * <p>The rights information for the article.</p>
-         */
-        _FinalStage rights(Optional<String> rights);
-
-        _FinalStage rights(String rights);
-
-        /**
-         * <p>The media associated with the article.</p>
-         */
-        _FinalStage media(Optional<String> media);
-
-        _FinalStage media(String media);
-
-        /**
-         * <p>The language in which the article is written.</p>
-         */
-        _FinalStage language(Optional<String> language);
-
-        _FinalStage language(String language);
-
-        /**
-         * <p>A brief description of the article.</p>
-         */
-        _FinalStage description(Optional<String> description);
-
-        _FinalStage description(String description);
-
-        /**
-         * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
-         */
-        _FinalStage titleTranslatedEn(Optional<String> titleTranslatedEn);
-
-        _FinalStage titleTranslatedEn(String titleTranslatedEn);
-
-        /**
-         * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
-         */
-        _FinalStage contentTranslatedEn(Optional<String> contentTranslatedEn);
-
-        _FinalStage contentTranslatedEn(String contentTranslatedEn);
-
-        /**
-         * <p>The word count of the article.</p>
-         */
-        _FinalStage wordCount(Optional<Integer> wordCount);
-
-        _FinalStage wordCount(Integer wordCount);
-
-        /**
-         * <p>Indicates if the article is an opinion piece.</p>
-         */
-        _FinalStage isOpinion(Optional<Boolean> isOpinion);
-
-        _FinalStage isOpinion(Boolean isOpinion);
-
-        /**
-         * <p>The Twitter account associated with the article.</p>
-         */
-        _FinalStage twitterAccount(Optional<String> twitterAccount);
-
-        _FinalStage twitterAccount(String twitterAccount);
-
-        /**
-         * <p>A list of all URLs mentioned in the article.</p>
-         */
-        _FinalStage allLinks(Optional<ArticleEntityAllLinks> allLinks);
-
-        _FinalStage allLinks(ArticleEntityAllLinks allLinks);
-
-        /**
-         * <p>A list of all domain URLs mentioned in the article.</p>
-         */
-        _FinalStage allDomainLinks(Optional<ArticleEntityAllDomainLinks> allDomainLinks);
-
-        _FinalStage allDomainLinks(ArticleEntityAllDomainLinks allDomainLinks);
-
-        _FinalStage nlp(Optional<NlpDataEntity> nlp);
-
-        _FinalStage nlp(NlpDataEntity nlp);
-
-        /**
-         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
-         */
-        _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant);
-
-        _FinalStage robotsCompliant(Boolean robotsCompliant);
-
-        /**
-         * <p>An object that contains custom tags associated with an article, where each key is a taxonomy name, and the value is an array of tags.</p>
-         */
-        _FinalStage customTags(Optional<Map<String, List<String>>> customTags);
-
-        _FinalStage customTags(Map<String, List<String>> customTags);
-
-        _FinalStage additionalDomainInfo(Optional<AdditionalDomainInfoEntity> additionalDomainInfo);
-
-        _FinalStage additionalDomainInfo(AdditionalDomainInfoEntity additionalDomainInfo);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements TitleStage,
-                    LinkStage,
-                    DomainUrlStage,
-                    FullDomainUrlStage,
-                    ParentUrlStage,
-                    RankStage,
-                    ContentStage,
-                    IdStage,
-                    ScoreStage,
-                    _FinalStage {
-        private String title;
+    public static final class Builder {
+        private Optional<String> title = Optional.empty();
 
-        private String link;
+        private Optional<String> author = Optional.empty();
 
-        private String domainUrl;
+        private Optional<ArticleEntityAuthors> authors = Optional.empty();
 
-        private String fullDomainUrl;
-
-        private String parentUrl;
-
-        private int rank;
-
-        private String content;
-
-        private String id;
-
-        private double score;
-
-        private Optional<AdditionalDomainInfoEntity> additionalDomainInfo = Optional.empty();
-
-        private Optional<Map<String, List<String>>> customTags = Optional.empty();
-
-        private Optional<Boolean> robotsCompliant = Optional.empty();
-
-        private Optional<NlpDataEntity> nlp = Optional.empty();
-
-        private Optional<ArticleEntityAllDomainLinks> allDomainLinks = Optional.empty();
-
-        private Optional<ArticleEntityAllLinks> allLinks = Optional.empty();
-
-        private Optional<String> twitterAccount = Optional.empty();
-
-        private Optional<Boolean> isOpinion = Optional.empty();
-
-        private Optional<Integer> wordCount = Optional.empty();
-
-        private Optional<String> contentTranslatedEn = Optional.empty();
-
-        private Optional<String> titleTranslatedEn = Optional.empty();
-
-        private Optional<String> description = Optional.empty();
-
-        private Optional<String> language = Optional.empty();
-
-        private Optional<String> media = Optional.empty();
-
-        private Optional<String> rights = Optional.empty();
-
-        private Optional<String> country = Optional.empty();
-
-        private Optional<Boolean> paidContent = Optional.empty();
-
-        private Optional<Boolean> isHeadline = Optional.empty();
-
-        private Optional<String> nameSource = Optional.empty();
-
-        private Optional<String> parseDate = Optional.empty();
-
-        private Optional<String> updatedDatePrecision = Optional.empty();
-
-        private Optional<String> updatedDate = Optional.empty();
-
-        private Optional<String> publishedDatePrecision = Optional.empty();
+        private Optional<ArticleEntityJournalists> journalists = Optional.empty();
 
         private Optional<String> publishedDate = Optional.empty();
 
-        private Optional<Journalists> journalists = Optional.empty();
+        private Optional<String> publishedDatePrecision = Optional.empty();
 
-        private Optional<Authors> authors = Optional.empty();
+        private Optional<String> updatedDate = Optional.empty();
 
-        private Optional<String> author = Optional.empty();
+        private Optional<String> updatedDatePrecision = Optional.empty();
+
+        private Optional<String> parseDate = Optional.empty();
+
+        private Optional<String> link = Optional.empty();
+
+        private Optional<Boolean> canonicalUrl = Optional.empty();
+
+        private Optional<String> domainUrl = Optional.empty();
+
+        private Optional<String> fullDomainUrl = Optional.empty();
+
+        private Optional<String> nameSource = Optional.empty();
+
+        private Optional<Boolean> isHeadline = Optional.empty();
+
+        private Optional<Boolean> paidContent = Optional.empty();
+
+        private Optional<String> parentUrl = Optional.empty();
+
+        private Optional<String> country = Optional.empty();
+
+        private Optional<String> rights = Optional.empty();
+
+        private Optional<Integer> rank = Optional.empty();
+
+        private Optional<String> media = Optional.empty();
+
+        private Optional<String> language = Optional.empty();
+
+        private Optional<String> description = Optional.empty();
+
+        private Optional<String> content = Optional.empty();
+
+        private Optional<String> titleTranslatedEn = Optional.empty();
+
+        private Optional<String> contentTranslatedEn = Optional.empty();
+
+        private Optional<Integer> wordCount = Optional.empty();
+
+        private Optional<Boolean> isOpinion = Optional.empty();
+
+        private Optional<String> twitterAccount = Optional.empty();
+
+        private Optional<ArticleEntityAllLinks> allLinks = Optional.empty();
+
+        private Optional<ArticleEntityAllDomainLinks> allDomainLinks = Optional.empty();
+
+        private Optional<NlpDataEntity> nlp = Optional.empty();
+
+        private Optional<String> id = Optional.empty();
+
+        private Optional<Double> score = Optional.empty();
+
+        private Optional<Boolean> robotsCompliant = Optional.empty();
+
+        private Optional<Map<String, List<String>>> customTags = Optional.empty();
+
+        private Optional<AdditionalDomainInfoEntity> additionalDomainInfo = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ArticleEntity other) {
             title(other.getTitle());
             author(other.getAuthor());
@@ -940,6 +693,7 @@ public final class ArticleEntity implements IArticleEntity {
             updatedDatePrecision(other.getUpdatedDatePrecision());
             parseDate(other.getParseDate());
             link(other.getLink());
+            canonicalUrl(other.getCanonicalUrl());
             domainUrl(other.getDomainUrl());
             fullDomainUrl(other.getFullDomainUrl());
             nameSource(other.getNameSource());
@@ -971,639 +725,516 @@ public final class ArticleEntity implements IArticleEntity {
 
         /**
          * <p>The title of the article.</p>
-         * <p>The title of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        @JsonSetter("title")
-        public LinkStage title(@NotNull String title) {
-            this.title = Objects.requireNonNull(title, "title must not be null");
+        @JsonSetter(value = "title", nulls = Nulls.SKIP)
+        public Builder title(Optional<String> title) {
+            this.title = title;
             return this;
         }
 
-        /**
-         * <p>The URL link to the article.</p>
-         * <p>The URL link to the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("link")
-        public DomainUrlStage link(@NotNull String link) {
-            this.link = Objects.requireNonNull(link, "link must not be null");
-            return this;
-        }
-
-        /**
-         * <p>The domain URL of the article.</p>
-         * <p>The domain URL of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("domain_url")
-        public FullDomainUrlStage domainUrl(@NotNull String domainUrl) {
-            this.domainUrl = Objects.requireNonNull(domainUrl, "domainUrl must not be null");
-            return this;
-        }
-
-        /**
-         * <p>The full domain URL of the article.</p>
-         * <p>The full domain URL of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("full_domain_url")
-        public ParentUrlStage fullDomainUrl(@NotNull String fullDomainUrl) {
-            this.fullDomainUrl = Objects.requireNonNull(fullDomainUrl, "fullDomainUrl must not be null");
-            return this;
-        }
-
-        /**
-         * <p>The categorical URL of the article.</p>
-         * <p>The categorical URL of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("parent_url")
-        public RankStage parentUrl(@NotNull String parentUrl) {
-            this.parentUrl = Objects.requireNonNull(parentUrl, "parentUrl must not be null");
-            return this;
-        }
-
-        /**
-         * <p>The rank of the article's source.</p>
-         * <p>The rank of the article's source.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("rank")
-        public ContentStage rank(int rank) {
-            this.rank = rank;
-            return this;
-        }
-
-        /**
-         * <p>The content of the article.</p>
-         * <p>The content of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("content")
-        public IdStage content(@NotNull String content) {
-            this.content = Objects.requireNonNull(content, "content must not be null");
-            return this;
-        }
-
-        /**
-         * <p>The unique identifier for the article.</p>
-         * <p>The unique identifier for the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("id")
-        public ScoreStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
-            return this;
-        }
-
-        /**
-         * <p>The relevance score of the article.</p>
-         * <p>The relevance score of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("score")
-        public _FinalStage score(double score) {
-            this.score = score;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage additionalDomainInfo(AdditionalDomainInfoEntity additionalDomainInfo) {
-            this.additionalDomainInfo = Optional.ofNullable(additionalDomainInfo);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "additional_domain_info", nulls = Nulls.SKIP)
-        public _FinalStage additionalDomainInfo(Optional<AdditionalDomainInfoEntity> additionalDomainInfo) {
-            this.additionalDomainInfo = additionalDomainInfo;
-            return this;
-        }
-
-        /**
-         * <p>An object that contains custom tags associated with an article, where each key is a taxonomy name, and the value is an array of tags.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage customTags(Map<String, List<String>> customTags) {
-            this.customTags = Optional.ofNullable(customTags);
-            return this;
-        }
-
-        /**
-         * <p>An object that contains custom tags associated with an article, where each key is a taxonomy name, and the value is an array of tags.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "custom_tags", nulls = Nulls.SKIP)
-        public _FinalStage customTags(Optional<Map<String, List<String>>> customTags) {
-            this.customTags = customTags;
-            return this;
-        }
-
-        /**
-         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage robotsCompliant(Boolean robotsCompliant) {
-            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
-            return this;
-        }
-
-        /**
-         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
-        public _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant) {
-            this.robotsCompliant = robotsCompliant;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage nlp(NlpDataEntity nlp) {
-            this.nlp = Optional.ofNullable(nlp);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "nlp", nulls = Nulls.SKIP)
-        public _FinalStage nlp(Optional<NlpDataEntity> nlp) {
-            this.nlp = nlp;
-            return this;
-        }
-
-        /**
-         * <p>A list of all domain URLs mentioned in the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage allDomainLinks(ArticleEntityAllDomainLinks allDomainLinks) {
-            this.allDomainLinks = Optional.ofNullable(allDomainLinks);
-            return this;
-        }
-
-        /**
-         * <p>A list of all domain URLs mentioned in the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "all_domain_links", nulls = Nulls.SKIP)
-        public _FinalStage allDomainLinks(Optional<ArticleEntityAllDomainLinks> allDomainLinks) {
-            this.allDomainLinks = allDomainLinks;
-            return this;
-        }
-
-        /**
-         * <p>A list of all URLs mentioned in the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage allLinks(ArticleEntityAllLinks allLinks) {
-            this.allLinks = Optional.ofNullable(allLinks);
-            return this;
-        }
-
-        /**
-         * <p>A list of all URLs mentioned in the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "all_links", nulls = Nulls.SKIP)
-        public _FinalStage allLinks(Optional<ArticleEntityAllLinks> allLinks) {
-            this.allLinks = allLinks;
-            return this;
-        }
-
-        /**
-         * <p>The Twitter account associated with the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage twitterAccount(String twitterAccount) {
-            this.twitterAccount = Optional.ofNullable(twitterAccount);
-            return this;
-        }
-
-        /**
-         * <p>The Twitter account associated with the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "twitter_account", nulls = Nulls.SKIP)
-        public _FinalStage twitterAccount(Optional<String> twitterAccount) {
-            this.twitterAccount = twitterAccount;
-            return this;
-        }
-
-        /**
-         * <p>Indicates if the article is an opinion piece.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage isOpinion(Boolean isOpinion) {
-            this.isOpinion = Optional.ofNullable(isOpinion);
-            return this;
-        }
-
-        /**
-         * <p>Indicates if the article is an opinion piece.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "is_opinion", nulls = Nulls.SKIP)
-        public _FinalStage isOpinion(Optional<Boolean> isOpinion) {
-            this.isOpinion = isOpinion;
-            return this;
-        }
-
-        /**
-         * <p>The word count of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage wordCount(Integer wordCount) {
-            this.wordCount = Optional.ofNullable(wordCount);
-            return this;
-        }
-
-        /**
-         * <p>The word count of the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "word_count", nulls = Nulls.SKIP)
-        public _FinalStage wordCount(Optional<Integer> wordCount) {
-            this.wordCount = wordCount;
-            return this;
-        }
-
-        /**
-         * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage contentTranslatedEn(String contentTranslatedEn) {
-            this.contentTranslatedEn = Optional.ofNullable(contentTranslatedEn);
-            return this;
-        }
-
-        /**
-         * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "content_translated_en", nulls = Nulls.SKIP)
-        public _FinalStage contentTranslatedEn(Optional<String> contentTranslatedEn) {
-            this.contentTranslatedEn = contentTranslatedEn;
-            return this;
-        }
-
-        /**
-         * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage titleTranslatedEn(String titleTranslatedEn) {
-            this.titleTranslatedEn = Optional.ofNullable(titleTranslatedEn);
-            return this;
-        }
-
-        /**
-         * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "title_translated_en", nulls = Nulls.SKIP)
-        public _FinalStage titleTranslatedEn(Optional<String> titleTranslatedEn) {
-            this.titleTranslatedEn = titleTranslatedEn;
-            return this;
-        }
-
-        /**
-         * <p>A brief description of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage description(String description) {
-            this.description = Optional.ofNullable(description);
-            return this;
-        }
-
-        /**
-         * <p>A brief description of the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "description", nulls = Nulls.SKIP)
-        public _FinalStage description(Optional<String> description) {
-            this.description = description;
-            return this;
-        }
-
-        /**
-         * <p>The language in which the article is written.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage language(String language) {
-            this.language = Optional.ofNullable(language);
-            return this;
-        }
-
-        /**
-         * <p>The language in which the article is written.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "language", nulls = Nulls.SKIP)
-        public _FinalStage language(Optional<String> language) {
-            this.language = language;
-            return this;
-        }
-
-        /**
-         * <p>The media associated with the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage media(String media) {
-            this.media = Optional.ofNullable(media);
-            return this;
-        }
-
-        /**
-         * <p>The media associated with the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "media", nulls = Nulls.SKIP)
-        public _FinalStage media(Optional<String> media) {
-            this.media = media;
-            return this;
-        }
-
-        /**
-         * <p>The rights information for the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage rights(String rights) {
-            this.rights = Optional.ofNullable(rights);
-            return this;
-        }
-
-        /**
-         * <p>The rights information for the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "rights", nulls = Nulls.SKIP)
-        public _FinalStage rights(Optional<String> rights) {
-            this.rights = rights;
-            return this;
-        }
-
-        /**
-         * <p>The country where the article was published.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage country(String country) {
-            this.country = Optional.ofNullable(country);
-            return this;
-        }
-
-        /**
-         * <p>The country where the article was published.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "country", nulls = Nulls.SKIP)
-        public _FinalStage country(Optional<String> country) {
-            this.country = country;
-            return this;
-        }
-
-        /**
-         * <p>Indicates if the article is paid content.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage paidContent(Boolean paidContent) {
-            this.paidContent = Optional.ofNullable(paidContent);
-            return this;
-        }
-
-        /**
-         * <p>Indicates if the article is paid content.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "paid_content", nulls = Nulls.SKIP)
-        public _FinalStage paidContent(Optional<Boolean> paidContent) {
-            this.paidContent = paidContent;
-            return this;
-        }
-
-        /**
-         * <p>Indicates if the article is a headline.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage isHeadline(Boolean isHeadline) {
-            this.isHeadline = Optional.ofNullable(isHeadline);
-            return this;
-        }
-
-        /**
-         * <p>Indicates if the article is a headline.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "is_headline", nulls = Nulls.SKIP)
-        public _FinalStage isHeadline(Optional<Boolean> isHeadline) {
-            this.isHeadline = isHeadline;
-            return this;
-        }
-
-        /**
-         * <p>The name of the source where the article was published.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage nameSource(String nameSource) {
-            this.nameSource = Optional.ofNullable(nameSource);
-            return this;
-        }
-
-        /**
-         * <p>The name of the source where the article was published.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "name_source", nulls = Nulls.SKIP)
-        public _FinalStage nameSource(Optional<String> nameSource) {
-            this.nameSource = nameSource;
-            return this;
-        }
-
-        /**
-         * <p>The date the article was parsed.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage parseDate(String parseDate) {
-            this.parseDate = Optional.ofNullable(parseDate);
-            return this;
-        }
-
-        /**
-         * <p>The date the article was parsed.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "parse_date", nulls = Nulls.SKIP)
-        public _FinalStage parseDate(Optional<String> parseDate) {
-            this.parseDate = parseDate;
-            return this;
-        }
-
-        /**
-         * <p>The precision of the updated date.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedDatePrecision(String updatedDatePrecision) {
-            this.updatedDatePrecision = Optional.ofNullable(updatedDatePrecision);
-            return this;
-        }
-
-        /**
-         * <p>The precision of the updated date.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "updated_date_precision", nulls = Nulls.SKIP)
-        public _FinalStage updatedDatePrecision(Optional<String> updatedDatePrecision) {
-            this.updatedDatePrecision = updatedDatePrecision;
-            return this;
-        }
-
-        /**
-         * <p>The date the article was last updated.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedDate(String updatedDate) {
-            this.updatedDate = Optional.ofNullable(updatedDate);
-            return this;
-        }
-
-        /**
-         * <p>The date the article was last updated.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "updated_date", nulls = Nulls.SKIP)
-        public _FinalStage updatedDate(Optional<String> updatedDate) {
-            this.updatedDate = updatedDate;
-            return this;
-        }
-
-        /**
-         * <p>The precision of the published date.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage publishedDatePrecision(String publishedDatePrecision) {
-            this.publishedDatePrecision = Optional.ofNullable(publishedDatePrecision);
-            return this;
-        }
-
-        /**
-         * <p>The precision of the published date.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "published_date_precision", nulls = Nulls.SKIP)
-        public _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision) {
-            this.publishedDatePrecision = publishedDatePrecision;
-            return this;
-        }
-
-        /**
-         * <p>The date the article was published.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage publishedDate(String publishedDate) {
-            this.publishedDate = Optional.ofNullable(publishedDate);
-            return this;
-        }
-
-        /**
-         * <p>The date the article was published.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "published_date", nulls = Nulls.SKIP)
-        public _FinalStage publishedDate(Optional<String> publishedDate) {
-            this.publishedDate = publishedDate;
-            return this;
-        }
-
-        /**
-         * <p>A list of journalists associated with the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage journalists(Journalists journalists) {
-            this.journalists = Optional.ofNullable(journalists);
-            return this;
-        }
-
-        /**
-         * <p>A list of journalists associated with the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "journalists", nulls = Nulls.SKIP)
-        public _FinalStage journalists(Optional<Journalists> journalists) {
-            this.journalists = journalists;
-            return this;
-        }
-
-        /**
-         * <p>A list of authors of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage authors(Authors authors) {
-            this.authors = Optional.ofNullable(authors);
-            return this;
-        }
-
-        /**
-         * <p>A list of authors of the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "authors", nulls = Nulls.SKIP)
-        public _FinalStage authors(Optional<Authors> authors) {
-            this.authors = authors;
+        public Builder title(String title) {
+            this.title = Optional.ofNullable(title);
             return this;
         }
 
         /**
          * <p>The primary author of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage author(String author) {
+        @JsonSetter(value = "author", nulls = Nulls.SKIP)
+        public Builder author(Optional<String> author) {
+            this.author = author;
+            return this;
+        }
+
+        public Builder author(String author) {
             this.author = Optional.ofNullable(author);
             return this;
         }
 
         /**
-         * <p>The primary author of the article.</p>
+         * <p>A list of authors of the article.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "author", nulls = Nulls.SKIP)
-        public _FinalStage author(Optional<String> author) {
-            this.author = author;
+        @JsonSetter(value = "authors", nulls = Nulls.SKIP)
+        public Builder authors(Optional<ArticleEntityAuthors> authors) {
+            this.authors = authors;
             return this;
         }
 
-        @java.lang.Override
+        public Builder authors(ArticleEntityAuthors authors) {
+            this.authors = Optional.ofNullable(authors);
+            return this;
+        }
+
+        /**
+         * <p>A list of journalists associated with the article.</p>
+         */
+        @JsonSetter(value = "journalists", nulls = Nulls.SKIP)
+        public Builder journalists(Optional<ArticleEntityJournalists> journalists) {
+            this.journalists = journalists;
+            return this;
+        }
+
+        public Builder journalists(ArticleEntityJournalists journalists) {
+            this.journalists = Optional.ofNullable(journalists);
+            return this;
+        }
+
+        /**
+         * <p>The date the article was published.</p>
+         */
+        @JsonSetter(value = "published_date", nulls = Nulls.SKIP)
+        public Builder publishedDate(Optional<String> publishedDate) {
+            this.publishedDate = publishedDate;
+            return this;
+        }
+
+        public Builder publishedDate(String publishedDate) {
+            this.publishedDate = Optional.ofNullable(publishedDate);
+            return this;
+        }
+
+        /**
+         * <p>The precision of the published date.</p>
+         */
+        @JsonSetter(value = "published_date_precision", nulls = Nulls.SKIP)
+        public Builder publishedDatePrecision(Optional<String> publishedDatePrecision) {
+            this.publishedDatePrecision = publishedDatePrecision;
+            return this;
+        }
+
+        public Builder publishedDatePrecision(String publishedDatePrecision) {
+            this.publishedDatePrecision = Optional.ofNullable(publishedDatePrecision);
+            return this;
+        }
+
+        /**
+         * <p>The date the article was last updated.</p>
+         */
+        @JsonSetter(value = "updated_date", nulls = Nulls.SKIP)
+        public Builder updatedDate(Optional<String> updatedDate) {
+            this.updatedDate = updatedDate;
+            return this;
+        }
+
+        public Builder updatedDate(String updatedDate) {
+            this.updatedDate = Optional.ofNullable(updatedDate);
+            return this;
+        }
+
+        /**
+         * <p>The precision of the updated date.</p>
+         */
+        @JsonSetter(value = "updated_date_precision", nulls = Nulls.SKIP)
+        public Builder updatedDatePrecision(Optional<String> updatedDatePrecision) {
+            this.updatedDatePrecision = updatedDatePrecision;
+            return this;
+        }
+
+        public Builder updatedDatePrecision(String updatedDatePrecision) {
+            this.updatedDatePrecision = Optional.ofNullable(updatedDatePrecision);
+            return this;
+        }
+
+        /**
+         * <p>The date the article was parsed.</p>
+         */
+        @JsonSetter(value = "parse_date", nulls = Nulls.SKIP)
+        public Builder parseDate(Optional<String> parseDate) {
+            this.parseDate = parseDate;
+            return this;
+        }
+
+        public Builder parseDate(String parseDate) {
+            this.parseDate = Optional.ofNullable(parseDate);
+            return this;
+        }
+
+        /**
+         * <p>The URL link to the article.</p>
+         */
+        @JsonSetter(value = "link", nulls = Nulls.SKIP)
+        public Builder link(Optional<String> link) {
+            this.link = link;
+            return this;
+        }
+
+        public Builder link(String link) {
+            this.link = Optional.ofNullable(link);
+            return this;
+        }
+
+        /**
+         * <p>Indicates whether the article URL is canonical.</p>
+         */
+        @JsonSetter(value = "canonical_url", nulls = Nulls.SKIP)
+        public Builder canonicalUrl(Optional<Boolean> canonicalUrl) {
+            this.canonicalUrl = canonicalUrl;
+            return this;
+        }
+
+        public Builder canonicalUrl(Boolean canonicalUrl) {
+            this.canonicalUrl = Optional.ofNullable(canonicalUrl);
+            return this;
+        }
+
+        /**
+         * <p>The domain URL of the article.</p>
+         */
+        @JsonSetter(value = "domain_url", nulls = Nulls.SKIP)
+        public Builder domainUrl(Optional<String> domainUrl) {
+            this.domainUrl = domainUrl;
+            return this;
+        }
+
+        public Builder domainUrl(String domainUrl) {
+            this.domainUrl = Optional.ofNullable(domainUrl);
+            return this;
+        }
+
+        /**
+         * <p>The full domain URL of the article.</p>
+         */
+        @JsonSetter(value = "full_domain_url", nulls = Nulls.SKIP)
+        public Builder fullDomainUrl(Optional<String> fullDomainUrl) {
+            this.fullDomainUrl = fullDomainUrl;
+            return this;
+        }
+
+        public Builder fullDomainUrl(String fullDomainUrl) {
+            this.fullDomainUrl = Optional.ofNullable(fullDomainUrl);
+            return this;
+        }
+
+        /**
+         * <p>The name of the source where the article was published.</p>
+         */
+        @JsonSetter(value = "name_source", nulls = Nulls.SKIP)
+        public Builder nameSource(Optional<String> nameSource) {
+            this.nameSource = nameSource;
+            return this;
+        }
+
+        public Builder nameSource(String nameSource) {
+            this.nameSource = Optional.ofNullable(nameSource);
+            return this;
+        }
+
+        /**
+         * <p>Indicates if the article is a headline.</p>
+         */
+        @JsonSetter(value = "is_headline", nulls = Nulls.SKIP)
+        public Builder isHeadline(Optional<Boolean> isHeadline) {
+            this.isHeadline = isHeadline;
+            return this;
+        }
+
+        public Builder isHeadline(Boolean isHeadline) {
+            this.isHeadline = Optional.ofNullable(isHeadline);
+            return this;
+        }
+
+        /**
+         * <p>Indicates if the article is paid content.</p>
+         */
+        @JsonSetter(value = "paid_content", nulls = Nulls.SKIP)
+        public Builder paidContent(Optional<Boolean> paidContent) {
+            this.paidContent = paidContent;
+            return this;
+        }
+
+        public Builder paidContent(Boolean paidContent) {
+            this.paidContent = Optional.ofNullable(paidContent);
+            return this;
+        }
+
+        /**
+         * <p>The categorical URL of the article.</p>
+         */
+        @JsonSetter(value = "parent_url", nulls = Nulls.SKIP)
+        public Builder parentUrl(Optional<String> parentUrl) {
+            this.parentUrl = parentUrl;
+            return this;
+        }
+
+        public Builder parentUrl(String parentUrl) {
+            this.parentUrl = Optional.ofNullable(parentUrl);
+            return this;
+        }
+
+        /**
+         * <p>The country where the article was published.</p>
+         */
+        @JsonSetter(value = "country", nulls = Nulls.SKIP)
+        public Builder country(Optional<String> country) {
+            this.country = country;
+            return this;
+        }
+
+        public Builder country(String country) {
+            this.country = Optional.ofNullable(country);
+            return this;
+        }
+
+        /**
+         * <p>The rights information for the article.</p>
+         */
+        @JsonSetter(value = "rights", nulls = Nulls.SKIP)
+        public Builder rights(Optional<String> rights) {
+            this.rights = rights;
+            return this;
+        }
+
+        public Builder rights(String rights) {
+            this.rights = Optional.ofNullable(rights);
+            return this;
+        }
+
+        /**
+         * <p>The rank of the article's source.</p>
+         */
+        @JsonSetter(value = "rank", nulls = Nulls.SKIP)
+        public Builder rank(Optional<Integer> rank) {
+            this.rank = rank;
+            return this;
+        }
+
+        public Builder rank(Integer rank) {
+            this.rank = Optional.ofNullable(rank);
+            return this;
+        }
+
+        /**
+         * <p>The media associated with the article.</p>
+         */
+        @JsonSetter(value = "media", nulls = Nulls.SKIP)
+        public Builder media(Optional<String> media) {
+            this.media = media;
+            return this;
+        }
+
+        public Builder media(String media) {
+            this.media = Optional.ofNullable(media);
+            return this;
+        }
+
+        /**
+         * <p>The language in which the article is written.</p>
+         */
+        @JsonSetter(value = "language", nulls = Nulls.SKIP)
+        public Builder language(Optional<String> language) {
+            this.language = language;
+            return this;
+        }
+
+        public Builder language(String language) {
+            this.language = Optional.ofNullable(language);
+            return this;
+        }
+
+        /**
+         * <p>A brief description of the article.</p>
+         */
+        @JsonSetter(value = "description", nulls = Nulls.SKIP)
+        public Builder description(Optional<String> description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = Optional.ofNullable(description);
+            return this;
+        }
+
+        /**
+         * <p>The content of the article.</p>
+         */
+        @JsonSetter(value = "content", nulls = Nulls.SKIP)
+        public Builder content(Optional<String> content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder content(String content) {
+            this.content = Optional.ofNullable(content);
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        @JsonSetter(value = "title_translated_en", nulls = Nulls.SKIP)
+        public Builder titleTranslatedEn(Optional<String> titleTranslatedEn) {
+            this.titleTranslatedEn = titleTranslatedEn;
+            return this;
+        }
+
+        public Builder titleTranslatedEn(String titleTranslatedEn) {
+            this.titleTranslatedEn = Optional.ofNullable(titleTranslatedEn);
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        @JsonSetter(value = "content_translated_en", nulls = Nulls.SKIP)
+        public Builder contentTranslatedEn(Optional<String> contentTranslatedEn) {
+            this.contentTranslatedEn = contentTranslatedEn;
+            return this;
+        }
+
+        public Builder contentTranslatedEn(String contentTranslatedEn) {
+            this.contentTranslatedEn = Optional.ofNullable(contentTranslatedEn);
+            return this;
+        }
+
+        /**
+         * <p>The word count of the article.</p>
+         */
+        @JsonSetter(value = "word_count", nulls = Nulls.SKIP)
+        public Builder wordCount(Optional<Integer> wordCount) {
+            this.wordCount = wordCount;
+            return this;
+        }
+
+        public Builder wordCount(Integer wordCount) {
+            this.wordCount = Optional.ofNullable(wordCount);
+            return this;
+        }
+
+        /**
+         * <p>Indicates if the article is an opinion piece.</p>
+         */
+        @JsonSetter(value = "is_opinion", nulls = Nulls.SKIP)
+        public Builder isOpinion(Optional<Boolean> isOpinion) {
+            this.isOpinion = isOpinion;
+            return this;
+        }
+
+        public Builder isOpinion(Boolean isOpinion) {
+            this.isOpinion = Optional.ofNullable(isOpinion);
+            return this;
+        }
+
+        /**
+         * <p>The Twitter account associated with the article.</p>
+         */
+        @JsonSetter(value = "twitter_account", nulls = Nulls.SKIP)
+        public Builder twitterAccount(Optional<String> twitterAccount) {
+            this.twitterAccount = twitterAccount;
+            return this;
+        }
+
+        public Builder twitterAccount(String twitterAccount) {
+            this.twitterAccount = Optional.ofNullable(twitterAccount);
+            return this;
+        }
+
+        /**
+         * <p>A list of all URLs mentioned in the article.</p>
+         */
+        @JsonSetter(value = "all_links", nulls = Nulls.SKIP)
+        public Builder allLinks(Optional<ArticleEntityAllLinks> allLinks) {
+            this.allLinks = allLinks;
+            return this;
+        }
+
+        public Builder allLinks(ArticleEntityAllLinks allLinks) {
+            this.allLinks = Optional.ofNullable(allLinks);
+            return this;
+        }
+
+        /**
+         * <p>A list of all domain URLs mentioned in the article.</p>
+         */
+        @JsonSetter(value = "all_domain_links", nulls = Nulls.SKIP)
+        public Builder allDomainLinks(Optional<ArticleEntityAllDomainLinks> allDomainLinks) {
+            this.allDomainLinks = allDomainLinks;
+            return this;
+        }
+
+        public Builder allDomainLinks(ArticleEntityAllDomainLinks allDomainLinks) {
+            this.allDomainLinks = Optional.ofNullable(allDomainLinks);
+            return this;
+        }
+
+        @JsonSetter(value = "nlp", nulls = Nulls.SKIP)
+        public Builder nlp(Optional<NlpDataEntity> nlp) {
+            this.nlp = nlp;
+            return this;
+        }
+
+        public Builder nlp(NlpDataEntity nlp) {
+            this.nlp = Optional.ofNullable(nlp);
+            return this;
+        }
+
+        /**
+         * <p>The unique identifier for the article.</p>
+         */
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
+            return this;
+        }
+
+        /**
+         * <p>The relevance score of the article.</p>
+         */
+        @JsonSetter(value = "score", nulls = Nulls.SKIP)
+        public Builder score(Optional<Double> score) {
+            this.score = score;
+            return this;
+        }
+
+        public Builder score(Double score) {
+            this.score = Optional.ofNullable(score);
+            return this;
+        }
+
+        /**
+         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
+         */
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public Builder robotsCompliant(Optional<Boolean> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
+            return this;
+        }
+
+        public Builder robotsCompliant(Boolean robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
+        /**
+         * <p>An object that contains custom tags associated with an article, where each key is a taxonomy name, and the value is an array of tags.</p>
+         */
+        @JsonSetter(value = "custom_tags", nulls = Nulls.SKIP)
+        public Builder customTags(Optional<Map<String, List<String>>> customTags) {
+            this.customTags = customTags;
+            return this;
+        }
+
+        public Builder customTags(Map<String, List<String>> customTags) {
+            this.customTags = Optional.ofNullable(customTags);
+            return this;
+        }
+
+        @JsonSetter(value = "additional_domain_info", nulls = Nulls.SKIP)
+        public Builder additionalDomainInfo(Optional<AdditionalDomainInfoEntity> additionalDomainInfo) {
+            this.additionalDomainInfo = additionalDomainInfo;
+            return this;
+        }
+
+        public Builder additionalDomainInfo(AdditionalDomainInfoEntity additionalDomainInfo) {
+            this.additionalDomainInfo = Optional.ofNullable(additionalDomainInfo);
+            return this;
+        }
+
         public ArticleEntity build() {
             return new ArticleEntity(
                     title,
@@ -1616,6 +1247,7 @@ public final class ArticleEntity implements IArticleEntity {
                     updatedDatePrecision,
                     parseDate,
                     link,
+                    canonicalUrl,
                     domainUrl,
                     fullDomainUrl,
                     nameSource,
@@ -1643,6 +1275,16 @@ public final class ArticleEntity implements IArticleEntity {
                     customTags,
                     additionalDomainInfo,
                     additionalProperties);
+        }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

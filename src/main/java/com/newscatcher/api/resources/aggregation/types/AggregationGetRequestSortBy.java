@@ -3,24 +3,93 @@
  */
 package com.newscatcher.api.resources.aggregation.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum AggregationGetRequestSortBy {
-    RELEVANCY("relevancy"),
+public final class AggregationGetRequestSortBy {
+    public static final AggregationGetRequestSortBy RANK = new AggregationGetRequestSortBy(Value.RANK, "rank");
 
-    DATE("date"),
+    public static final AggregationGetRequestSortBy DATE = new AggregationGetRequestSortBy(Value.DATE, "date");
 
-    RANK("rank");
+    public static final AggregationGetRequestSortBy RELEVANCY =
+            new AggregationGetRequestSortBy(Value.RELEVANCY, "relevancy");
 
-    private final String value;
+    private final Value value;
 
-    AggregationGetRequestSortBy(String value) {
+    private final String string;
+
+    AggregationGetRequestSortBy(Value value, String string) {
         this.value = value;
+        this.string = string;
     }
 
-    @JsonValue
+    public Value getEnumValue() {
+        return value;
+    }
+
     @java.lang.Override
+    @JsonValue
     public String toString() {
-        return this.value;
+        return this.string;
+    }
+
+    @java.lang.Override
+    public boolean equals(Object other) {
+        return (this == other)
+                || (other instanceof AggregationGetRequestSortBy
+                        && this.string.equals(((AggregationGetRequestSortBy) other).string));
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return this.string.hashCode();
+    }
+
+    public <T> T visit(Visitor<T> visitor) {
+        switch (value) {
+            case RANK:
+                return visitor.visitRank();
+            case DATE:
+                return visitor.visitDate();
+            case RELEVANCY:
+                return visitor.visitRelevancy();
+            case UNKNOWN:
+            default:
+                return visitor.visitUnknown(string);
+        }
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static AggregationGetRequestSortBy valueOf(String value) {
+        switch (value) {
+            case "rank":
+                return RANK;
+            case "date":
+                return DATE;
+            case "relevancy":
+                return RELEVANCY;
+            default:
+                return new AggregationGetRequestSortBy(Value.UNKNOWN, value);
+        }
+    }
+
+    public enum Value {
+        RELEVANCY,
+
+        DATE,
+
+        RANK,
+
+        UNKNOWN
+    }
+
+    public interface Visitor<T> {
+        T visitRelevancy();
+
+        T visitDate();
+
+        T visitRank();
+
+        T visitUnknown(String unknownType);
     }
 }

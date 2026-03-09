@@ -93,6 +93,10 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
     public interface _FinalStage {
         ClusteredArticlesDto build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>A list of clusters found in the search results.</p>
          */
@@ -139,7 +143,9 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
          */
         @java.lang.Override
         public _FinalStage addAllClusters(List<ClusterEntity> clusters) {
-            this.clusters.addAll(clusters);
+            if (clusters != null) {
+                this.clusters.addAll(clusters);
+            }
             return this;
         }
 
@@ -160,13 +166,27 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
         @JsonSetter(value = "clusters", nulls = Nulls.SKIP)
         public _FinalStage clusters(List<ClusterEntity> clusters) {
             this.clusters.clear();
-            this.clusters.addAll(clusters);
+            if (clusters != null) {
+                this.clusters.addAll(clusters);
+            }
             return this;
         }
 
         @java.lang.Override
         public ClusteredArticlesDto build() {
             return new ClusteredArticlesDto(clustersCount, clusters, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

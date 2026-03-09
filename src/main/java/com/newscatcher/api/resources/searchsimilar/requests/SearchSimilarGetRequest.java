@@ -14,7 +14,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.resources.searchsimilar.types.SearchSimilarGetRequestPublishedDatePrecision;
 import com.newscatcher.api.resources.searchsimilar.types.SearchSimilarGetRequestSortBy;
-import java.time.OffsetDateTime;
+import com.newscatcher.api.types.SearchSimilarGetRequestFrom;
+import com.newscatcher.api.types.SearchSimilarGetRequestTo;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -50,9 +51,9 @@ public final class SearchSimilarGetRequest {
 
     private final Optional<String> notCountries;
 
-    private final Optional<OffsetDateTime> from;
+    private final Optional<SearchSimilarGetRequestFrom> from;
 
-    private final Optional<OffsetDateTime> to;
+    private final Optional<SearchSimilarGetRequestTo> to;
 
     private final Optional<Boolean> byParseDate;
 
@@ -128,8 +129,8 @@ public final class SearchSimilarGetRequest {
             Optional<String> notLang,
             Optional<String> countries,
             Optional<String> notCountries,
-            Optional<OffsetDateTime> from,
-            Optional<OffsetDateTime> to,
+            Optional<SearchSimilarGetRequestFrom> from,
+            Optional<SearchSimilarGetRequestTo> to,
             Optional<Boolean> byParseDate,
             Optional<SearchSimilarGetRequestPublishedDatePrecision> publishedDatePrecision,
             Optional<SearchSimilarGetRequestSortBy> sortBy,
@@ -207,18 +208,6 @@ public final class SearchSimilarGetRequest {
         this.additionalProperties = additionalProperties;
     }
 
-    /**
-     * @return The keyword(s) to search for in articles. Query syntax supports logical operators (<code>AND</code>, <code>OR</code>, <code>NOT</code>) and wildcards:
-     * <ul>
-     * <li>For an exact match, use double quotes. For example, <code>&quot;technology news&quot;</code>.</li>
-     * <li>Use <code>*</code> to search for any keyword.</li>
-     * <li>Use <code>+</code> to include and <code>-</code> to exclude specific words or phrases.
-     * For example, <code>+Apple</code>, <code>-Google</code>.</li>
-     * <li>Use <code>AND</code>, <code>OR</code>, and <code>NOT</code> to refine search results.
-     * For example, <code>technology AND (Apple OR Microsoft) NOT Google</code>.</li>
-     * </ul>
-     * <p>For more details, see <a href="/docs/v3/documentation/guides-and-concepts/advanced-querying">Advanced querying</a>.</p>
-     */
     @JsonProperty("q")
     public String getQ() {
         return q;
@@ -349,7 +338,7 @@ public final class SearchSimilarGetRequest {
      * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
      */
     @JsonProperty("from_")
-    public Optional<OffsetDateTime> getFrom() {
+    public Optional<SearchSimilarGetRequestFrom> getFrom() {
         return from;
     }
 
@@ -366,7 +355,7 @@ public final class SearchSimilarGetRequest {
      * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
      */
     @JsonProperty("to_")
-    public Optional<OffsetDateTime> getTo() {
+    public Optional<SearchSimilarGetRequestTo> getTo() {
         return to;
     }
 
@@ -780,18 +769,6 @@ public final class SearchSimilarGetRequest {
     }
 
     public interface QStage {
-        /**
-         * <p>The keyword(s) to search for in articles. Query syntax supports logical operators (<code>AND</code>, <code>OR</code>, <code>NOT</code>) and wildcards:</p>
-         * <ul>
-         * <li>For an exact match, use double quotes. For example, <code>&quot;technology news&quot;</code>.</li>
-         * <li>Use <code>*</code> to search for any keyword.</li>
-         * <li>Use <code>+</code> to include and <code>-</code> to exclude specific words or phrases.
-         * For example, <code>+Apple</code>, <code>-Google</code>.</li>
-         * <li>Use <code>AND</code>, <code>OR</code>, and <code>NOT</code> to refine search results.
-         * For example, <code>technology AND (Apple OR Microsoft) NOT Google</code>.</li>
-         * </ul>
-         * <p>For more details, see <a href="/docs/v3/documentation/guides-and-concepts/advanced-querying">Advanced querying</a>.</p>
-         */
         _FinalStage q(@NotNull String q);
 
         Builder from(SearchSimilarGetRequest other);
@@ -799,6 +776,10 @@ public final class SearchSimilarGetRequest {
 
     public interface _FinalStage {
         SearchSimilarGetRequest build();
+
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
 
         _FinalStage searchIn(Optional<String> searchIn);
 
@@ -912,9 +893,9 @@ public final class SearchSimilarGetRequest {
          * </ul>
          * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
          */
-        _FinalStage from(Optional<OffsetDateTime> from);
+        _FinalStage from(Optional<SearchSimilarGetRequestFrom> from);
 
-        _FinalStage from(OffsetDateTime from);
+        _FinalStage from(SearchSimilarGetRequestFrom from);
 
         /**
          * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
@@ -928,9 +909,9 @@ public final class SearchSimilarGetRequest {
          * </ul>
          * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
          */
-        _FinalStage to(Optional<OffsetDateTime> to);
+        _FinalStage to(Optional<SearchSimilarGetRequestTo> to);
 
-        _FinalStage to(OffsetDateTime to);
+        _FinalStage to(SearchSimilarGetRequestTo to);
 
         /**
          * <p>If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.</p>
@@ -1260,9 +1241,9 @@ public final class SearchSimilarGetRequest {
 
         private Optional<Boolean> byParseDate = Optional.empty();
 
-        private Optional<OffsetDateTime> to = Optional.empty();
+        private Optional<SearchSimilarGetRequestTo> to = Optional.empty();
 
-        private Optional<OffsetDateTime> from = Optional.empty();
+        private Optional<SearchSimilarGetRequestFrom> from = Optional.empty();
 
         private Optional<String> notCountries = Optional.empty();
 
@@ -1342,29 +1323,6 @@ public final class SearchSimilarGetRequest {
             return this;
         }
 
-        /**
-         * <p>The keyword(s) to search for in articles. Query syntax supports logical operators (<code>AND</code>, <code>OR</code>, <code>NOT</code>) and wildcards:</p>
-         * <ul>
-         * <li>For an exact match, use double quotes. For example, <code>&quot;technology news&quot;</code>.</li>
-         * <li>Use <code>*</code> to search for any keyword.</li>
-         * <li>Use <code>+</code> to include and <code>-</code> to exclude specific words or phrases.
-         * For example, <code>+Apple</code>, <code>-Google</code>.</li>
-         * <li>Use <code>AND</code>, <code>OR</code>, and <code>NOT</code> to refine search results.
-         * For example, <code>technology AND (Apple OR Microsoft) NOT Google</code>.</li>
-         * </ul>
-         * <p>For more details, see <a href="/docs/v3/documentation/guides-and-concepts/advanced-querying">Advanced querying</a>.</p>
-         * <p>The keyword(s) to search for in articles. Query syntax supports logical operators (<code>AND</code>, <code>OR</code>, <code>NOT</code>) and wildcards:</p>
-         * <ul>
-         * <li>For an exact match, use double quotes. For example, <code>&quot;technology news&quot;</code>.</li>
-         * <li>Use <code>*</code> to search for any keyword.</li>
-         * <li>Use <code>+</code> to include and <code>-</code> to exclude specific words or phrases.
-         * For example, <code>+Apple</code>, <code>-Google</code>.</li>
-         * <li>Use <code>AND</code>, <code>OR</code>, and <code>NOT</code> to refine search results.
-         * For example, <code>technology AND (Apple OR Microsoft) NOT Google</code>.</li>
-         * </ul>
-         * <p>For more details, see <a href="/docs/v3/documentation/guides-and-concepts/advanced-querying">Advanced querying</a>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         @JsonSetter("q")
         public _FinalStage q(@NotNull String q) {
@@ -2088,7 +2046,7 @@ public final class SearchSimilarGetRequest {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage to(OffsetDateTime to) {
+        public _FinalStage to(SearchSimilarGetRequestTo to) {
             this.to = Optional.ofNullable(to);
             return this;
         }
@@ -2107,7 +2065,7 @@ public final class SearchSimilarGetRequest {
          */
         @java.lang.Override
         @JsonSetter(value = "to_", nulls = Nulls.SKIP)
-        public _FinalStage to(Optional<OffsetDateTime> to) {
+        public _FinalStage to(Optional<SearchSimilarGetRequestTo> to) {
             this.to = to;
             return this;
         }
@@ -2126,7 +2084,7 @@ public final class SearchSimilarGetRequest {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage from(OffsetDateTime from) {
+        public _FinalStage from(SearchSimilarGetRequestFrom from) {
             this.from = Optional.ofNullable(from);
             return this;
         }
@@ -2145,7 +2103,7 @@ public final class SearchSimilarGetRequest {
          */
         @java.lang.Override
         @JsonSetter(value = "from_", nulls = Nulls.SKIP)
-        public _FinalStage from(Optional<OffsetDateTime> from) {
+        public _FinalStage from(Optional<SearchSimilarGetRequestFrom> from) {
             this.from = from;
             return this;
         }
@@ -2468,6 +2426,18 @@ public final class SearchSimilarGetRequest {
                     customTags,
                     robotsCompliant,
                     additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

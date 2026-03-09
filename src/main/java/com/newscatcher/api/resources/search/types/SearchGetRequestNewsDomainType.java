@@ -3,28 +3,116 @@
  */
 package com.newscatcher.api.resources.search.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum SearchGetRequestNewsDomainType {
-    ORIGINAL_CONTENT("Original Content"),
+public final class SearchGetRequestNewsDomainType {
+    public static final SearchGetRequestNewsDomainType PRESS_RELEASES =
+            new SearchGetRequestNewsDomainType(Value.PRESS_RELEASES, "Press Releases");
 
-    AGGREGATOR("Aggregator"),
+    public static final SearchGetRequestNewsDomainType AGGREGATOR =
+            new SearchGetRequestNewsDomainType(Value.AGGREGATOR, "Aggregator");
 
-    PRESS_RELEASES("Press Releases"),
+    public static final SearchGetRequestNewsDomainType REPUBLISHER =
+            new SearchGetRequestNewsDomainType(Value.REPUBLISHER, "Republisher");
 
-    REPUBLISHER("Republisher"),
+    public static final SearchGetRequestNewsDomainType OTHER = new SearchGetRequestNewsDomainType(Value.OTHER, "Other");
 
-    OTHER("Other");
+    public static final SearchGetRequestNewsDomainType ORIGINAL_CONTENT =
+            new SearchGetRequestNewsDomainType(Value.ORIGINAL_CONTENT, "Original Content");
 
-    private final String value;
+    private final Value value;
 
-    SearchGetRequestNewsDomainType(String value) {
+    private final String string;
+
+    SearchGetRequestNewsDomainType(Value value, String string) {
         this.value = value;
+        this.string = string;
     }
 
-    @JsonValue
+    public Value getEnumValue() {
+        return value;
+    }
+
     @java.lang.Override
+    @JsonValue
     public String toString() {
-        return this.value;
+        return this.string;
+    }
+
+    @java.lang.Override
+    public boolean equals(Object other) {
+        return (this == other)
+                || (other instanceof SearchGetRequestNewsDomainType
+                        && this.string.equals(((SearchGetRequestNewsDomainType) other).string));
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return this.string.hashCode();
+    }
+
+    public <T> T visit(Visitor<T> visitor) {
+        switch (value) {
+            case PRESS_RELEASES:
+                return visitor.visitPressReleases();
+            case AGGREGATOR:
+                return visitor.visitAggregator();
+            case REPUBLISHER:
+                return visitor.visitRepublisher();
+            case OTHER:
+                return visitor.visitOther();
+            case ORIGINAL_CONTENT:
+                return visitor.visitOriginalContent();
+            case UNKNOWN:
+            default:
+                return visitor.visitUnknown(string);
+        }
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static SearchGetRequestNewsDomainType valueOf(String value) {
+        switch (value) {
+            case "Press Releases":
+                return PRESS_RELEASES;
+            case "Aggregator":
+                return AGGREGATOR;
+            case "Republisher":
+                return REPUBLISHER;
+            case "Other":
+                return OTHER;
+            case "Original Content":
+                return ORIGINAL_CONTENT;
+            default:
+                return new SearchGetRequestNewsDomainType(Value.UNKNOWN, value);
+        }
+    }
+
+    public enum Value {
+        ORIGINAL_CONTENT,
+
+        AGGREGATOR,
+
+        PRESS_RELEASES,
+
+        REPUBLISHER,
+
+        OTHER,
+
+        UNKNOWN
+    }
+
+    public interface Visitor<T> {
+        T visitOriginalContent();
+
+        T visitAggregator();
+
+        T visitPressReleases();
+
+        T visitRepublisher();
+
+        T visitOther();
+
+        T visitUnknown(String unknownType);
     }
 }

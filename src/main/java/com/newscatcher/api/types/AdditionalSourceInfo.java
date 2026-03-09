@@ -251,5 +251,15 @@ public final class AdditionalSourceInfo {
             return new AdditionalSourceInfo(
                     nbArticlesFor7D, country, rank, isNewsDomain, newsDomainType, newsType, additionalProperties);
         }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
+        }
     }
 }

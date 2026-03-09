@@ -50,6 +50,13 @@ public class RawLatestheadlinesClient {
     /**
      * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
+    public NewscatcherApiHttpResponse<LatestHeadlinesGetResponse> get(RequestOptions requestOptions) {
+        return get(LatestHeadlinesGetRequest.builder().build(), requestOptions);
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
     public NewscatcherApiHttpResponse<LatestHeadlinesGetResponse> get(LatestHeadlinesGetRequest request) {
         return get(request, null);
     }
@@ -261,6 +268,11 @@ public class RawLatestheadlinesClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -273,12 +285,12 @@ public class RawLatestheadlinesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new NewscatcherApiHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), LatestHeadlinesGetResponse.class),
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, LatestHeadlinesGetResponse.class),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -306,11 +318,9 @@ public class RawLatestheadlinesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new NewscatcherApiException("Network error executing HTTP request", e);
         }
@@ -326,6 +336,13 @@ public class RawLatestheadlinesClient {
     /**
      * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
      */
+    public NewscatcherApiHttpResponse<LatestHeadlinesPostResponse> post(RequestOptions requestOptions) {
+        return post(LatestHeadlinesPostRequest.builder().build(), requestOptions);
+    }
+
+    /**
+     * Retrieves the latest headlines for the specified time period. You can filter results by language, country, source, and more.
+     */
     public NewscatcherApiHttpResponse<LatestHeadlinesPostResponse> post(LatestHeadlinesPostRequest request) {
         return post(request, null);
     }
@@ -335,10 +352,14 @@ public class RawLatestheadlinesClient {
      */
     public NewscatcherApiHttpResponse<LatestHeadlinesPostResponse> post(
             LatestHeadlinesPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/latest_headlines")
-                .build();
+                .addPathSegments("api/latest_headlines");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -347,7 +368,7 @@ public class RawLatestheadlinesClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -359,12 +380,12 @@ public class RawLatestheadlinesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new NewscatcherApiHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), LatestHeadlinesPostResponse.class),
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, LatestHeadlinesPostResponse.class),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -392,11 +413,9 @@ public class RawLatestheadlinesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new NewscatcherApiException("Network error executing HTTP request", e);
         }

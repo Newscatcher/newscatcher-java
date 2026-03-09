@@ -560,6 +560,10 @@ public final class AuthorsPostRequest {
     public interface _FinalStage {
         AuthorsPostRequest build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         _FinalStage notAuthorName(Optional<NotAuthorName> notAuthorName);
 
         _FinalStage notAuthorName(NotAuthorName notAuthorName);
@@ -1470,6 +1474,18 @@ public final class AuthorsPostRequest {
                     customTags,
                     robotsCompliant,
                     additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }
