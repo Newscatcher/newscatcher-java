@@ -3,24 +3,91 @@
  */
 package com.newscatcher.api.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum AggregationBy {
-    DAY("day"),
+public final class AggregationBy {
+    public static final AggregationBy MONTH = new AggregationBy(Value.MONTH, "month");
 
-    HOUR("hour"),
+    public static final AggregationBy DAY = new AggregationBy(Value.DAY, "day");
 
-    MONTH("month");
+    public static final AggregationBy HOUR = new AggregationBy(Value.HOUR, "hour");
 
-    private final String value;
+    private final Value value;
 
-    AggregationBy(String value) {
+    private final String string;
+
+    AggregationBy(Value value, String string) {
         this.value = value;
+        this.string = string;
     }
 
-    @JsonValue
+    public Value getEnumValue() {
+        return value;
+    }
+
     @java.lang.Override
+    @JsonValue
     public String toString() {
-        return this.value;
+        return this.string;
+    }
+
+    @java.lang.Override
+    public boolean equals(Object other) {
+        return (this == other)
+                || (other instanceof AggregationBy && this.string.equals(((AggregationBy) other).string));
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return this.string.hashCode();
+    }
+
+    public <T> T visit(Visitor<T> visitor) {
+        switch (value) {
+            case MONTH:
+                return visitor.visitMonth();
+            case DAY:
+                return visitor.visitDay();
+            case HOUR:
+                return visitor.visitHour();
+            case UNKNOWN:
+            default:
+                return visitor.visitUnknown(string);
+        }
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static AggregationBy valueOf(String value) {
+        switch (value) {
+            case "month":
+                return MONTH;
+            case "day":
+                return DAY;
+            case "hour":
+                return HOUR;
+            default:
+                return new AggregationBy(Value.UNKNOWN, value);
+        }
+    }
+
+    public enum Value {
+        DAY,
+
+        HOUR,
+
+        MONTH,
+
+        UNKNOWN
+    }
+
+    public interface Visitor<T> {
+        T visitDay();
+
+        T visitHour();
+
+        T visitMonth();
+
+        T visitUnknown(String unknownType);
     }
 }

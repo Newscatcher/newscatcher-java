@@ -5,8 +5,8 @@ package com.newscatcher.api.resources.breakingnews;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.resources.breakingnews.requests.BreakingNewsGetRequest;
-import com.newscatcher.api.resources.breakingnews.requests.BreakingNewsPostRequest;
+import com.newscatcher.api.resources.breakingnews.requests.GetBreakingNewsRequest;
+import com.newscatcher.api.resources.breakingnews.requests.PostBreakingNewsRequest;
 import com.newscatcher.api.types.BreakingNewsResponseDto;
 import java.util.concurrent.CompletableFuture;
 
@@ -30,44 +30,58 @@ public class AsyncBreakingNewsClient {
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public CompletableFuture<BreakingNewsResponseDto> breakingNewsGet() {
-        return this.rawClient.breakingNewsGet().thenApply(response -> response.body());
+    public CompletableFuture<BreakingNewsResponseDto> get() {
+        return this.rawClient.get().thenApply(response -> response.body());
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public CompletableFuture<BreakingNewsResponseDto> breakingNewsGet(BreakingNewsGetRequest request) {
-        return this.rawClient.breakingNewsGet(request).thenApply(response -> response.body());
+    public CompletableFuture<BreakingNewsResponseDto> get(RequestOptions requestOptions) {
+        return this.rawClient.get(requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public CompletableFuture<BreakingNewsResponseDto> breakingNewsGet(
-            BreakingNewsGetRequest request, RequestOptions requestOptions) {
-        return this.rawClient.breakingNewsGet(request, requestOptions).thenApply(response -> response.body());
+    public CompletableFuture<BreakingNewsResponseDto> get(GetBreakingNewsRequest request) {
+        return this.rawClient.get(request).thenApply(response -> response.body());
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public CompletableFuture<BreakingNewsResponseDto> breakingNewsPost() {
-        return this.rawClient.breakingNewsPost().thenApply(response -> response.body());
+    public CompletableFuture<BreakingNewsResponseDto> get(
+            GetBreakingNewsRequest request, RequestOptions requestOptions) {
+        return this.rawClient.get(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public CompletableFuture<BreakingNewsResponseDto> breakingNewsPost(BreakingNewsPostRequest request) {
-        return this.rawClient.breakingNewsPost(request).thenApply(response -> response.body());
+    public CompletableFuture<BreakingNewsResponseDto> post() {
+        return this.rawClient.post().thenApply(response -> response.body());
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public CompletableFuture<BreakingNewsResponseDto> breakingNewsPost(
-            BreakingNewsPostRequest request, RequestOptions requestOptions) {
-        return this.rawClient.breakingNewsPost(request, requestOptions).thenApply(response -> response.body());
+    public CompletableFuture<BreakingNewsResponseDto> post(RequestOptions requestOptions) {
+        return this.rawClient.post(requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
+    public CompletableFuture<BreakingNewsResponseDto> post(PostBreakingNewsRequest request) {
+        return this.rawClient.post(request).thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
+    public CompletableFuture<BreakingNewsResponseDto> post(
+            PostBreakingNewsRequest request, RequestOptions requestOptions) {
+        return this.rawClient.post(request, requestOptions).thenApply(response -> response.body());
     }
 }

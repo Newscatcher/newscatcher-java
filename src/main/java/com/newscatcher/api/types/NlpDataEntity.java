@@ -123,7 +123,7 @@ public final class NlpDataEntity {
 
     /**
      * @return A dense 1024-dimensional vector representation of the article content, generated using  the <a href="https://huggingface.co/intfloat/multilingual-e5-large">multilingual-e5-large</a> model.
-     * <p><strong>Note</strong>: The <code>new_embedding</code> field is only available in the <code>v3_local_news_nlp_embeddings</code> subscription plan.</p>
+     * <p><strong>Note</strong>: The <code>new_embedding</code> field is only available in the <code>v3_nlp_embeddings</code> subscription plan.</p>
      */
     @JsonProperty("new_embedding")
     public Optional<List<Float>> getNewEmbedding() {
@@ -395,7 +395,7 @@ public final class NlpDataEntity {
 
         /**
          * <p>A dense 1024-dimensional vector representation of the article content, generated using  the <a href="https://huggingface.co/intfloat/multilingual-e5-large">multilingual-e5-large</a> model.</p>
-         * <p><strong>Note</strong>: The <code>new_embedding</code> field is only available in the <code>v3_local_news_nlp_embeddings</code> subscription plan.</p>
+         * <p><strong>Note</strong>: The <code>new_embedding</code> field is only available in the <code>v3_nlp_embeddings</code> subscription plan.</p>
          */
         @JsonSetter(value = "new_embedding", nulls = Nulls.SKIP)
         public Builder newEmbedding(Optional<List<Float>> newEmbedding) {
@@ -584,6 +584,16 @@ public final class NlpDataEntity {
                     iptcTagsId,
                     iabTagsName,
                     additionalProperties);
+        }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

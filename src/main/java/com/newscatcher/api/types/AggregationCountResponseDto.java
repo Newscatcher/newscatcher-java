@@ -31,7 +31,7 @@ public final class AggregationCountResponseDto implements IBaseSearchResponseDto
 
     private final int pageSize;
 
-    private final Optional<Aggregations> aggregations;
+    private final Optional<AggregationCountResponseDtoAggregations> aggregations;
 
     private final Optional<Map<String, Object>> userInput;
 
@@ -43,7 +43,7 @@ public final class AggregationCountResponseDto implements IBaseSearchResponseDto
             int page,
             int totalPages,
             int pageSize,
-            Optional<Aggregations> aggregations,
+            Optional<AggregationCountResponseDtoAggregations> aggregations,
             Optional<Map<String, Object>> userInput,
             Map<String, Object> additionalProperties) {
         this.status = status;
@@ -105,7 +105,7 @@ public final class AggregationCountResponseDto implements IBaseSearchResponseDto
      * @return The aggregation results. Can be either a dictionary or a list of dictionaries.
      */
     @JsonProperty("aggregations")
-    public Optional<Aggregations> getAggregations() {
+    public Optional<AggregationCountResponseDtoAggregations> getAggregations() {
         return aggregations;
     }
 
@@ -196,12 +196,16 @@ public final class AggregationCountResponseDto implements IBaseSearchResponseDto
     public interface _FinalStage {
         AggregationCountResponseDto build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>The aggregation results. Can be either a dictionary or a list of dictionaries.</p>
          */
-        _FinalStage aggregations(Optional<Aggregations> aggregations);
+        _FinalStage aggregations(Optional<AggregationCountResponseDtoAggregations> aggregations);
 
-        _FinalStage aggregations(Aggregations aggregations);
+        _FinalStage aggregations(AggregationCountResponseDtoAggregations aggregations);
 
         _FinalStage userInput(Optional<Map<String, Object>> userInput);
 
@@ -223,7 +227,7 @@ public final class AggregationCountResponseDto implements IBaseSearchResponseDto
 
         private Optional<Map<String, Object>> userInput = Optional.empty();
 
-        private Optional<Aggregations> aggregations = Optional.empty();
+        private Optional<AggregationCountResponseDtoAggregations> aggregations = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -320,7 +324,7 @@ public final class AggregationCountResponseDto implements IBaseSearchResponseDto
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage aggregations(Aggregations aggregations) {
+        public _FinalStage aggregations(AggregationCountResponseDtoAggregations aggregations) {
             this.aggregations = Optional.ofNullable(aggregations);
             return this;
         }
@@ -330,7 +334,7 @@ public final class AggregationCountResponseDto implements IBaseSearchResponseDto
          */
         @java.lang.Override
         @JsonSetter(value = "aggregations", nulls = Nulls.SKIP)
-        public _FinalStage aggregations(Optional<Aggregations> aggregations) {
+        public _FinalStage aggregations(Optional<AggregationCountResponseDtoAggregations> aggregations) {
             this.aggregations = aggregations;
             return this;
         }
@@ -339,6 +343,18 @@ public final class AggregationCountResponseDto implements IBaseSearchResponseDto
         public AggregationCountResponseDto build() {
             return new AggregationCountResponseDto(
                     status, totalHits, page, totalPages, pageSize, aggregations, userInput, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

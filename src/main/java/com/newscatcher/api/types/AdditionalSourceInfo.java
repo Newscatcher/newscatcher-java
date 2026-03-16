@@ -32,6 +32,8 @@ public final class AdditionalSourceInfo {
 
     private final Optional<String> newsType;
 
+    private final Optional<String> robotsCompliant;
+
     private final Map<String, Object> additionalProperties;
 
     private AdditionalSourceInfo(
@@ -41,6 +43,7 @@ public final class AdditionalSourceInfo {
             Optional<Boolean> isNewsDomain,
             Optional<String> newsDomainType,
             Optional<String> newsType,
+            Optional<String> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.nbArticlesFor7D = nbArticlesFor7D;
         this.country = country;
@@ -48,6 +51,7 @@ public final class AdditionalSourceInfo {
         this.isNewsDomain = isNewsDomain;
         this.newsDomainType = newsDomainType;
         this.newsType = newsType;
+        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -99,6 +103,14 @@ public final class AdditionalSourceInfo {
         return newsType;
     }
 
+    /**
+     * @return Percentage of domain articles that comply with robots.txt scraping rules (0-100%).
+     */
+    @JsonProperty("robots_compliant")
+    public Optional<String> getRobotsCompliant() {
+        return robotsCompliant;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -116,13 +128,20 @@ public final class AdditionalSourceInfo {
                 && rank.equals(other.rank)
                 && isNewsDomain.equals(other.isNewsDomain)
                 && newsDomainType.equals(other.newsDomainType)
-                && newsType.equals(other.newsType);
+                && newsType.equals(other.newsType)
+                && robotsCompliant.equals(other.robotsCompliant);
     }
 
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.nbArticlesFor7D, this.country, this.rank, this.isNewsDomain, this.newsDomainType, this.newsType);
+                this.nbArticlesFor7D,
+                this.country,
+                this.rank,
+                this.isNewsDomain,
+                this.newsDomainType,
+                this.newsType,
+                this.robotsCompliant);
     }
 
     @java.lang.Override
@@ -148,6 +167,8 @@ public final class AdditionalSourceInfo {
 
         private Optional<String> newsType = Optional.empty();
 
+        private Optional<String> robotsCompliant = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -160,6 +181,7 @@ public final class AdditionalSourceInfo {
             isNewsDomain(other.getIsNewsDomain());
             newsDomainType(other.getNewsDomainType());
             newsType(other.getNewsType());
+            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
@@ -247,9 +269,40 @@ public final class AdditionalSourceInfo {
             return this;
         }
 
+        /**
+         * <p>Percentage of domain articles that comply with robots.txt scraping rules (0-100%).</p>
+         */
+        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
+        public Builder robotsCompliant(Optional<String> robotsCompliant) {
+            this.robotsCompliant = robotsCompliant;
+            return this;
+        }
+
+        public Builder robotsCompliant(String robotsCompliant) {
+            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+            return this;
+        }
+
         public AdditionalSourceInfo build() {
             return new AdditionalSourceInfo(
-                    nbArticlesFor7D, country, rank, isNewsDomain, newsDomainType, newsType, additionalProperties);
+                    nbArticlesFor7D,
+                    country,
+                    rank,
+                    isNewsDomain,
+                    newsDomainType,
+                    newsType,
+                    robotsCompliant,
+                    additionalProperties);
+        }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

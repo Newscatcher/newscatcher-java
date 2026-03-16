@@ -5,10 +5,10 @@ package com.newscatcher.api.resources.authors;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.resources.authors.requests.AuthorsGetRequest;
-import com.newscatcher.api.resources.authors.requests.AuthorsPostRequest;
-import com.newscatcher.api.resources.authors.types.AuthorsGetResponse;
-import com.newscatcher.api.resources.authors.types.AuthorsPostResponse;
+import com.newscatcher.api.resources.authors.requests.GetAuthorsRequest;
+import com.newscatcher.api.resources.authors.requests.PostAuthorsRequest;
+import com.newscatcher.api.resources.authors.types.GetAuthorsResponse;
+import com.newscatcher.api.resources.authors.types.PostAuthorsResponse;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncAuthorsClient {
@@ -31,28 +31,28 @@ public class AsyncAuthorsClient {
     /**
      * Searches for articles written by a specified author. You can filter results by language, country, source, and more.
      */
-    public CompletableFuture<AuthorsGetResponse> get(AuthorsGetRequest request) {
+    public CompletableFuture<GetAuthorsResponse> get(GetAuthorsRequest request) {
         return this.rawClient.get(request).thenApply(response -> response.body());
     }
 
     /**
      * Searches for articles written by a specified author. You can filter results by language, country, source, and more.
      */
-    public CompletableFuture<AuthorsGetResponse> get(AuthorsGetRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<GetAuthorsResponse> get(GetAuthorsRequest request, RequestOptions requestOptions) {
         return this.rawClient.get(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * Searches for articles by author. You can filter results by language, country, source, and more.
      */
-    public CompletableFuture<AuthorsPostResponse> post(AuthorsPostRequest request) {
+    public CompletableFuture<PostAuthorsResponse> post(PostAuthorsRequest request) {
         return this.rawClient.post(request).thenApply(response -> response.body());
     }
 
     /**
      * Searches for articles by author. You can filter results by language, country, source, and more.
      */
-    public CompletableFuture<AuthorsPostResponse> post(AuthorsPostRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<PostAuthorsResponse> post(PostAuthorsRequest request, RequestOptions requestOptions) {
         return this.rawClient.post(request, requestOptions).thenApply(response -> response.body());
     }
 }
