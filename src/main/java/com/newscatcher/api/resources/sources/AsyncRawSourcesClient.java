@@ -19,8 +19,8 @@ import com.newscatcher.api.errors.RequestTimeoutError;
 import com.newscatcher.api.errors.TooManyRequestsError;
 import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
-import com.newscatcher.api.resources.sources.requests.SourcesGetRequest;
-import com.newscatcher.api.resources.sources.requests.SourcesPostRequest;
+import com.newscatcher.api.resources.sources.requests.GetSourcesRequest;
+import com.newscatcher.api.resources.sources.requests.PostSourcesRequest;
 import com.newscatcher.api.types.Error;
 import com.newscatcher.api.types.SourcesResponseDto;
 import java.io.IOException;
@@ -47,13 +47,20 @@ public class AsyncRawSourcesClient {
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
     public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> get() {
-        return get(SourcesGetRequest.builder().build());
+        return get(GetSourcesRequest.builder().build());
     }
 
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> get(SourcesGetRequest request) {
+    public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> get(RequestOptions requestOptions) {
+        return get(GetSourcesRequest.builder().build(), requestOptions);
+    }
+
+    /**
+     * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
+     */
+    public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> get(GetSourcesRequest request) {
         return get(request, null);
     }
 
@@ -61,7 +68,7 @@ public class AsyncRawSourcesClient {
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
     public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> get(
-            SourcesGetRequest request, RequestOptions requestOptions) {
+            GetSourcesRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/sources");
@@ -115,6 +122,11 @@ public class AsyncRawSourcesClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "to_rank", request.getToRank().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -130,13 +142,13 @@ public class AsyncRawSourcesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SourcesResponseDto.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, SourcesResponseDto.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -178,11 +190,9 @@ public class AsyncRawSourcesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(
@@ -202,13 +212,20 @@ public class AsyncRawSourcesClient {
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
     public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> post() {
-        return post(SourcesPostRequest.builder().build());
+        return post(PostSourcesRequest.builder().build());
     }
 
     /**
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> post(SourcesPostRequest request) {
+    public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> post(RequestOptions requestOptions) {
+        return post(PostSourcesRequest.builder().build(), requestOptions);
+    }
+
+    /**
+     * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
+     */
+    public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> post(PostSourcesRequest request) {
         return post(request, null);
     }
 
@@ -216,11 +233,15 @@ public class AsyncRawSourcesClient {
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
     public CompletableFuture<NewscatcherApiHttpResponse<SourcesResponseDto>> post(
-            SourcesPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+            PostSourcesRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/sources")
-                .build();
+                .addPathSegments("api/sources");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -229,7 +250,7 @@ public class AsyncRawSourcesClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -244,13 +265,13 @@ public class AsyncRawSourcesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SourcesResponseDto.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, SourcesResponseDto.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -292,11 +313,9 @@ public class AsyncRawSourcesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(

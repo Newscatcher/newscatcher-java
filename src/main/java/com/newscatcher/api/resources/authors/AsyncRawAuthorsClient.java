@@ -19,10 +19,10 @@ import com.newscatcher.api.errors.RequestTimeoutError;
 import com.newscatcher.api.errors.TooManyRequestsError;
 import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
-import com.newscatcher.api.resources.authors.requests.AuthorsGetRequest;
-import com.newscatcher.api.resources.authors.requests.AuthorsPostRequest;
-import com.newscatcher.api.resources.authors.types.AuthorsGetResponse;
-import com.newscatcher.api.resources.authors.types.AuthorsPostResponse;
+import com.newscatcher.api.resources.authors.requests.GetAuthorsRequest;
+import com.newscatcher.api.resources.authors.requests.PostAuthorsRequest;
+import com.newscatcher.api.resources.authors.types.GetAuthorsResponse;
+import com.newscatcher.api.resources.authors.types.PostAuthorsResponse;
 import com.newscatcher.api.types.Error;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -47,15 +47,15 @@ public class AsyncRawAuthorsClient {
     /**
      * Searches for articles written by a specified author. You can filter results by language, country, source, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<AuthorsGetResponse>> get(AuthorsGetRequest request) {
+    public CompletableFuture<NewscatcherApiHttpResponse<GetAuthorsResponse>> get(GetAuthorsRequest request) {
         return get(request, null);
     }
 
     /**
      * Searches for articles written by a specified author. You can filter results by language, country, source, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<AuthorsGetResponse>> get(
-            AuthorsGetRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<NewscatcherApiHttpResponse<GetAuthorsResponse>> get(
+            GetAuthorsRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/authors");
@@ -153,6 +153,10 @@ public class AsyncRawAuthorsClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "all_domain_links", request.getAllDomainLinks().get(), false);
         }
+        if (request.getAllLinksText().isPresent()) {
+            QueryStringMapper.addQueryParameter(
+                    httpUrl, "all_links_text", request.getAllLinksText().get(), false);
+        }
         if (request.getWordCountMin().isPresent()) {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "word_count_min", request.getWordCountMin().get(), false);
@@ -248,6 +252,11 @@ public class AsyncRawAuthorsClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -258,18 +267,18 @@ public class AsyncRawAuthorsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<NewscatcherApiHttpResponse<AuthorsGetResponse>> future = new CompletableFuture<>();
+        CompletableFuture<NewscatcherApiHttpResponse<GetAuthorsResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AuthorsGetResponse.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, GetAuthorsResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -311,11 +320,9 @@ public class AsyncRawAuthorsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(
@@ -334,19 +341,23 @@ public class AsyncRawAuthorsClient {
     /**
      * Searches for articles by author. You can filter results by language, country, source, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<AuthorsPostResponse>> post(AuthorsPostRequest request) {
+    public CompletableFuture<NewscatcherApiHttpResponse<PostAuthorsResponse>> post(PostAuthorsRequest request) {
         return post(request, null);
     }
 
     /**
      * Searches for articles by author. You can filter results by language, country, source, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<AuthorsPostResponse>> post(
-            AuthorsPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+    public CompletableFuture<NewscatcherApiHttpResponse<PostAuthorsResponse>> post(
+            PostAuthorsRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/authors")
-                .build();
+                .addPathSegments("api/authors");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -355,7 +366,7 @@ public class AsyncRawAuthorsClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -365,18 +376,18 @@ public class AsyncRawAuthorsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<NewscatcherApiHttpResponse<AuthorsPostResponse>> future = new CompletableFuture<>();
+        CompletableFuture<NewscatcherApiHttpResponse<PostAuthorsResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AuthorsPostResponse.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, PostAuthorsResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -418,11 +429,9 @@ public class AsyncRawAuthorsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(

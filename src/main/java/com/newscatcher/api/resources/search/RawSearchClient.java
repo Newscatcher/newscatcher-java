@@ -19,10 +19,10 @@ import com.newscatcher.api.errors.RequestTimeoutError;
 import com.newscatcher.api.errors.TooManyRequestsError;
 import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
-import com.newscatcher.api.resources.search.requests.SearchGetRequest;
-import com.newscatcher.api.resources.search.requests.SearchPostRequest;
-import com.newscatcher.api.resources.search.types.SearchGetResponse;
-import com.newscatcher.api.resources.search.types.SearchPostResponse;
+import com.newscatcher.api.resources.search.requests.GetSearchRequest;
+import com.newscatcher.api.resources.search.requests.PostSearchRequest;
+import com.newscatcher.api.resources.search.types.GetSearchResponse;
+import com.newscatcher.api.resources.search.types.PostSearchResponse;
 import com.newscatcher.api.types.Error;
 import java.io.IOException;
 import okhttp3.Headers;
@@ -41,16 +41,16 @@ public class RawSearchClient {
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public NewscatcherApiHttpResponse<SearchGetResponse> get(SearchGetRequest request) {
+    public NewscatcherApiHttpResponse<GetSearchResponse> get(GetSearchRequest request) {
         return get(request, null);
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public NewscatcherApiHttpResponse<SearchGetResponse> get(SearchGetRequest request, RequestOptions requestOptions) {
+    public NewscatcherApiHttpResponse<GetSearchResponse> get(GetSearchRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/search");
@@ -162,6 +162,10 @@ public class RawSearchClient {
         if (request.getAllDomainLinks().isPresent()) {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "all_domain_links", request.getAllDomainLinks().get(), false);
+        }
+        if (request.getAllLinksText().isPresent()) {
+            QueryStringMapper.addQueryParameter(
+                    httpUrl, "all_links_text", request.getAllLinksText().get(), false);
         }
         if (request.getAdditionalDomainInfo().isPresent()) {
             QueryStringMapper.addQueryParameter(
@@ -310,6 +314,11 @@ public class RawSearchClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -322,11 +331,11 @@ public class RawSearchClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new NewscatcherApiHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SearchGetResponse.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, GetSearchResponse.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -354,32 +363,34 @@ public class RawSearchClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new NewscatcherApiException("Network error executing HTTP request", e);
         }
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public NewscatcherApiHttpResponse<SearchPostResponse> post(SearchPostRequest request) {
+    public NewscatcherApiHttpResponse<PostSearchResponse> post(PostSearchRequest request) {
         return post(request, null);
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public NewscatcherApiHttpResponse<SearchPostResponse> post(
-            SearchPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+    public NewscatcherApiHttpResponse<PostSearchResponse> post(
+            PostSearchRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/search")
-                .build();
+                .addPathSegments("api/search");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -388,7 +399,7 @@ public class RawSearchClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -400,11 +411,11 @@ public class RawSearchClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new NewscatcherApiHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SearchPostResponse.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, PostSearchResponse.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -432,11 +443,9 @@ public class RawSearchClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new NewscatcherApiException("Network error executing HTTP request", e);
         }

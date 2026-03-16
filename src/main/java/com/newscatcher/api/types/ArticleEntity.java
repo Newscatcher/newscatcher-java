@@ -5,12 +5,15 @@ package com.newscatcher.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.newscatcher.api.core.Nullable;
+import com.newscatcher.api.core.NullableNonemptyFilter;
 import com.newscatcher.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +24,14 @@ import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ArticleEntity.Builder.class)
-public final class ArticleEntity implements IArticleEntity {
+public final class ArticleEntity {
     private final String title;
 
     private final Optional<String> author;
 
-    private final Optional<Authors> authors;
+    private final Optional<ArticleEntityAuthors> authors;
 
-    private final Optional<Journalists> journalists;
+    private final Optional<ArticleEntityJournalists> journalists;
 
     private final Optional<String> publishedDate;
 
@@ -66,7 +69,7 @@ public final class ArticleEntity implements IArticleEntity {
 
     private final Optional<String> description;
 
-    private final String content;
+    private final Optional<String> content;
 
     private final Optional<String> titleTranslatedEn;
 
@@ -81,6 +84,8 @@ public final class ArticleEntity implements IArticleEntity {
     private final Optional<ArticleEntityAllLinks> allLinks;
 
     private final Optional<ArticleEntityAllDomainLinks> allDomainLinks;
+
+    private final Optional<List<AllLinksDataItem>> allLinksData;
 
     private final Optional<NlpDataEntity> nlp;
 
@@ -99,8 +104,8 @@ public final class ArticleEntity implements IArticleEntity {
     private ArticleEntity(
             String title,
             Optional<String> author,
-            Optional<Authors> authors,
-            Optional<Journalists> journalists,
+            Optional<ArticleEntityAuthors> authors,
+            Optional<ArticleEntityJournalists> journalists,
             Optional<String> publishedDate,
             Optional<String> publishedDatePrecision,
             Optional<String> updatedDate,
@@ -119,7 +124,7 @@ public final class ArticleEntity implements IArticleEntity {
             Optional<String> media,
             Optional<String> language,
             Optional<String> description,
-            String content,
+            Optional<String> content,
             Optional<String> titleTranslatedEn,
             Optional<String> contentTranslatedEn,
             Optional<Integer> wordCount,
@@ -127,6 +132,7 @@ public final class ArticleEntity implements IArticleEntity {
             Optional<String> twitterAccount,
             Optional<ArticleEntityAllLinks> allLinks,
             Optional<ArticleEntityAllDomainLinks> allDomainLinks,
+            Optional<List<AllLinksDataItem>> allLinksData,
             Optional<NlpDataEntity> nlp,
             String id,
             double score,
@@ -164,6 +170,7 @@ public final class ArticleEntity implements IArticleEntity {
         this.twitterAccount = twitterAccount;
         this.allLinks = allLinks;
         this.allDomainLinks = allDomainLinks;
+        this.allLinksData = allLinksData;
         this.nlp = nlp;
         this.id = id;
         this.score = score;
@@ -177,7 +184,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The title of the article.
      */
     @JsonProperty("title")
-    @java.lang.Override
     public String getTitle() {
         return title;
     }
@@ -186,7 +192,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The primary author of the article.
      */
     @JsonProperty("author")
-    @java.lang.Override
     public Optional<String> getAuthor() {
         return author;
     }
@@ -195,15 +200,18 @@ public final class ArticleEntity implements IArticleEntity {
      * @return A list of authors of the article.
      */
     @JsonProperty("authors")
-    public Optional<Authors> getAuthors() {
+    public Optional<ArticleEntityAuthors> getAuthors() {
         return authors;
     }
 
     /**
      * @return A list of journalists associated with the article.
      */
-    @JsonProperty("journalists")
-    public Optional<Journalists> getJournalists() {
+    @JsonIgnore
+    public Optional<ArticleEntityJournalists> getJournalists() {
+        if (journalists == null) {
+            return Optional.empty();
+        }
         return journalists;
     }
 
@@ -211,7 +219,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The date the article was published.
      */
     @JsonProperty("published_date")
-    @java.lang.Override
     public Optional<String> getPublishedDate() {
         return publishedDate;
     }
@@ -220,7 +227,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The precision of the published date.
      */
     @JsonProperty("published_date_precision")
-    @java.lang.Override
     public Optional<String> getPublishedDatePrecision() {
         return publishedDatePrecision;
     }
@@ -228,27 +234,33 @@ public final class ArticleEntity implements IArticleEntity {
     /**
      * @return The date the article was last updated.
      */
-    @JsonProperty("updated_date")
-    @java.lang.Override
+    @JsonIgnore
     public Optional<String> getUpdatedDate() {
+        if (updatedDate == null) {
+            return Optional.empty();
+        }
         return updatedDate;
     }
 
     /**
      * @return The precision of the updated date.
      */
-    @JsonProperty("updated_date_precision")
-    @java.lang.Override
+    @JsonIgnore
     public Optional<String> getUpdatedDatePrecision() {
+        if (updatedDatePrecision == null) {
+            return Optional.empty();
+        }
         return updatedDatePrecision;
     }
 
     /**
      * @return The date the article was parsed.
      */
-    @JsonProperty("parse_date")
-    @java.lang.Override
+    @JsonIgnore
     public Optional<String> getParseDate() {
+        if (parseDate == null) {
+            return Optional.empty();
+        }
         return parseDate;
     }
 
@@ -256,7 +268,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The URL link to the article.
      */
     @JsonProperty("link")
-    @java.lang.Override
     public String getLink() {
         return link;
     }
@@ -265,7 +276,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The domain URL of the article.
      */
     @JsonProperty("domain_url")
-    @java.lang.Override
     public String getDomainUrl() {
         return domainUrl;
     }
@@ -274,7 +284,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The full domain URL of the article.
      */
     @JsonProperty("full_domain_url")
-    @java.lang.Override
     public String getFullDomainUrl() {
         return fullDomainUrl;
     }
@@ -283,7 +292,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The name of the source where the article was published.
      */
     @JsonProperty("name_source")
-    @java.lang.Override
     public Optional<String> getNameSource() {
         return nameSource;
     }
@@ -292,16 +300,14 @@ public final class ArticleEntity implements IArticleEntity {
      * @return Indicates if the article is a headline.
      */
     @JsonProperty("is_headline")
-    @java.lang.Override
     public Optional<Boolean> getIsHeadline() {
         return isHeadline;
     }
 
     /**
-     * @return Indicates if the article is paid content.
+     * @return Indicates whether the source labels the article as paywalled or requiring a subscription for full access.
      */
     @JsonProperty("paid_content")
-    @java.lang.Override
     public Optional<Boolean> getPaidContent() {
         return paidContent;
     }
@@ -310,7 +316,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The categorical URL of the article.
      */
     @JsonProperty("parent_url")
-    @java.lang.Override
     public String getParentUrl() {
         return parentUrl;
     }
@@ -319,7 +324,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The country where the article was published.
      */
     @JsonProperty("country")
-    @java.lang.Override
     public Optional<String> getCountry() {
         return country;
     }
@@ -328,7 +332,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The rights information for the article.
      */
     @JsonProperty("rights")
-    @java.lang.Override
     public Optional<String> getRights() {
         return rights;
     }
@@ -337,7 +340,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The rank of the article's source.
      */
     @JsonProperty("rank")
-    @java.lang.Override
     public int getRank() {
         return rank;
     }
@@ -346,7 +348,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The media associated with the article.
      */
     @JsonProperty("media")
-    @java.lang.Override
     public Optional<String> getMedia() {
         return media;
     }
@@ -355,7 +356,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The language in which the article is written.
      */
     @JsonProperty("language")
-    @java.lang.Override
     public Optional<String> getLanguage() {
         return language;
     }
@@ -364,7 +364,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return A brief description of the article.
      */
     @JsonProperty("description")
-    @java.lang.Override
     public Optional<String> getDescription() {
         return description;
     }
@@ -373,26 +372,29 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The content of the article.
      */
     @JsonProperty("content")
-    @java.lang.Override
-    public String getContent() {
+    public Optional<String> getContent() {
         return content;
     }
 
     /**
      * @return English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.
      */
-    @JsonProperty("title_translated_en")
-    @java.lang.Override
+    @JsonIgnore
     public Optional<String> getTitleTranslatedEn() {
+        if (titleTranslatedEn == null) {
+            return Optional.empty();
+        }
         return titleTranslatedEn;
     }
 
     /**
      * @return English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.
      */
-    @JsonProperty("content_translated_en")
-    @java.lang.Override
+    @JsonIgnore
     public Optional<String> getContentTranslatedEn() {
+        if (contentTranslatedEn == null) {
+            return Optional.empty();
+        }
         return contentTranslatedEn;
     }
 
@@ -400,7 +402,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The word count of the article.
      */
     @JsonProperty("word_count")
-    @java.lang.Override
     public Optional<Integer> getWordCount() {
         return wordCount;
     }
@@ -409,7 +410,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return Indicates if the article is an opinion piece.
      */
     @JsonProperty("is_opinion")
-    @java.lang.Override
     public Optional<Boolean> getIsOpinion() {
         return isOpinion;
     }
@@ -417,9 +417,11 @@ public final class ArticleEntity implements IArticleEntity {
     /**
      * @return The Twitter account associated with the article.
      */
-    @JsonProperty("twitter_account")
-    @java.lang.Override
+    @JsonIgnore
     public Optional<String> getTwitterAccount() {
+        if (twitterAccount == null) {
+            return Optional.empty();
+        }
         return twitterAccount;
     }
 
@@ -439,8 +441,15 @@ public final class ArticleEntity implements IArticleEntity {
         return allDomainLinks;
     }
 
+    /**
+     * @return Detailed information about all links mentioned in the article, including link URL, domain, and anchor text. Only present when the <code>all_links_text</code> parameter is used in the request.
+     */
+    @JsonProperty("all_links_data")
+    public Optional<List<AllLinksDataItem>> getAllLinksData() {
+        return allLinksData;
+    }
+
     @JsonProperty("nlp")
-    @java.lang.Override
     public Optional<NlpDataEntity> getNlp() {
         return nlp;
     }
@@ -449,7 +458,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The unique identifier for the article.
      */
     @JsonProperty("id")
-    @java.lang.Override
     public String getId() {
         return id;
     }
@@ -458,7 +466,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return The relevance score of the article.
      */
     @JsonProperty("score")
-    @java.lang.Override
     public double getScore() {
         return score;
     }
@@ -467,7 +474,6 @@ public final class ArticleEntity implements IArticleEntity {
      * @return True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.
      */
     @JsonProperty("robots_compliant")
-    @java.lang.Override
     public Optional<Boolean> getRobotsCompliant() {
         return robotsCompliant;
     }
@@ -476,15 +482,55 @@ public final class ArticleEntity implements IArticleEntity {
      * @return An object that contains custom tags associated with an article, where each key is a taxonomy name, and the value is an array of tags.
      */
     @JsonProperty("custom_tags")
-    @java.lang.Override
     public Optional<Map<String, List<String>>> getCustomTags() {
         return customTags;
     }
 
     @JsonProperty("additional_domain_info")
-    @java.lang.Override
     public Optional<AdditionalDomainInfoEntity> getAdditionalDomainInfo() {
         return additionalDomainInfo;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("journalists")
+    private Optional<ArticleEntityJournalists> _getJournalists() {
+        return journalists;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("updated_date")
+    private Optional<String> _getUpdatedDate() {
+        return updatedDate;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("updated_date_precision")
+    private Optional<String> _getUpdatedDatePrecision() {
+        return updatedDatePrecision;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("parse_date")
+    private Optional<String> _getParseDate() {
+        return parseDate;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("title_translated_en")
+    private Optional<String> _getTitleTranslatedEn() {
+        return titleTranslatedEn;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("content_translated_en")
+    private Optional<String> _getContentTranslatedEn() {
+        return contentTranslatedEn;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("twitter_account")
+    private Optional<String> _getTwitterAccount() {
+        return twitterAccount;
     }
 
     @java.lang.Override
@@ -529,6 +575,7 @@ public final class ArticleEntity implements IArticleEntity {
                 && twitterAccount.equals(other.twitterAccount)
                 && allLinks.equals(other.allLinks)
                 && allDomainLinks.equals(other.allDomainLinks)
+                && allLinksData.equals(other.allLinksData)
                 && nlp.equals(other.nlp)
                 && id.equals(other.id)
                 && score == other.score
@@ -570,6 +617,7 @@ public final class ArticleEntity implements IArticleEntity {
                 this.twitterAccount,
                 this.allLinks,
                 this.allDomainLinks,
+                this.allLinksData,
                 this.nlp,
                 this.id,
                 this.score,
@@ -628,14 +676,7 @@ public final class ArticleEntity implements IArticleEntity {
         /**
          * <p>The rank of the article's source.</p>
          */
-        ContentStage rank(int rank);
-    }
-
-    public interface ContentStage {
-        /**
-         * <p>The content of the article.</p>
-         */
-        IdStage content(@NotNull String content);
+        IdStage rank(int rank);
     }
 
     public interface IdStage {
@@ -655,6 +696,10 @@ public final class ArticleEntity implements IArticleEntity {
     public interface _FinalStage {
         ArticleEntity build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>The primary author of the article.</p>
          */
@@ -665,16 +710,18 @@ public final class ArticleEntity implements IArticleEntity {
         /**
          * <p>A list of authors of the article.</p>
          */
-        _FinalStage authors(Optional<Authors> authors);
+        _FinalStage authors(Optional<ArticleEntityAuthors> authors);
 
-        _FinalStage authors(Authors authors);
+        _FinalStage authors(ArticleEntityAuthors authors);
 
         /**
          * <p>A list of journalists associated with the article.</p>
          */
-        _FinalStage journalists(Optional<Journalists> journalists);
+        _FinalStage journalists(Optional<ArticleEntityJournalists> journalists);
 
-        _FinalStage journalists(Journalists journalists);
+        _FinalStage journalists(ArticleEntityJournalists journalists);
+
+        _FinalStage journalists(Nullable<ArticleEntityJournalists> journalists);
 
         /**
          * <p>The date the article was published.</p>
@@ -697,6 +744,8 @@ public final class ArticleEntity implements IArticleEntity {
 
         _FinalStage updatedDate(String updatedDate);
 
+        _FinalStage updatedDate(Nullable<String> updatedDate);
+
         /**
          * <p>The precision of the updated date.</p>
          */
@@ -704,12 +753,16 @@ public final class ArticleEntity implements IArticleEntity {
 
         _FinalStage updatedDatePrecision(String updatedDatePrecision);
 
+        _FinalStage updatedDatePrecision(Nullable<String> updatedDatePrecision);
+
         /**
          * <p>The date the article was parsed.</p>
          */
         _FinalStage parseDate(Optional<String> parseDate);
 
         _FinalStage parseDate(String parseDate);
+
+        _FinalStage parseDate(Nullable<String> parseDate);
 
         /**
          * <p>The name of the source where the article was published.</p>
@@ -726,7 +779,7 @@ public final class ArticleEntity implements IArticleEntity {
         _FinalStage isHeadline(Boolean isHeadline);
 
         /**
-         * <p>Indicates if the article is paid content.</p>
+         * <p>Indicates whether the source labels the article as paywalled or requiring a subscription for full access.</p>
          */
         _FinalStage paidContent(Optional<Boolean> paidContent);
 
@@ -768,11 +821,20 @@ public final class ArticleEntity implements IArticleEntity {
         _FinalStage description(String description);
 
         /**
+         * <p>The content of the article.</p>
+         */
+        _FinalStage content(Optional<String> content);
+
+        _FinalStage content(String content);
+
+        /**
          * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
          */
         _FinalStage titleTranslatedEn(Optional<String> titleTranslatedEn);
 
         _FinalStage titleTranslatedEn(String titleTranslatedEn);
+
+        _FinalStage titleTranslatedEn(Nullable<String> titleTranslatedEn);
 
         /**
          * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
@@ -780,6 +842,8 @@ public final class ArticleEntity implements IArticleEntity {
         _FinalStage contentTranslatedEn(Optional<String> contentTranslatedEn);
 
         _FinalStage contentTranslatedEn(String contentTranslatedEn);
+
+        _FinalStage contentTranslatedEn(Nullable<String> contentTranslatedEn);
 
         /**
          * <p>The word count of the article.</p>
@@ -802,6 +866,8 @@ public final class ArticleEntity implements IArticleEntity {
 
         _FinalStage twitterAccount(String twitterAccount);
 
+        _FinalStage twitterAccount(Nullable<String> twitterAccount);
+
         /**
          * <p>A list of all URLs mentioned in the article.</p>
          */
@@ -815,6 +881,13 @@ public final class ArticleEntity implements IArticleEntity {
         _FinalStage allDomainLinks(Optional<ArticleEntityAllDomainLinks> allDomainLinks);
 
         _FinalStage allDomainLinks(ArticleEntityAllDomainLinks allDomainLinks);
+
+        /**
+         * <p>Detailed information about all links mentioned in the article, including link URL, domain, and anchor text. Only present when the <code>all_links_text</code> parameter is used in the request.</p>
+         */
+        _FinalStage allLinksData(Optional<List<AllLinksDataItem>> allLinksData);
+
+        _FinalStage allLinksData(List<AllLinksDataItem> allLinksData);
 
         _FinalStage nlp(Optional<NlpDataEntity> nlp);
 
@@ -847,7 +920,6 @@ public final class ArticleEntity implements IArticleEntity {
                     FullDomainUrlStage,
                     ParentUrlStage,
                     RankStage,
-                    ContentStage,
                     IdStage,
                     ScoreStage,
                     _FinalStage {
@@ -863,8 +935,6 @@ public final class ArticleEntity implements IArticleEntity {
 
         private int rank;
 
-        private String content;
-
         private String id;
 
         private double score;
@@ -876,6 +946,8 @@ public final class ArticleEntity implements IArticleEntity {
         private Optional<Boolean> robotsCompliant = Optional.empty();
 
         private Optional<NlpDataEntity> nlp = Optional.empty();
+
+        private Optional<List<AllLinksDataItem>> allLinksData = Optional.empty();
 
         private Optional<ArticleEntityAllDomainLinks> allDomainLinks = Optional.empty();
 
@@ -890,6 +962,8 @@ public final class ArticleEntity implements IArticleEntity {
         private Optional<String> contentTranslatedEn = Optional.empty();
 
         private Optional<String> titleTranslatedEn = Optional.empty();
+
+        private Optional<String> content = Optional.empty();
 
         private Optional<String> description = Optional.empty();
 
@@ -917,9 +991,9 @@ public final class ArticleEntity implements IArticleEntity {
 
         private Optional<String> publishedDate = Optional.empty();
 
-        private Optional<Journalists> journalists = Optional.empty();
+        private Optional<ArticleEntityJournalists> journalists = Optional.empty();
 
-        private Optional<Authors> authors = Optional.empty();
+        private Optional<ArticleEntityAuthors> authors = Optional.empty();
 
         private Optional<String> author = Optional.empty();
 
@@ -960,6 +1034,7 @@ public final class ArticleEntity implements IArticleEntity {
             twitterAccount(other.getTwitterAccount());
             allLinks(other.getAllLinks());
             allDomainLinks(other.getAllDomainLinks());
+            allLinksData(other.getAllLinksData());
             nlp(other.getNlp());
             id(other.getId());
             score(other.getScore());
@@ -1036,20 +1111,8 @@ public final class ArticleEntity implements IArticleEntity {
          */
         @java.lang.Override
         @JsonSetter("rank")
-        public ContentStage rank(int rank) {
+        public IdStage rank(int rank) {
             this.rank = rank;
-            return this;
-        }
-
-        /**
-         * <p>The content of the article.</p>
-         * <p>The content of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("content")
-        public IdStage content(@NotNull String content) {
-            this.content = Objects.requireNonNull(content, "content must not be null");
             return this;
         }
 
@@ -1144,6 +1207,26 @@ public final class ArticleEntity implements IArticleEntity {
         }
 
         /**
+         * <p>Detailed information about all links mentioned in the article, including link URL, domain, and anchor text. Only present when the <code>all_links_text</code> parameter is used in the request.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage allLinksData(List<AllLinksDataItem> allLinksData) {
+            this.allLinksData = Optional.ofNullable(allLinksData);
+            return this;
+        }
+
+        /**
+         * <p>Detailed information about all links mentioned in the article, including link URL, domain, and anchor text. Only present when the <code>all_links_text</code> parameter is used in the request.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "all_links_data", nulls = Nulls.SKIP)
+        public _FinalStage allLinksData(Optional<List<AllLinksDataItem>> allLinksData) {
+            this.allLinksData = allLinksData;
+            return this;
+        }
+
+        /**
          * <p>A list of all domain URLs mentioned in the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -1180,6 +1263,22 @@ public final class ArticleEntity implements IArticleEntity {
         @JsonSetter(value = "all_links", nulls = Nulls.SKIP)
         public _FinalStage allLinks(Optional<ArticleEntityAllLinks> allLinks) {
             this.allLinks = allLinks;
+            return this;
+        }
+
+        /**
+         * <p>The Twitter account associated with the article.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage twitterAccount(Nullable<String> twitterAccount) {
+            if (twitterAccount.isNull()) {
+                this.twitterAccount = null;
+            } else if (twitterAccount.isEmpty()) {
+                this.twitterAccount = Optional.empty();
+            } else {
+                this.twitterAccount = Optional.of(twitterAccount.get());
+            }
             return this;
         }
 
@@ -1248,6 +1347,22 @@ public final class ArticleEntity implements IArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
+        public _FinalStage contentTranslatedEn(Nullable<String> contentTranslatedEn) {
+            if (contentTranslatedEn.isNull()) {
+                this.contentTranslatedEn = null;
+            } else if (contentTranslatedEn.isEmpty()) {
+                this.contentTranslatedEn = Optional.empty();
+            } else {
+                this.contentTranslatedEn = Optional.of(contentTranslatedEn.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article content. Available when using the <code>search_in</code> parameter with the <code>content_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
         public _FinalStage contentTranslatedEn(String contentTranslatedEn) {
             this.contentTranslatedEn = Optional.ofNullable(contentTranslatedEn);
             return this;
@@ -1268,6 +1383,22 @@ public final class ArticleEntity implements IArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
+        public _FinalStage titleTranslatedEn(Nullable<String> titleTranslatedEn) {
+            if (titleTranslatedEn.isNull()) {
+                this.titleTranslatedEn = null;
+            } else if (titleTranslatedEn.isEmpty()) {
+                this.titleTranslatedEn = Optional.empty();
+            } else {
+                this.titleTranslatedEn = Optional.of(titleTranslatedEn.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article title. Available when using the <code>search_in</code> parameter with the <code>title_translated</code> option or by setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
         public _FinalStage titleTranslatedEn(String titleTranslatedEn) {
             this.titleTranslatedEn = Optional.ofNullable(titleTranslatedEn);
             return this;
@@ -1280,6 +1411,26 @@ public final class ArticleEntity implements IArticleEntity {
         @JsonSetter(value = "title_translated_en", nulls = Nulls.SKIP)
         public _FinalStage titleTranslatedEn(Optional<String> titleTranslatedEn) {
             this.titleTranslatedEn = titleTranslatedEn;
+            return this;
+        }
+
+        /**
+         * <p>The content of the article.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage content(String content) {
+            this.content = Optional.ofNullable(content);
+            return this;
+        }
+
+        /**
+         * <p>The content of the article.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "content", nulls = Nulls.SKIP)
+        public _FinalStage content(Optional<String> content) {
+            this.content = content;
             return this;
         }
 
@@ -1384,7 +1535,7 @@ public final class ArticleEntity implements IArticleEntity {
         }
 
         /**
-         * <p>Indicates if the article is paid content.</p>
+         * <p>Indicates whether the source labels the article as paywalled or requiring a subscription for full access.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1394,7 +1545,7 @@ public final class ArticleEntity implements IArticleEntity {
         }
 
         /**
-         * <p>Indicates if the article is paid content.</p>
+         * <p>Indicates whether the source labels the article as paywalled or requiring a subscription for full access.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "paid_content", nulls = Nulls.SKIP)
@@ -1448,6 +1599,22 @@ public final class ArticleEntity implements IArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
+        public _FinalStage parseDate(Nullable<String> parseDate) {
+            if (parseDate.isNull()) {
+                this.parseDate = null;
+            } else if (parseDate.isEmpty()) {
+                this.parseDate = Optional.empty();
+            } else {
+                this.parseDate = Optional.of(parseDate.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>The date the article was parsed.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
         public _FinalStage parseDate(String parseDate) {
             this.parseDate = Optional.ofNullable(parseDate);
             return this;
@@ -1468,6 +1635,22 @@ public final class ArticleEntity implements IArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
+        public _FinalStage updatedDatePrecision(Nullable<String> updatedDatePrecision) {
+            if (updatedDatePrecision.isNull()) {
+                this.updatedDatePrecision = null;
+            } else if (updatedDatePrecision.isEmpty()) {
+                this.updatedDatePrecision = Optional.empty();
+            } else {
+                this.updatedDatePrecision = Optional.of(updatedDatePrecision.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>The precision of the updated date.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
         public _FinalStage updatedDatePrecision(String updatedDatePrecision) {
             this.updatedDatePrecision = Optional.ofNullable(updatedDatePrecision);
             return this;
@@ -1480,6 +1663,22 @@ public final class ArticleEntity implements IArticleEntity {
         @JsonSetter(value = "updated_date_precision", nulls = Nulls.SKIP)
         public _FinalStage updatedDatePrecision(Optional<String> updatedDatePrecision) {
             this.updatedDatePrecision = updatedDatePrecision;
+            return this;
+        }
+
+        /**
+         * <p>The date the article was last updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage updatedDate(Nullable<String> updatedDate) {
+            if (updatedDate.isNull()) {
+                this.updatedDate = null;
+            } else if (updatedDate.isEmpty()) {
+                this.updatedDate = Optional.empty();
+            } else {
+                this.updatedDate = Optional.of(updatedDate.get());
+            }
             return this;
         }
 
@@ -1548,7 +1747,23 @@ public final class ArticleEntity implements IArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage journalists(Journalists journalists) {
+        public _FinalStage journalists(Nullable<ArticleEntityJournalists> journalists) {
+            if (journalists.isNull()) {
+                this.journalists = null;
+            } else if (journalists.isEmpty()) {
+                this.journalists = Optional.empty();
+            } else {
+                this.journalists = Optional.of(journalists.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>A list of journalists associated with the article.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage journalists(ArticleEntityJournalists journalists) {
             this.journalists = Optional.ofNullable(journalists);
             return this;
         }
@@ -1558,7 +1773,7 @@ public final class ArticleEntity implements IArticleEntity {
          */
         @java.lang.Override
         @JsonSetter(value = "journalists", nulls = Nulls.SKIP)
-        public _FinalStage journalists(Optional<Journalists> journalists) {
+        public _FinalStage journalists(Optional<ArticleEntityJournalists> journalists) {
             this.journalists = journalists;
             return this;
         }
@@ -1568,7 +1783,7 @@ public final class ArticleEntity implements IArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage authors(Authors authors) {
+        public _FinalStage authors(ArticleEntityAuthors authors) {
             this.authors = Optional.ofNullable(authors);
             return this;
         }
@@ -1578,7 +1793,7 @@ public final class ArticleEntity implements IArticleEntity {
          */
         @java.lang.Override
         @JsonSetter(value = "authors", nulls = Nulls.SKIP)
-        public _FinalStage authors(Optional<Authors> authors) {
+        public _FinalStage authors(Optional<ArticleEntityAuthors> authors) {
             this.authors = authors;
             return this;
         }
@@ -1636,6 +1851,7 @@ public final class ArticleEntity implements IArticleEntity {
                     twitterAccount,
                     allLinks,
                     allDomainLinks,
+                    allLinksData,
                     nlp,
                     id,
                     score,
@@ -1643,6 +1859,18 @@ public final class ArticleEntity implements IArticleEntity {
                     customTags,
                     additionalDomainInfo,
                     additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

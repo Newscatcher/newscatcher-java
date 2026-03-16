@@ -3,28 +3,112 @@
  */
 package com.newscatcher.api.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum NewsDomainType {
-    ORIGINAL_CONTENT("Original Content"),
+public final class NewsDomainType {
+    public static final NewsDomainType PRESS_RELEASES = new NewsDomainType(Value.PRESS_RELEASES, "Press Releases");
 
-    AGGREGATOR("Aggregator"),
+    public static final NewsDomainType AGGREGATOR = new NewsDomainType(Value.AGGREGATOR, "Aggregator");
 
-    PRESS_RELEASES("Press Releases"),
+    public static final NewsDomainType REPUBLISHER = new NewsDomainType(Value.REPUBLISHER, "Republisher");
 
-    REPUBLISHER("Republisher"),
+    public static final NewsDomainType OTHER = new NewsDomainType(Value.OTHER, "Other");
 
-    OTHER("Other");
+    public static final NewsDomainType ORIGINAL_CONTENT =
+            new NewsDomainType(Value.ORIGINAL_CONTENT, "Original Content");
 
-    private final String value;
+    private final Value value;
 
-    NewsDomainType(String value) {
+    private final String string;
+
+    NewsDomainType(Value value, String string) {
         this.value = value;
+        this.string = string;
     }
 
-    @JsonValue
+    public Value getEnumValue() {
+        return value;
+    }
+
     @java.lang.Override
+    @JsonValue
     public String toString() {
-        return this.value;
+        return this.string;
+    }
+
+    @java.lang.Override
+    public boolean equals(Object other) {
+        return (this == other)
+                || (other instanceof NewsDomainType && this.string.equals(((NewsDomainType) other).string));
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+        return this.string.hashCode();
+    }
+
+    public <T> T visit(Visitor<T> visitor) {
+        switch (value) {
+            case PRESS_RELEASES:
+                return visitor.visitPressReleases();
+            case AGGREGATOR:
+                return visitor.visitAggregator();
+            case REPUBLISHER:
+                return visitor.visitRepublisher();
+            case OTHER:
+                return visitor.visitOther();
+            case ORIGINAL_CONTENT:
+                return visitor.visitOriginalContent();
+            case UNKNOWN:
+            default:
+                return visitor.visitUnknown(string);
+        }
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static NewsDomainType valueOf(String value) {
+        switch (value) {
+            case "Press Releases":
+                return PRESS_RELEASES;
+            case "Aggregator":
+                return AGGREGATOR;
+            case "Republisher":
+                return REPUBLISHER;
+            case "Other":
+                return OTHER;
+            case "Original Content":
+                return ORIGINAL_CONTENT;
+            default:
+                return new NewsDomainType(Value.UNKNOWN, value);
+        }
+    }
+
+    public enum Value {
+        ORIGINAL_CONTENT,
+
+        AGGREGATOR,
+
+        PRESS_RELEASES,
+
+        REPUBLISHER,
+
+        OTHER,
+
+        UNKNOWN
+    }
+
+    public interface Visitor<T> {
+        T visitOriginalContent();
+
+        T visitAggregator();
+
+        T visitPressReleases();
+
+        T visitRepublisher();
+
+        T visitOther();
+
+        T visitUnknown(String unknownType);
     }
 }
