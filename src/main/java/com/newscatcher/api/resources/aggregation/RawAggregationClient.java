@@ -19,10 +19,10 @@ import com.newscatcher.api.errors.RequestTimeoutError;
 import com.newscatcher.api.errors.TooManyRequestsError;
 import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
-import com.newscatcher.api.resources.aggregation.requests.AggregationGetRequest;
-import com.newscatcher.api.resources.aggregation.requests.AggregationPostRequest;
-import com.newscatcher.api.resources.aggregation.types.AggregationGetResponse;
-import com.newscatcher.api.resources.aggregation.types.AggregationPostResponse;
+import com.newscatcher.api.resources.aggregation.requests.AggregationCountGetRequest;
+import com.newscatcher.api.resources.aggregation.requests.AggregationCountPostRequest;
+import com.newscatcher.api.resources.aggregation.types.AggregationCountGetResponse;
+import com.newscatcher.api.resources.aggregation.types.AggregationCountPostResponse;
 import com.newscatcher.api.types.Error;
 import java.io.IOException;
 import okhttp3.Headers;
@@ -43,15 +43,15 @@ public class RawAggregationClient {
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public NewscatcherApiHttpResponse<AggregationGetResponse> get(AggregationGetRequest request) {
-        return get(request, null);
+    public NewscatcherApiHttpResponse<AggregationCountGetResponse> countGet(AggregationCountGetRequest request) {
+        return countGet(request, null);
     }
 
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public NewscatcherApiHttpResponse<AggregationGetResponse> get(
-            AggregationGetRequest request, RequestOptions requestOptions) {
+    public NewscatcherApiHttpResponse<AggregationCountGetResponse> countGet(
+            AggregationCountGetRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/aggregation_count");
@@ -157,6 +157,10 @@ public class RawAggregationClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "all_domain_links", request.getAllDomainLinks().get(), false);
         }
+        if (request.getAllLinksText().isPresent()) {
+            QueryStringMapper.addQueryParameter(
+                    httpUrl, "all_links_text", request.getAllLinksText().get(), false);
+        }
         if (request.getWordCountMin().isPresent()) {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "word_count_min", request.getWordCountMin().get(), false);
@@ -245,6 +249,11 @@ public class RawAggregationClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -257,12 +266,12 @@ public class RawAggregationClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new NewscatcherApiHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AggregationGetResponse.class),
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, AggregationCountGetResponse.class),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -290,11 +299,9 @@ public class RawAggregationClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new NewscatcherApiException("Network error executing HTTP request", e);
         }
@@ -303,19 +310,23 @@ public class RawAggregationClient {
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public NewscatcherApiHttpResponse<AggregationPostResponse> post(AggregationPostRequest request) {
-        return post(request, null);
+    public NewscatcherApiHttpResponse<AggregationCountPostResponse> countPost(AggregationCountPostRequest request) {
+        return countPost(request, null);
     }
 
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public NewscatcherApiHttpResponse<AggregationPostResponse> post(
-            AggregationPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+    public NewscatcherApiHttpResponse<AggregationCountPostResponse> countPost(
+            AggregationCountPostRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/aggregation_count")
-                .build();
+                .addPathSegments("api/aggregation_count");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -324,7 +335,7 @@ public class RawAggregationClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -336,12 +347,12 @@ public class RawAggregationClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new NewscatcherApiHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AggregationPostResponse.class),
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, AggregationCountPostResponse.class),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -369,11 +380,9 @@ public class RawAggregationClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new NewscatcherApiException("Network error executing HTTP request", e);
         }

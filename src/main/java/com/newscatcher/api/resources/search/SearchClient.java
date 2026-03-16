@@ -28,28 +28,28 @@ public class SearchClient {
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
     public SearchGetResponse get(SearchGetRequest request) {
         return this.rawClient.get(request).body();
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
     public SearchGetResponse get(SearchGetRequest request, RequestOptions requestOptions) {
         return this.rawClient.get(request, requestOptions).body();
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
     public SearchPostResponse post(SearchPostRequest request) {
         return this.rawClient.post(request).body();
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
     public SearchPostResponse post(SearchPostRequest request, RequestOptions requestOptions) {
         return this.rawClient.post(request, requestOptions).body();

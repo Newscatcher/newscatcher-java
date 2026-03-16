@@ -113,6 +113,10 @@ public final class BreakingNewsEventEntity {
     public interface _FinalStage {
         BreakingNewsEventEntity build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>The articles associated with this breaking news event.</p>
          */
@@ -174,7 +178,9 @@ public final class BreakingNewsEventEntity {
          */
         @java.lang.Override
         public _FinalStage addAllArticles(List<BreakingNewsArticleEntity> articles) {
-            this.articles.addAll(articles);
+            if (articles != null) {
+                this.articles.addAll(articles);
+            }
             return this;
         }
 
@@ -195,13 +201,27 @@ public final class BreakingNewsEventEntity {
         @JsonSetter(value = "articles", nulls = Nulls.SKIP)
         public _FinalStage articles(List<BreakingNewsArticleEntity> articles) {
             this.articles.clear();
-            this.articles.addAll(articles);
+            if (articles != null) {
+                this.articles.addAll(articles);
+            }
             return this;
         }
 
         @java.lang.Override
         public BreakingNewsEventEntity build() {
             return new BreakingNewsEventEntity(eventId, articlesCount, articles, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

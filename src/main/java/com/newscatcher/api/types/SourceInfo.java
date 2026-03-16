@@ -117,6 +117,10 @@ public final class SourceInfo {
     public interface _FinalStage {
         SourceInfo build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>The name of the news source.</p>
          */
@@ -228,6 +232,18 @@ public final class SourceInfo {
         @java.lang.Override
         public SourceInfo build() {
             return new SourceInfo(nameSource, domainUrl, logo, additionalInfo, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

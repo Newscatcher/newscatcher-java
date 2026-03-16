@@ -8,10 +8,9 @@ import com.newscatcher.api.core.Suppliers;
 import com.newscatcher.api.resources.aggregation.AsyncAggregationClient;
 import com.newscatcher.api.resources.authors.AsyncAuthorsClient;
 import com.newscatcher.api.resources.breakingnews.AsyncBreakingNewsClient;
-import com.newscatcher.api.resources.latestheadlines.AsyncLatestheadlinesClient;
+import com.newscatcher.api.resources.latestheadlines.AsyncLatestHeadlinesClient;
 import com.newscatcher.api.resources.search.AsyncSearchClient;
-import com.newscatcher.api.resources.searchlink.AsyncSearchLinkClient;
-import com.newscatcher.api.resources.searchsimilar.AsyncSearchsimilarClient;
+import com.newscatcher.api.resources.searchbylink.AsyncSearchByLinkClient;
 import com.newscatcher.api.resources.sources.AsyncSourcesClient;
 import com.newscatcher.api.resources.subscription.AsyncSubscriptionClient;
 import java.util.function.Supplier;
@@ -21,15 +20,13 @@ public class AsyncNewscatcherApiClient {
 
     protected final Supplier<AsyncSearchClient> searchClient;
 
-    protected final Supplier<AsyncLatestheadlinesClient> latestheadlinesClient;
+    protected final Supplier<AsyncLatestHeadlinesClient> latestHeadlinesClient;
 
     protected final Supplier<AsyncBreakingNewsClient> breakingNewsClient;
 
     protected final Supplier<AsyncAuthorsClient> authorsClient;
 
-    protected final Supplier<AsyncSearchLinkClient> searchLinkClient;
-
-    protected final Supplier<AsyncSearchsimilarClient> searchsimilarClient;
+    protected final Supplier<AsyncSearchByLinkClient> searchByLinkClient;
 
     protected final Supplier<AsyncSourcesClient> sourcesClient;
 
@@ -40,11 +37,10 @@ public class AsyncNewscatcherApiClient {
     public AsyncNewscatcherApiClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
         this.searchClient = Suppliers.memoize(() -> new AsyncSearchClient(clientOptions));
-        this.latestheadlinesClient = Suppliers.memoize(() -> new AsyncLatestheadlinesClient(clientOptions));
+        this.latestHeadlinesClient = Suppliers.memoize(() -> new AsyncLatestHeadlinesClient(clientOptions));
         this.breakingNewsClient = Suppliers.memoize(() -> new AsyncBreakingNewsClient(clientOptions));
         this.authorsClient = Suppliers.memoize(() -> new AsyncAuthorsClient(clientOptions));
-        this.searchLinkClient = Suppliers.memoize(() -> new AsyncSearchLinkClient(clientOptions));
-        this.searchsimilarClient = Suppliers.memoize(() -> new AsyncSearchsimilarClient(clientOptions));
+        this.searchByLinkClient = Suppliers.memoize(() -> new AsyncSearchByLinkClient(clientOptions));
         this.sourcesClient = Suppliers.memoize(() -> new AsyncSourcesClient(clientOptions));
         this.aggregationClient = Suppliers.memoize(() -> new AsyncAggregationClient(clientOptions));
         this.subscriptionClient = Suppliers.memoize(() -> new AsyncSubscriptionClient(clientOptions));
@@ -54,8 +50,8 @@ public class AsyncNewscatcherApiClient {
         return this.searchClient.get();
     }
 
-    public AsyncLatestheadlinesClient latestheadlines() {
-        return this.latestheadlinesClient.get();
+    public AsyncLatestHeadlinesClient latestHeadlines() {
+        return this.latestHeadlinesClient.get();
     }
 
     public AsyncBreakingNewsClient breakingNews() {
@@ -66,12 +62,8 @@ public class AsyncNewscatcherApiClient {
         return this.authorsClient.get();
     }
 
-    public AsyncSearchLinkClient searchLink() {
-        return this.searchLinkClient.get();
-    }
-
-    public AsyncSearchsimilarClient searchsimilar() {
-        return this.searchsimilarClient.get();
+    public AsyncSearchByLinkClient searchByLink() {
+        return this.searchByLinkClient.get();
     }
 
     public AsyncSourcesClient sources() {

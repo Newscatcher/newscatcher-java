@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.types.AllDomainLinks;
 import com.newscatcher.api.types.AllLinks;
+import com.newscatcher.api.types.AllLinksText;
 import com.newscatcher.api.types.ClusteringVariable;
 import com.newscatcher.api.types.Countries;
 import com.newscatcher.api.types.CustomTags;
@@ -29,14 +30,11 @@ import com.newscatcher.api.types.NotIabTags;
 import com.newscatcher.api.types.NotIptcTags;
 import com.newscatcher.api.types.NotLang;
 import com.newscatcher.api.types.NotSources;
-import com.newscatcher.api.types.NotTheme;
 import com.newscatcher.api.types.ParentUrl;
 import com.newscatcher.api.types.PredefinedSources;
-import com.newscatcher.api.types.PublishedDatePrecision;
 import com.newscatcher.api.types.SortBy;
 import com.newscatcher.api.types.SourceName;
 import com.newscatcher.api.types.Sources;
-import com.newscatcher.api.types.Theme;
 import com.newscatcher.api.types.To;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +73,7 @@ public final class SearchPostRequest {
 
     private final Optional<To> to;
 
-    private final Optional<PublishedDatePrecision> publishedDatePrecision;
+    private final Optional<String> publishedDatePrecision;
 
     private final Optional<Boolean> byParseDate;
 
@@ -98,6 +96,8 @@ public final class SearchPostRequest {
     private final Optional<AllLinks> allLinks;
 
     private final Optional<AllDomainLinks> allDomainLinks;
+
+    private final Optional<AllLinksText> allLinksText;
 
     private final Optional<Boolean> additionalDomainInfo;
 
@@ -125,9 +125,9 @@ public final class SearchPostRequest {
 
     private final Optional<Boolean> hasNlp;
 
-    private final Optional<Theme> theme;
+    private final Optional<String> theme;
 
-    private final Optional<NotTheme> notTheme;
+    private final Optional<String> notTheme;
 
     private final Optional<String> orgEntityName;
 
@@ -176,7 +176,7 @@ public final class SearchPostRequest {
             Optional<NotAuthorName> notAuthorName,
             Optional<From> from,
             Optional<To> to,
-            Optional<PublishedDatePrecision> publishedDatePrecision,
+            Optional<String> publishedDatePrecision,
             Optional<Boolean> byParseDate,
             Optional<SortBy> sortBy,
             Optional<Boolean> rankedOnly,
@@ -188,6 +188,7 @@ public final class SearchPostRequest {
             Optional<ParentUrl> parentUrl,
             Optional<AllLinks> allLinks,
             Optional<AllDomainLinks> allDomainLinks,
+            Optional<AllLinksText> allLinksText,
             Optional<Boolean> additionalDomainInfo,
             Optional<Boolean> isNewsDomain,
             Optional<NewsDomainType> newsDomainType,
@@ -201,8 +202,8 @@ public final class SearchPostRequest {
             Optional<Float> clusteringThreshold,
             Optional<Boolean> includeNlpData,
             Optional<Boolean> hasNlp,
-            Optional<Theme> theme,
-            Optional<NotTheme> notTheme,
+            Optional<String> theme,
+            Optional<String> notTheme,
             Optional<String> orgEntityName,
             Optional<String> perEntityName,
             Optional<String> locEntityName,
@@ -245,6 +246,7 @@ public final class SearchPostRequest {
         this.parentUrl = parentUrl;
         this.allLinks = allLinks;
         this.allDomainLinks = allDomainLinks;
+        this.allLinksText = allLinksText;
         this.additionalDomainInfo = additionalDomainInfo;
         this.isNewsDomain = isNewsDomain;
         this.newsDomainType = newsDomainType;
@@ -349,7 +351,7 @@ public final class SearchPostRequest {
     }
 
     @JsonProperty("published_date_precision")
-    public Optional<PublishedDatePrecision> getPublishedDatePrecision() {
+    public Optional<String> getPublishedDatePrecision() {
         return publishedDatePrecision;
     }
 
@@ -406,6 +408,11 @@ public final class SearchPostRequest {
     @JsonProperty("all_domain_links")
     public Optional<AllDomainLinks> getAllDomainLinks() {
         return allDomainLinks;
+    }
+
+    @JsonProperty("all_links_text")
+    public Optional<AllLinksText> getAllLinksText() {
+        return allLinksText;
     }
 
     @JsonProperty("additional_domain_info")
@@ -474,12 +481,12 @@ public final class SearchPostRequest {
     }
 
     @JsonProperty("theme")
-    public Optional<Theme> getTheme() {
+    public Optional<String> getTheme() {
         return theme;
     }
 
     @JsonProperty("not_theme")
-    public Optional<NotTheme> getNotTheme() {
+    public Optional<String> getNotTheme() {
         return notTheme;
     }
 
@@ -596,6 +603,7 @@ public final class SearchPostRequest {
                 && parentUrl.equals(other.parentUrl)
                 && allLinks.equals(other.allLinks)
                 && allDomainLinks.equals(other.allDomainLinks)
+                && allLinksText.equals(other.allLinksText)
                 && additionalDomainInfo.equals(other.additionalDomainInfo)
                 && isNewsDomain.equals(other.isNewsDomain)
                 && newsDomainType.equals(other.newsDomainType)
@@ -657,6 +665,7 @@ public final class SearchPostRequest {
                 this.parentUrl,
                 this.allLinks,
                 this.allDomainLinks,
+                this.allLinksText,
                 this.additionalDomainInfo,
                 this.isNewsDomain,
                 this.newsDomainType,
@@ -706,6 +715,10 @@ public final class SearchPostRequest {
 
     public interface _FinalStage {
         SearchPostRequest build();
+
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
 
         _FinalStage searchIn(Optional<String> searchIn);
 
@@ -759,9 +772,9 @@ public final class SearchPostRequest {
 
         _FinalStage to(To to);
 
-        _FinalStage publishedDatePrecision(Optional<PublishedDatePrecision> publishedDatePrecision);
+        _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision);
 
-        _FinalStage publishedDatePrecision(PublishedDatePrecision publishedDatePrecision);
+        _FinalStage publishedDatePrecision(String publishedDatePrecision);
 
         _FinalStage byParseDate(Optional<Boolean> byParseDate);
 
@@ -806,6 +819,10 @@ public final class SearchPostRequest {
         _FinalStage allDomainLinks(Optional<AllDomainLinks> allDomainLinks);
 
         _FinalStage allDomainLinks(AllDomainLinks allDomainLinks);
+
+        _FinalStage allLinksText(Optional<AllLinksText> allLinksText);
+
+        _FinalStage allLinksText(AllLinksText allLinksText);
 
         _FinalStage additionalDomainInfo(Optional<Boolean> additionalDomainInfo);
 
@@ -859,13 +876,13 @@ public final class SearchPostRequest {
 
         _FinalStage hasNlp(Boolean hasNlp);
 
-        _FinalStage theme(Optional<Theme> theme);
+        _FinalStage theme(Optional<String> theme);
 
-        _FinalStage theme(Theme theme);
+        _FinalStage theme(String theme);
 
-        _FinalStage notTheme(Optional<NotTheme> notTheme);
+        _FinalStage notTheme(Optional<String> notTheme);
 
-        _FinalStage notTheme(NotTheme notTheme);
+        _FinalStage notTheme(String notTheme);
 
         _FinalStage orgEntityName(Optional<String> orgEntityName);
 
@@ -962,9 +979,9 @@ public final class SearchPostRequest {
 
         private Optional<String> orgEntityName = Optional.empty();
 
-        private Optional<NotTheme> notTheme = Optional.empty();
+        private Optional<String> notTheme = Optional.empty();
 
-        private Optional<Theme> theme = Optional.empty();
+        private Optional<String> theme = Optional.empty();
 
         private Optional<Boolean> hasNlp = Optional.empty();
 
@@ -992,6 +1009,8 @@ public final class SearchPostRequest {
 
         private Optional<Boolean> additionalDomainInfo = Optional.empty();
 
+        private Optional<AllLinksText> allLinksText = Optional.empty();
+
         private Optional<AllDomainLinks> allDomainLinks = Optional.empty();
 
         private Optional<AllLinks> allLinks = Optional.empty();
@@ -1014,7 +1033,7 @@ public final class SearchPostRequest {
 
         private Optional<Boolean> byParseDate = Optional.empty();
 
-        private Optional<PublishedDatePrecision> publishedDatePrecision = Optional.empty();
+        private Optional<String> publishedDatePrecision = Optional.empty();
 
         private Optional<To> to = Optional.empty();
 
@@ -1075,6 +1094,7 @@ public final class SearchPostRequest {
             parentUrl(other.getParentUrl());
             allLinks(other.getAllLinks());
             allDomainLinks(other.getAllDomainLinks());
+            allLinksText(other.getAllLinksText());
             additionalDomainInfo(other.getAdditionalDomainInfo());
             isNewsDomain(other.getIsNewsDomain());
             newsDomainType(other.getNewsDomainType());
@@ -1311,27 +1331,27 @@ public final class SearchPostRequest {
         }
 
         @java.lang.Override
-        public _FinalStage notTheme(NotTheme notTheme) {
+        public _FinalStage notTheme(String notTheme) {
             this.notTheme = Optional.ofNullable(notTheme);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "not_theme", nulls = Nulls.SKIP)
-        public _FinalStage notTheme(Optional<NotTheme> notTheme) {
+        public _FinalStage notTheme(Optional<String> notTheme) {
             this.notTheme = notTheme;
             return this;
         }
 
         @java.lang.Override
-        public _FinalStage theme(Theme theme) {
+        public _FinalStage theme(String theme) {
             this.theme = Optional.ofNullable(theme);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "theme", nulls = Nulls.SKIP)
-        public _FinalStage theme(Optional<Theme> theme) {
+        public _FinalStage theme(Optional<String> theme) {
             this.theme = theme;
             return this;
         }
@@ -1506,6 +1526,19 @@ public final class SearchPostRequest {
         }
 
         @java.lang.Override
+        public _FinalStage allLinksText(AllLinksText allLinksText) {
+            this.allLinksText = Optional.ofNullable(allLinksText);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "all_links_text", nulls = Nulls.SKIP)
+        public _FinalStage allLinksText(Optional<AllLinksText> allLinksText) {
+            this.allLinksText = allLinksText;
+            return this;
+        }
+
+        @java.lang.Override
         public _FinalStage allDomainLinks(AllDomainLinks allDomainLinks) {
             this.allDomainLinks = Optional.ofNullable(allDomainLinks);
             return this;
@@ -1649,14 +1682,14 @@ public final class SearchPostRequest {
         }
 
         @java.lang.Override
-        public _FinalStage publishedDatePrecision(PublishedDatePrecision publishedDatePrecision) {
+        public _FinalStage publishedDatePrecision(String publishedDatePrecision) {
             this.publishedDatePrecision = Optional.ofNullable(publishedDatePrecision);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "published_date_precision", nulls = Nulls.SKIP)
-        public _FinalStage publishedDatePrecision(Optional<PublishedDatePrecision> publishedDatePrecision) {
+        public _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision) {
             this.publishedDatePrecision = publishedDatePrecision;
             return this;
         }
@@ -1859,6 +1892,7 @@ public final class SearchPostRequest {
                     parentUrl,
                     allLinks,
                     allDomainLinks,
+                    allLinksText,
                     additionalDomainInfo,
                     isNewsDomain,
                     newsDomainType,
@@ -1890,6 +1924,18 @@ public final class SearchPostRequest {
                     excludeDuplicates,
                     robotsCompliant,
                     additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

@@ -54,6 +54,14 @@ public class AsyncRawBreakingNewsClient {
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
     public CompletableFuture<NewscatcherApiHttpResponse<BreakingNewsResponseDto>> breakingNewsGet(
+            RequestOptions requestOptions) {
+        return breakingNewsGet(BreakingNewsGetRequest.builder().build(), requestOptions);
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
+    public CompletableFuture<NewscatcherApiHttpResponse<BreakingNewsResponseDto>> breakingNewsGet(
             BreakingNewsGetRequest request) {
         return breakingNewsGet(request, null);
     }
@@ -161,9 +169,10 @@ public class AsyncRawBreakingNewsClient {
                     request.getContentSentimentMax().get(),
                     false);
         }
-        if (request.getRobotsCompliant().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
         }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
@@ -180,14 +189,13 @@ public class AsyncRawBreakingNewsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), BreakingNewsResponseDto.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, BreakingNewsResponseDto.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -229,11 +237,9 @@ public class AsyncRawBreakingNewsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(
@@ -260,6 +266,14 @@ public class AsyncRawBreakingNewsClient {
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
     public CompletableFuture<NewscatcherApiHttpResponse<BreakingNewsResponseDto>> breakingNewsPost(
+            RequestOptions requestOptions) {
+        return breakingNewsPost(BreakingNewsPostRequest.builder().build(), requestOptions);
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
+    public CompletableFuture<NewscatcherApiHttpResponse<BreakingNewsResponseDto>> breakingNewsPost(
             BreakingNewsPostRequest request) {
         return breakingNewsPost(request, null);
     }
@@ -269,10 +283,14 @@ public class AsyncRawBreakingNewsClient {
      */
     public CompletableFuture<NewscatcherApiHttpResponse<BreakingNewsResponseDto>> breakingNewsPost(
             BreakingNewsPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/breaking_news")
-                .build();
+                .addPathSegments("api/breaking_news");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -281,7 +299,7 @@ public class AsyncRawBreakingNewsClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -296,14 +314,13 @@ public class AsyncRawBreakingNewsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), BreakingNewsResponseDto.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, BreakingNewsResponseDto.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -345,11 +362,9 @@ public class AsyncRawBreakingNewsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(

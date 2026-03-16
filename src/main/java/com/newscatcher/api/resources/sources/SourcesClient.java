@@ -36,6 +36,13 @@ public class SourcesClient {
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
+    public SourcesResponseDto get(RequestOptions requestOptions) {
+        return this.rawClient.get(requestOptions).body();
+    }
+
+    /**
+     * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
+     */
     public SourcesResponseDto get(SourcesGetRequest request) {
         return this.rawClient.get(request).body();
     }
@@ -52,6 +59,13 @@ public class SourcesClient {
      */
     public SourcesResponseDto post() {
         return this.rawClient.post().body();
+    }
+
+    /**
+     * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
+     */
+    public SourcesResponseDto post(RequestOptions requestOptions) {
+        return this.rawClient.post(requestOptions).body();
     }
 
     /**

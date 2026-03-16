@@ -37,6 +37,13 @@ public class AsyncSourcesClient {
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
+    public CompletableFuture<SourcesResponseDto> get(RequestOptions requestOptions) {
+        return this.rawClient.get(requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
+     */
     public CompletableFuture<SourcesResponseDto> get(SourcesGetRequest request) {
         return this.rawClient.get(request).thenApply(response -> response.body());
     }
@@ -53,6 +60,13 @@ public class AsyncSourcesClient {
      */
     public CompletableFuture<SourcesResponseDto> post() {
         return this.rawClient.post().thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
+     */
+    public CompletableFuture<SourcesResponseDto> post(RequestOptions requestOptions) {
+        return this.rawClient.post(requestOptions).thenApply(response -> response.body());
     }
 
     /**

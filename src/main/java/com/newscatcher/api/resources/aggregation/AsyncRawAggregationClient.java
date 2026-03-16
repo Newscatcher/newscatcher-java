@@ -19,10 +19,10 @@ import com.newscatcher.api.errors.RequestTimeoutError;
 import com.newscatcher.api.errors.TooManyRequestsError;
 import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
-import com.newscatcher.api.resources.aggregation.requests.AggregationGetRequest;
-import com.newscatcher.api.resources.aggregation.requests.AggregationPostRequest;
-import com.newscatcher.api.resources.aggregation.types.AggregationGetResponse;
-import com.newscatcher.api.resources.aggregation.types.AggregationPostResponse;
+import com.newscatcher.api.resources.aggregation.requests.AggregationCountGetRequest;
+import com.newscatcher.api.resources.aggregation.requests.AggregationCountPostRequest;
+import com.newscatcher.api.resources.aggregation.types.AggregationCountGetResponse;
+import com.newscatcher.api.resources.aggregation.types.AggregationCountPostResponse;
 import com.newscatcher.api.types.Error;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -47,15 +47,16 @@ public class AsyncRawAggregationClient {
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<AggregationGetResponse>> get(AggregationGetRequest request) {
-        return get(request, null);
+    public CompletableFuture<NewscatcherApiHttpResponse<AggregationCountGetResponse>> countGet(
+            AggregationCountGetRequest request) {
+        return countGet(request, null);
     }
 
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<AggregationGetResponse>> get(
-            AggregationGetRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<NewscatcherApiHttpResponse<AggregationCountGetResponse>> countGet(
+            AggregationCountGetRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/aggregation_count");
@@ -161,6 +162,10 @@ public class AsyncRawAggregationClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "all_domain_links", request.getAllDomainLinks().get(), false);
         }
+        if (request.getAllLinksText().isPresent()) {
+            QueryStringMapper.addQueryParameter(
+                    httpUrl, "all_links_text", request.getAllLinksText().get(), false);
+        }
         if (request.getWordCountMin().isPresent()) {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "word_count_min", request.getWordCountMin().get(), false);
@@ -249,6 +254,11 @@ public class AsyncRawAggregationClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -259,19 +269,19 @@ public class AsyncRawAggregationClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<NewscatcherApiHttpResponse<AggregationGetResponse>> future = new CompletableFuture<>();
+        CompletableFuture<NewscatcherApiHttpResponse<AggregationCountGetResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), AggregationGetResponse.class),
+                                        responseBodyString, AggregationCountGetResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -313,11 +323,9 @@ public class AsyncRawAggregationClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(
@@ -336,19 +344,24 @@ public class AsyncRawAggregationClient {
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<AggregationPostResponse>> post(AggregationPostRequest request) {
-        return post(request, null);
+    public CompletableFuture<NewscatcherApiHttpResponse<AggregationCountPostResponse>> countPost(
+            AggregationCountPostRequest request) {
+        return countPost(request, null);
     }
 
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<AggregationPostResponse>> post(
-            AggregationPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+    public CompletableFuture<NewscatcherApiHttpResponse<AggregationCountPostResponse>> countPost(
+            AggregationCountPostRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/aggregation_count")
-                .build();
+                .addPathSegments("api/aggregation_count");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -357,7 +370,7 @@ public class AsyncRawAggregationClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -367,19 +380,19 @@ public class AsyncRawAggregationClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<NewscatcherApiHttpResponse<AggregationPostResponse>> future = new CompletableFuture<>();
+        CompletableFuture<NewscatcherApiHttpResponse<AggregationCountPostResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), AggregationPostResponse.class),
+                                        responseBodyString, AggregationCountPostResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -421,11 +434,9 @@ public class AsyncRawAggregationClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(

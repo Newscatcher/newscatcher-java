@@ -12,9 +12,9 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
-import com.newscatcher.api.resources.authors.types.AuthorsGetRequestPublishedDatePrecision;
-import com.newscatcher.api.resources.authors.types.AuthorsGetRequestSortBy;
-import java.time.OffsetDateTime;
+import com.newscatcher.api.types.From;
+import com.newscatcher.api.types.SortBy;
+import com.newscatcher.api.types.To;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -42,15 +42,15 @@ public final class AuthorsGetRequest {
 
     private final Optional<String> notCountries;
 
-    private final Optional<OffsetDateTime> from;
+    private final Optional<From> from;
 
-    private final Optional<OffsetDateTime> to;
+    private final Optional<To> to;
 
-    private final Optional<AuthorsGetRequestPublishedDatePrecision> publishedDatePrecision;
+    private final Optional<String> publishedDatePrecision;
 
     private final Optional<Boolean> byParseDate;
 
-    private final Optional<AuthorsGetRequestSortBy> sortBy;
+    private final Optional<SortBy> sortBy;
 
     private final Optional<Boolean> rankedOnly;
 
@@ -69,6 +69,8 @@ public final class AuthorsGetRequest {
     private final Optional<String> allLinks;
 
     private final Optional<String> allDomainLinks;
+
+    private final Optional<String> allLinksText;
 
     private final Optional<Integer> wordCountMin;
 
@@ -122,11 +124,11 @@ public final class AuthorsGetRequest {
             Optional<String> notLang,
             Optional<String> countries,
             Optional<String> notCountries,
-            Optional<OffsetDateTime> from,
-            Optional<OffsetDateTime> to,
-            Optional<AuthorsGetRequestPublishedDatePrecision> publishedDatePrecision,
+            Optional<From> from,
+            Optional<To> to,
+            Optional<String> publishedDatePrecision,
             Optional<Boolean> byParseDate,
-            Optional<AuthorsGetRequestSortBy> sortBy,
+            Optional<SortBy> sortBy,
             Optional<Boolean> rankedOnly,
             Optional<Integer> fromRank,
             Optional<Integer> toRank,
@@ -136,6 +138,7 @@ public final class AuthorsGetRequest {
             Optional<String> parentUrl,
             Optional<String> allLinks,
             Optional<String> allDomainLinks,
+            Optional<String> allLinksText,
             Optional<Integer> wordCountMin,
             Optional<Integer> wordCountMax,
             Optional<Integer> page,
@@ -180,6 +183,7 @@ public final class AuthorsGetRequest {
         this.parentUrl = parentUrl;
         this.allLinks = allLinks;
         this.allDomainLinks = allDomainLinks;
+        this.allLinksText = allLinksText;
         this.wordCountMin = wordCountMin;
         this.wordCountMax = wordCountMax;
         this.page = page;
@@ -203,9 +207,6 @@ public final class AuthorsGetRequest {
         this.additionalProperties = additionalProperties;
     }
 
-    /**
-     * @return The name of the author to search for. This parameter returns exact matches only.
-     */
     @JsonProperty("author_name")
     public String getAuthorName() {
         return authorName;
@@ -213,7 +214,6 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.
-     * <p>Example: <code>&quot;John Doe, Jane Doe&quot;</code></p>
      */
     @JsonProperty("not_author_name")
     public Optional<String> getNotAuthorName() {
@@ -222,14 +222,8 @@ public final class AuthorsGetRequest {
 
     /**
      * @return Predefined top news sources per country.
-     * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
-     * <p>Examples:</p>
-     * <ul>
-     * <li><code>&quot;top 100 US&quot;</code></li>
-     * <li><code>&quot;top 33 AT&quot;</code></li>
-     * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
-     * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
-     * </ul>
+     * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>.</p>
+     * <p>Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
      */
     @JsonProperty("predefined_sources")
     public Optional<String> getPredefinedSources() {
@@ -238,11 +232,6 @@ public final class AuthorsGetRequest {
 
     /**
      * @return One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.
-     * <p>Examples:</p>
-     * <ul>
-     * <li><code>&quot;nytimes.com&quot;</code></li>
-     * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
-     * </ul>
      */
     @JsonProperty("sources")
     public Optional<String> getSources() {
@@ -251,7 +240,6 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.
-     * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
      */
     @JsonProperty("not_sources")
     public Optional<String> getNotSources() {
@@ -260,8 +248,7 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.
-     * <p>Example: <code>&quot;en, es&quot;</code></p>
-     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+     * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
      */
     @JsonProperty("lang")
     public Optional<String> getLang() {
@@ -270,8 +257,7 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.
-     * <p>Example: <code>&quot;fr, de&quot;</code></p>
-     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+     * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
      */
     @JsonProperty("not_lang")
     public Optional<String> getNotLang() {
@@ -280,8 +266,7 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.
-     * <p>Example: <code>&quot;US, CA&quot;</code></p>
-     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+     * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
      */
     @JsonProperty("countries")
     public Optional<String> getCountries() {
@@ -290,125 +275,63 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.
-     * <p>Example:<code>&quot;US, CA&quot;</code></p>
-     * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+     * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
      */
     @JsonProperty("not_countries")
     public Optional<String> getNotCountries() {
         return notCountries;
     }
 
-    /**
-     * @return The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.
-     * <p>Formats with examples:</p>
-     * <ul>
-     * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-     * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-     * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-     * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-     * <li>English phrases: <code>7 day ago</code>, <code>today</code></li>
-     * </ul>
-     * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
-     */
     @JsonProperty("from_")
-    public Optional<OffsetDateTime> getFrom() {
+    public Optional<From> getFrom() {
         return from;
     }
 
-    /**
-     * @return The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.
-     * <p>Formats with examples:</p>
-     * <ul>
-     * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-     * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-     * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-     * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-     * <li>English phrases: <code>1 day ago</code>, <code>now</code></li>
-     * </ul>
-     * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
-     */
     @JsonProperty("to_")
-    public Optional<OffsetDateTime> getTo() {
+    public Optional<To> getTo() {
         return to;
     }
 
-    /**
-     * @return The precision of the published date. There are three types:
-     * <ul>
-     * <li><code>full</code>: The day and time of an article is correctly identified with the appropriate timezone.</li>
-     * <li><code>timezone unknown</code>: The day and time of an article is correctly identified without timezone.</li>
-     * <li><code>date</code>: Only the day is identified without an exact time.</li>
-     * </ul>
-     */
     @JsonProperty("published_date_precision")
-    public Optional<AuthorsGetRequestPublishedDatePrecision> getPublishedDatePrecision() {
+    public Optional<String> getPublishedDatePrecision() {
         return publishedDatePrecision;
     }
 
-    /**
-     * @return If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.
-     */
     @JsonProperty("by_parse_date")
     public Optional<Boolean> getByParseDate() {
         return byParseDate;
     }
 
-    /**
-     * @return The sorting order of the results. Possible values are:
-     * <ul>
-     * <li><code>relevancy</code>: The most relevant results first.</li>
-     * <li><code>date</code>: The most recently published results first.</li>
-     * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
-     * </ul>
-     */
     @JsonProperty("sort_by")
-    public Optional<AuthorsGetRequestSortBy> getSortBy() {
+    public Optional<SortBy> getSortBy() {
         return sortBy;
     }
 
-    /**
-     * @return If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.
-     */
     @JsonProperty("ranked_only")
     public Optional<Boolean> getRankedOnly() {
         return rankedOnly;
     }
 
-    /**
-     * @return The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.
-     */
     @JsonProperty("from_rank")
     public Optional<Integer> getFromRank() {
         return fromRank;
     }
 
-    /**
-     * @return The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.
-     */
     @JsonProperty("to_rank")
     public Optional<Integer> getToRank() {
         return toRank;
     }
 
-    /**
-     * @return If true, only returns articles that were posted on the home page of a given news domain.
-     */
     @JsonProperty("is_headline")
     public Optional<Boolean> getIsHeadline() {
         return isHeadline;
     }
 
-    /**
-     * @return If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.
-     */
     @JsonProperty("is_opinion")
     public Optional<Boolean> getIsOpinion() {
         return isOpinion;
     }
 
-    /**
-     * @return If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.
-     */
     @JsonProperty("is_paid_content")
     public Optional<Boolean> getIsPaidContent() {
         return isPaidContent;
@@ -416,7 +339,6 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.
-     * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
      */
     @JsonProperty("parent_url")
     public Optional<String> getParentUrl() {
@@ -425,8 +347,7 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.
-     * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
-     * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+     * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
      */
     @JsonProperty("all_links")
     public Optional<String> getAllLinks() {
@@ -435,8 +356,7 @@ public final class AuthorsGetRequest {
 
     /**
      * @return The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.
-     * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
-     * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+     * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
      */
     @JsonProperty("all_domain_links")
     public Optional<String> getAllDomainLinks() {
@@ -444,33 +364,30 @@ public final class AuthorsGetRequest {
     }
 
     /**
-     * @return The minimum number of words an article must contain. To be used for avoiding articles with small content.
+     * @return The text content of links mentioned in the article. Searches for links where the anchor text contains the specified terms. For multiple terms, use a comma-separated string.
+     * <p><strong>Note</strong>: When this parameter is used, the response includes the <code>all_links_data</code> field with detailed link information.</p>
+     * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
      */
+    @JsonProperty("all_links_text")
+    public Optional<String> getAllLinksText() {
+        return allLinksText;
+    }
+
     @JsonProperty("word_count_min")
     public Optional<Integer> getWordCountMin() {
         return wordCountMin;
     }
 
-    /**
-     * @return The maximum number of words an article can contain. To be used for avoiding articles with large content.
-     */
     @JsonProperty("word_count_max")
     public Optional<Integer> getWordCountMax() {
         return wordCountMax;
     }
 
-    /**
-     * @return The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.
-     * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
-     */
     @JsonProperty("page")
     public Optional<Integer> getPage() {
         return page;
     }
 
-    /**
-     * @return The number of articles to return per page.
-     */
     @JsonProperty("page_size")
     public Optional<Integer> getPageSize() {
         return pageSize;
@@ -491,97 +408,36 @@ public final class AuthorsGetRequest {
         return hasNlp;
     }
 
-    /**
-     * @return Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.
-     * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
-     */
     @JsonProperty("theme")
     public Optional<String> getTheme() {
         return theme;
     }
 
-    /**
-     * @return Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.
-     * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("not_theme")
     public Optional<String> getNotTheme() {
         return notTheme;
     }
 
-    /**
-     * @return The name of person, organization, location, product or other named entity to search for. To specify multiple names use a comma-separated string.
-     * <p>Example: <code>&quot;Tesla, Amazon&quot;</code></p>
-     */
     @JsonProperty("ner_name")
     public Optional<String> getNerName() {
         return nerName;
     }
 
-    /**
-     * @return Filters articles based on the minimum sentiment score of their titles.
-     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-     * <ul>
-     * <li>Negative values indicate negative sentiment.</li>
-     * <li>Positive values indicate positive sentiment.</li>
-     * <li>Values close to 0 indicate neutral sentiment.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("title_sentiment_min")
     public Optional<Float> getTitleSentimentMin() {
         return titleSentimentMin;
     }
 
-    /**
-     * @return Filters articles based on the maximum sentiment score of their titles.
-     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-     * <ul>
-     * <li>Negative values indicate negative sentiment.</li>
-     * <li>Positive values indicate positive sentiment.</li>
-     * <li>Values close to 0 indicate neutral sentiment.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("title_sentiment_max")
     public Optional<Float> getTitleSentimentMax() {
         return titleSentimentMax;
     }
 
-    /**
-     * @return Filters articles based on the minimum sentiment score of their content.
-     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-     * <ul>
-     * <li>Negative values indicate negative sentiment.</li>
-     * <li>Positive values indicate positive sentiment.</li>
-     * <li>Values close to 0 indicate neutral sentiment.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("content_sentiment_min")
     public Optional<Float> getContentSentimentMin() {
         return contentSentimentMin;
     }
 
-    /**
-     * @return Filters articles based on the maximum sentiment score of their content.
-     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-     * <ul>
-     * <li>Negative values indicate negative sentiment.</li>
-     * <li>Positive values indicate positive sentiment.</li>
-     * <li>Values close to 0 indicate neutral sentiment.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("content_sentiment_max")
     public Optional<Float> getContentSentimentMax() {
         return contentSentimentMax;
@@ -589,7 +445,6 @@ public final class AuthorsGetRequest {
 
     /**
      * @return Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.
-     * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
      * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
      */
@@ -600,7 +455,6 @@ public final class AuthorsGetRequest {
 
     /**
      * @return Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.
-     * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
      * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
      */
@@ -611,7 +465,6 @@ public final class AuthorsGetRequest {
 
     /**
      * @return Filters articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories, use a comma-separated string.
-     * <p>Example: <code>&quot;Business, Events&quot;</code></p>
      * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
      */
@@ -622,7 +475,6 @@ public final class AuthorsGetRequest {
 
     /**
      * @return Inverse of the <code>iab_tags</code> parameter. Excludes articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories to exclude, use a comma-separated string.
-     * <p>Example: <code>&quot;Agriculture, Metals&quot;</code></p>
      * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
      */
@@ -634,19 +486,16 @@ public final class AuthorsGetRequest {
     /**
      * @return Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:
      * <ul>
-     * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+     * <li><code>custom_tags.taxonomy=Tag1,Tag2</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2</code> is a comma-separated list of tag names.</li>
      * </ul>
-     * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
-     * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+     * <p>Example: <code>custom_tags.industry=&quot;Manufacturing,Logistics&quot;</code></p>
+     * <p>To learn more, see the <a href="https://www.newscatcherapi.com/docs/news-api/guides-and-concepts/custom-tags">Custom tags</a>.</p>
      */
     @JsonProperty("custom_tags")
     public Optional<String> getCustomTags() {
         return customTags;
     }
 
-    /**
-     * @return If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.
-     */
     @JsonProperty("robots_compliant")
     public Optional<Boolean> getRobotsCompliant() {
         return robotsCompliant;
@@ -687,6 +536,7 @@ public final class AuthorsGetRequest {
                 && parentUrl.equals(other.parentUrl)
                 && allLinks.equals(other.allLinks)
                 && allDomainLinks.equals(other.allDomainLinks)
+                && allLinksText.equals(other.allLinksText)
                 && wordCountMin.equals(other.wordCountMin)
                 && wordCountMax.equals(other.wordCountMax)
                 && page.equals(other.page)
@@ -735,6 +585,7 @@ public final class AuthorsGetRequest {
                 this.parentUrl,
                 this.allLinks,
                 this.allDomainLinks,
+                this.allLinksText,
                 this.wordCountMin,
                 this.wordCountMax,
                 this.page,
@@ -767,9 +618,6 @@ public final class AuthorsGetRequest {
     }
 
     public interface AuthorNameStage {
-        /**
-         * <p>The name of the author to search for. This parameter returns exact matches only.</p>
-         */
         _FinalStage authorName(@NotNull String authorName);
 
         Builder from(AuthorsGetRequest other);
@@ -778,9 +626,12 @@ public final class AuthorsGetRequest {
     public interface _FinalStage {
         AuthorsGetRequest build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;John Doe, Jane Doe&quot;</code></p>
          */
         _FinalStage notAuthorName(Optional<String> notAuthorName);
 
@@ -788,14 +639,8 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Predefined top news sources per country.</p>
-         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
-         * <p>Examples:</p>
-         * <ul>
-         * <li><code>&quot;top 100 US&quot;</code></li>
-         * <li><code>&quot;top 33 AT&quot;</code></li>
-         * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
-         * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
-         * </ul>
+         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>.</p>
+         * <p>Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
          */
         _FinalStage predefinedSources(Optional<String> predefinedSources);
 
@@ -803,11 +648,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.</p>
-         * <p>Examples:</p>
-         * <ul>
-         * <li><code>&quot;nytimes.com&quot;</code></li>
-         * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
-         * </ul>
          */
         _FinalStage sources(Optional<String> sources);
 
@@ -815,7 +655,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
          */
         _FinalStage notSources(Optional<String> notSources);
 
@@ -823,8 +662,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;en, es&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
          */
         _FinalStage lang(Optional<String> lang);
 
@@ -832,8 +670,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;fr, de&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
          */
         _FinalStage notLang(Optional<String> notLang);
 
@@ -841,8 +678,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;US, CA&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
          */
         _FinalStage countries(Optional<String> countries);
 
@@ -850,121 +686,58 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.</p>
-         * <p>Example:<code>&quot;US, CA&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
          */
         _FinalStage notCountries(Optional<String> notCountries);
 
         _FinalStage notCountries(String notCountries);
 
-        /**
-         * <p>The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
-         * <p>Formats with examples:</p>
-         * <ul>
-         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-         * <li>English phrases: <code>7 day ago</code>, <code>today</code></li>
-         * </ul>
-         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
-         */
-        _FinalStage from(Optional<OffsetDateTime> from);
+        _FinalStage from(Optional<From> from);
 
-        _FinalStage from(OffsetDateTime from);
+        _FinalStage from(From from);
 
-        /**
-         * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
-         * <p>Formats with examples:</p>
-         * <ul>
-         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-         * <li>English phrases: <code>1 day ago</code>, <code>now</code></li>
-         * </ul>
-         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
-         */
-        _FinalStage to(Optional<OffsetDateTime> to);
+        _FinalStage to(Optional<To> to);
 
-        _FinalStage to(OffsetDateTime to);
+        _FinalStage to(To to);
 
-        /**
-         * <p>The precision of the published date. There are three types:</p>
-         * <ul>
-         * <li><code>full</code>: The day and time of an article is correctly identified with the appropriate timezone.</li>
-         * <li><code>timezone unknown</code>: The day and time of an article is correctly identified without timezone.</li>
-         * <li><code>date</code>: Only the day is identified without an exact time.</li>
-         * </ul>
-         */
-        _FinalStage publishedDatePrecision(Optional<AuthorsGetRequestPublishedDatePrecision> publishedDatePrecision);
+        _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision);
 
-        _FinalStage publishedDatePrecision(AuthorsGetRequestPublishedDatePrecision publishedDatePrecision);
+        _FinalStage publishedDatePrecision(String publishedDatePrecision);
 
-        /**
-         * <p>If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.</p>
-         */
         _FinalStage byParseDate(Optional<Boolean> byParseDate);
 
         _FinalStage byParseDate(Boolean byParseDate);
 
-        /**
-         * <p>The sorting order of the results. Possible values are:</p>
-         * <ul>
-         * <li><code>relevancy</code>: The most relevant results first.</li>
-         * <li><code>date</code>: The most recently published results first.</li>
-         * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
-         * </ul>
-         */
-        _FinalStage sortBy(Optional<AuthorsGetRequestSortBy> sortBy);
+        _FinalStage sortBy(Optional<SortBy> sortBy);
 
-        _FinalStage sortBy(AuthorsGetRequestSortBy sortBy);
+        _FinalStage sortBy(SortBy sortBy);
 
-        /**
-         * <p>If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.</p>
-         */
         _FinalStage rankedOnly(Optional<Boolean> rankedOnly);
 
         _FinalStage rankedOnly(Boolean rankedOnly);
 
-        /**
-         * <p>The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
-         */
         _FinalStage fromRank(Optional<Integer> fromRank);
 
         _FinalStage fromRank(Integer fromRank);
 
-        /**
-         * <p>The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
-         */
         _FinalStage toRank(Optional<Integer> toRank);
 
         _FinalStage toRank(Integer toRank);
 
-        /**
-         * <p>If true, only returns articles that were posted on the home page of a given news domain.</p>
-         */
         _FinalStage isHeadline(Optional<Boolean> isHeadline);
 
         _FinalStage isHeadline(Boolean isHeadline);
 
-        /**
-         * <p>If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.</p>
-         */
         _FinalStage isOpinion(Optional<Boolean> isOpinion);
 
         _FinalStage isOpinion(Boolean isOpinion);
 
-        /**
-         * <p>If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.</p>
-         */
         _FinalStage isPaidContent(Optional<Boolean> isPaidContent);
 
         _FinalStage isPaidContent(Boolean isPaidContent);
 
         /**
          * <p>The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
          */
         _FinalStage parentUrl(Optional<String> parentUrl);
 
@@ -972,8 +745,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
-         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
          */
         _FinalStage allLinks(Optional<String> allLinks);
 
@@ -981,38 +753,33 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
-         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
          */
         _FinalStage allDomainLinks(Optional<String> allDomainLinks);
 
         _FinalStage allDomainLinks(String allDomainLinks);
 
         /**
-         * <p>The minimum number of words an article must contain. To be used for avoiding articles with small content.</p>
+         * <p>The text content of links mentioned in the article. Searches for links where the anchor text contains the specified terms. For multiple terms, use a comma-separated string.</p>
+         * <p><strong>Note</strong>: When this parameter is used, the response includes the <code>all_links_data</code> field with detailed link information.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
          */
+        _FinalStage allLinksText(Optional<String> allLinksText);
+
+        _FinalStage allLinksText(String allLinksText);
+
         _FinalStage wordCountMin(Optional<Integer> wordCountMin);
 
         _FinalStage wordCountMin(Integer wordCountMin);
 
-        /**
-         * <p>The maximum number of words an article can contain. To be used for avoiding articles with large content.</p>
-         */
         _FinalStage wordCountMax(Optional<Integer> wordCountMax);
 
         _FinalStage wordCountMax(Integer wordCountMax);
 
-        /**
-         * <p>The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.</p>
-         * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
-         */
         _FinalStage page(Optional<Integer> page);
 
         _FinalStage page(Integer page);
 
-        /**
-         * <p>The number of articles to return per page.</p>
-         */
         _FinalStage pageSize(Optional<Integer> pageSize);
 
         _FinalStage pageSize(Integer pageSize);
@@ -1029,98 +796,36 @@ public final class AuthorsGetRequest {
 
         _FinalStage hasNlp(Boolean hasNlp);
 
-        /**
-         * <p>Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
-         */
         _FinalStage theme(Optional<String> theme);
 
         _FinalStage theme(String theme);
 
-        /**
-         * <p>Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         _FinalStage notTheme(Optional<String> notTheme);
 
         _FinalStage notTheme(String notTheme);
 
-        /**
-         * <p>The name of person, organization, location, product or other named entity to search for. To specify multiple names use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Tesla, Amazon&quot;</code></p>
-         */
         _FinalStage nerName(Optional<String> nerName);
 
         _FinalStage nerName(String nerName);
 
-        /**
-         * <p>Filters articles based on the minimum sentiment score of their titles.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         _FinalStage titleSentimentMin(Optional<Float> titleSentimentMin);
 
         _FinalStage titleSentimentMin(Float titleSentimentMin);
 
-        /**
-         * <p>Filters articles based on the maximum sentiment score of their titles.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         _FinalStage titleSentimentMax(Optional<Float> titleSentimentMax);
 
         _FinalStage titleSentimentMax(Float titleSentimentMax);
 
-        /**
-         * <p>Filters articles based on the minimum sentiment score of their content.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         _FinalStage contentSentimentMin(Optional<Float> contentSentimentMin);
 
         _FinalStage contentSentimentMin(Float contentSentimentMin);
 
-        /**
-         * <p>Filters articles based on the maximum sentiment score of their content.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax);
 
         _FinalStage contentSentimentMax(Float contentSentimentMax);
 
         /**
          * <p>Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.</p>
-         * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
          * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
          */
@@ -1130,7 +835,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.</p>
-         * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
          * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
          */
@@ -1140,7 +844,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Filters articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Business, Events&quot;</code></p>
          * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
          */
@@ -1150,7 +853,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Inverse of the <code>iab_tags</code> parameter. Excludes articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories to exclude, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Agriculture, Metals&quot;</code></p>
          * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
          */
@@ -1161,18 +863,15 @@ public final class AuthorsGetRequest {
         /**
          * <p>Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:</p>
          * <ul>
-         * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+         * <li><code>custom_tags.taxonomy=Tag1,Tag2</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2</code> is a comma-separated list of tag names.</li>
          * </ul>
-         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
-         * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing,Logistics&quot;</code></p>
+         * <p>To learn more, see the <a href="https://www.newscatcherapi.com/docs/news-api/guides-and-concepts/custom-tags">Custom tags</a>.</p>
          */
         _FinalStage customTags(Optional<String> customTags);
 
         _FinalStage customTags(String customTags);
 
-        /**
-         * <p>If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.</p>
-         */
         _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant);
 
         _FinalStage robotsCompliant(Boolean robotsCompliant);
@@ -1222,6 +921,8 @@ public final class AuthorsGetRequest {
 
         private Optional<Integer> wordCountMin = Optional.empty();
 
+        private Optional<String> allLinksText = Optional.empty();
+
         private Optional<String> allDomainLinks = Optional.empty();
 
         private Optional<String> allLinks = Optional.empty();
@@ -1240,15 +941,15 @@ public final class AuthorsGetRequest {
 
         private Optional<Boolean> rankedOnly = Optional.empty();
 
-        private Optional<AuthorsGetRequestSortBy> sortBy = Optional.empty();
+        private Optional<SortBy> sortBy = Optional.empty();
 
         private Optional<Boolean> byParseDate = Optional.empty();
 
-        private Optional<AuthorsGetRequestPublishedDatePrecision> publishedDatePrecision = Optional.empty();
+        private Optional<String> publishedDatePrecision = Optional.empty();
 
-        private Optional<OffsetDateTime> to = Optional.empty();
+        private Optional<To> to = Optional.empty();
 
-        private Optional<OffsetDateTime> from = Optional.empty();
+        private Optional<From> from = Optional.empty();
 
         private Optional<String> notCountries = Optional.empty();
 
@@ -1296,6 +997,7 @@ public final class AuthorsGetRequest {
             parentUrl(other.getParentUrl());
             allLinks(other.getAllLinks());
             allDomainLinks(other.getAllDomainLinks());
+            allLinksText(other.getAllLinksText());
             wordCountMin(other.getWordCountMin());
             wordCountMax(other.getWordCountMax());
             page(other.getPage());
@@ -1319,11 +1021,6 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The name of the author to search for. This parameter returns exact matches only.</p>
-         * <p>The name of the author to search for. This parameter returns exact matches only.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         @JsonSetter("author_name")
         public _FinalStage authorName(@NotNull String authorName) {
@@ -1331,19 +1028,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage robotsCompliant(Boolean robotsCompliant) {
             this.robotsCompliant = Optional.ofNullable(robotsCompliant);
             return this;
         }
 
-        /**
-         * <p>If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
         public _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant) {
@@ -1354,10 +1044,10 @@ public final class AuthorsGetRequest {
         /**
          * <p>Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:</p>
          * <ul>
-         * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+         * <li><code>custom_tags.taxonomy=Tag1,Tag2</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2</code> is a comma-separated list of tag names.</li>
          * </ul>
-         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
-         * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing,Logistics&quot;</code></p>
+         * <p>To learn more, see the <a href="https://www.newscatcherapi.com/docs/news-api/guides-and-concepts/custom-tags">Custom tags</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1369,10 +1059,10 @@ public final class AuthorsGetRequest {
         /**
          * <p>Filters articles based on provided taxonomy that is tailored to your specific needs and is accessible only with your API key. To specify tags, use the following pattern:</p>
          * <ul>
-         * <li><code>custom_tags.taxonomy=Tag1,Tag2,Tag3</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2,Tag3</code> is a comma-separated list of tags.</li>
+         * <li><code>custom_tags.taxonomy=Tag1,Tag2</code>, where <code>taxonomy</code> is the taxonomy name and <code>Tag1,Tag2</code> is a comma-separated list of tag names.</li>
          * </ul>
-         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing, Supply Chain, Logistics&quot;</code></p>
-         * <p>To learn more, see the <a href="/docs/v3/documentation/guides-and-concepts/custom-tags">Custom tags</a>.</p>
+         * <p>Example: <code>custom_tags.industry=&quot;Manufacturing,Logistics&quot;</code></p>
+         * <p>To learn more, see the <a href="https://www.newscatcherapi.com/docs/news-api/guides-and-concepts/custom-tags">Custom tags</a>.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "custom_tags", nulls = Nulls.SKIP)
@@ -1383,7 +1073,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Inverse of the <code>iab_tags</code> parameter. Excludes articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories to exclude, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Agriculture, Metals&quot;</code></p>
          * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
@@ -1396,7 +1085,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Inverse of the <code>iab_tags</code> parameter. Excludes articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories to exclude, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Agriculture, Metals&quot;</code></p>
          * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
          */
@@ -1409,7 +1097,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Filters articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Business, Events&quot;</code></p>
          * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
@@ -1422,7 +1109,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Filters articles based on Interactive Advertising Bureau (IAB) content categories. These tags provide a standardized taxonomy for digital advertising content categorization. To specify multiple IAB categories, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Business, Events&quot;</code></p>
          * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
          */
@@ -1435,7 +1121,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.</p>
-         * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
          * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
@@ -1448,7 +1133,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Inverse of the <code>iptc_tags</code> parameter. Excludes articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags to exclude, use a comma-separated string of tag IDs.</p>
-         * <p>Example: <code>&quot;20000205, 20000209&quot;</code></p>
          * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
          */
@@ -1461,7 +1145,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.</p>
-         * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
          * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
@@ -1474,7 +1157,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Filters articles based on International Press Telecommunications Council (IPTC) media topic tags. To specify multiple IPTC tags, use a comma-separated string of tag IDs.</p>
-         * <p>Example: <code>&quot;20000199, 20000209&quot;</code></p>
          * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
          * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
          */
@@ -1485,35 +1167,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the maximum sentiment score of their content.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage contentSentimentMax(Float contentSentimentMax) {
             this.contentSentimentMax = Optional.ofNullable(contentSentimentMax);
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the maximum sentiment score of their content.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "content_sentiment_max", nulls = Nulls.SKIP)
         public _FinalStage contentSentimentMax(Optional<Float> contentSentimentMax) {
@@ -1521,35 +1180,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the minimum sentiment score of their content.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage contentSentimentMin(Float contentSentimentMin) {
             this.contentSentimentMin = Optional.ofNullable(contentSentimentMin);
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the minimum sentiment score of their content.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "content_sentiment_min", nulls = Nulls.SKIP)
         public _FinalStage contentSentimentMin(Optional<Float> contentSentimentMin) {
@@ -1557,35 +1193,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the maximum sentiment score of their titles.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage titleSentimentMax(Float titleSentimentMax) {
             this.titleSentimentMax = Optional.ofNullable(titleSentimentMax);
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the maximum sentiment score of their titles.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "title_sentiment_max", nulls = Nulls.SKIP)
         public _FinalStage titleSentimentMax(Optional<Float> titleSentimentMax) {
@@ -1593,35 +1206,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the minimum sentiment score of their titles.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage titleSentimentMin(Float titleSentimentMin) {
             this.titleSentimentMin = Optional.ofNullable(titleSentimentMin);
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the minimum sentiment score of their titles.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "title_sentiment_min", nulls = Nulls.SKIP)
         public _FinalStage titleSentimentMin(Optional<Float> titleSentimentMin) {
@@ -1629,21 +1219,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The name of person, organization, location, product or other named entity to search for. To specify multiple names use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Tesla, Amazon&quot;</code></p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage nerName(String nerName) {
             this.nerName = Optional.ofNullable(nerName);
             return this;
         }
 
-        /**
-         * <p>The name of person, organization, location, product or other named entity to search for. To specify multiple names use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Tesla, Amazon&quot;</code></p>
-         */
         @java.lang.Override
         @JsonSetter(value = "ner_name", nulls = Nulls.SKIP)
         public _FinalStage nerName(Optional<String> nerName) {
@@ -1651,25 +1232,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage notTheme(String notTheme) {
             this.notTheme = Optional.ofNullable(notTheme);
             return this;
         }
 
-        /**
-         * <p>Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "not_theme", nulls = Nulls.SKIP)
         public _FinalStage notTheme(Optional<String> notTheme) {
@@ -1677,27 +1245,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage theme(String theme) {
             this.theme = Optional.ofNullable(theme);
             return this;
         }
 
-        /**
-         * <p>Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "theme", nulls = Nulls.SKIP)
         public _FinalStage theme(Optional<String> theme) {
@@ -1744,19 +1297,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The number of articles to return per page.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage pageSize(Integer pageSize) {
             this.pageSize = Optional.ofNullable(pageSize);
             return this;
         }
 
-        /**
-         * <p>The number of articles to return per page.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
         public _FinalStage pageSize(Optional<Integer> pageSize) {
@@ -1764,21 +1310,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.</p>
-         * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage page(Integer page) {
             this.page = Optional.ofNullable(page);
             return this;
         }
 
-        /**
-         * <p>The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.</p>
-         * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public _FinalStage page(Optional<Integer> page) {
@@ -1786,19 +1323,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The maximum number of words an article can contain. To be used for avoiding articles with large content.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage wordCountMax(Integer wordCountMax) {
             this.wordCountMax = Optional.ofNullable(wordCountMax);
             return this;
         }
 
-        /**
-         * <p>The maximum number of words an article can contain. To be used for avoiding articles with large content.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "word_count_max", nulls = Nulls.SKIP)
         public _FinalStage wordCountMax(Optional<Integer> wordCountMax) {
@@ -1806,19 +1336,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The minimum number of words an article must contain. To be used for avoiding articles with small content.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage wordCountMin(Integer wordCountMin) {
             this.wordCountMin = Optional.ofNullable(wordCountMin);
             return this;
         }
 
-        /**
-         * <p>The minimum number of words an article must contain. To be used for avoiding articles with small content.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "word_count_min", nulls = Nulls.SKIP)
         public _FinalStage wordCountMin(Optional<Integer> wordCountMin) {
@@ -1827,9 +1350,32 @@ public final class AuthorsGetRequest {
         }
 
         /**
+         * <p>The text content of links mentioned in the article. Searches for links where the anchor text contains the specified terms. For multiple terms, use a comma-separated string.</p>
+         * <p><strong>Note</strong>: When this parameter is used, the response includes the <code>all_links_data</code> field with detailed link information.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage allLinksText(String allLinksText) {
+            this.allLinksText = Optional.ofNullable(allLinksText);
+            return this;
+        }
+
+        /**
+         * <p>The text content of links mentioned in the article. Searches for links where the anchor text contains the specified terms. For multiple terms, use a comma-separated string.</p>
+         * <p><strong>Note</strong>: When this parameter is used, the response includes the <code>all_links_data</code> field with detailed link information.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "all_links_text", nulls = Nulls.SKIP)
+        public _FinalStage allLinksText(Optional<String> allLinksText) {
+            this.allLinksText = allLinksText;
+            return this;
+        }
+
+        /**
          * <p>The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
-         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1840,8 +1386,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;who.int, nih.gov&quot;</code></p>
-         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "all_domain_links", nulls = Nulls.SKIP)
@@ -1852,8 +1397,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
-         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1864,8 +1408,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;https://aiindex.stanford.edu/report, https://www.stateof.ai&quot;</code></p>
-         * <p>For more details, see <a href="/docs/v3/documentation/how-to/search-by-url">Search by URL</a>.</p>
+         * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "all_links", nulls = Nulls.SKIP)
@@ -1876,7 +1419,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1887,7 +1429,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;wsj.com/politics, wsj.com/tech&quot;</code></p>
          */
         @java.lang.Override
         @JsonSetter(value = "parent_url", nulls = Nulls.SKIP)
@@ -1896,19 +1437,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage isPaidContent(Boolean isPaidContent) {
             this.isPaidContent = Optional.ofNullable(isPaidContent);
             return this;
         }
 
-        /**
-         * <p>If false, returns only articles that have publicly available complete content. Some publishers partially block content, so this setting ensures that only full articles are retrieved.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "is_paid_content", nulls = Nulls.SKIP)
         public _FinalStage isPaidContent(Optional<Boolean> isPaidContent) {
@@ -1916,19 +1450,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage isOpinion(Boolean isOpinion) {
             this.isOpinion = Optional.ofNullable(isOpinion);
             return this;
         }
 
-        /**
-         * <p>If true, returns only opinion pieces. If false, excludes opinion-based articles and returns news only.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "is_opinion", nulls = Nulls.SKIP)
         public _FinalStage isOpinion(Optional<Boolean> isOpinion) {
@@ -1936,19 +1463,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>If true, only returns articles that were posted on the home page of a given news domain.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage isHeadline(Boolean isHeadline) {
             this.isHeadline = Optional.ofNullable(isHeadline);
             return this;
         }
 
-        /**
-         * <p>If true, only returns articles that were posted on the home page of a given news domain.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "is_headline", nulls = Nulls.SKIP)
         public _FinalStage isHeadline(Optional<Boolean> isHeadline) {
@@ -1956,19 +1476,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage toRank(Integer toRank) {
             this.toRank = Optional.ofNullable(toRank);
             return this;
         }
 
-        /**
-         * <p>The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "to_rank", nulls = Nulls.SKIP)
         public _FinalStage toRank(Optional<Integer> toRank) {
@@ -1976,19 +1489,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage fromRank(Integer fromRank) {
             this.fromRank = Optional.ofNullable(fromRank);
             return this;
         }
 
-        /**
-         * <p>The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "from_rank", nulls = Nulls.SKIP)
         public _FinalStage fromRank(Optional<Integer> fromRank) {
@@ -1996,19 +1502,12 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage rankedOnly(Boolean rankedOnly) {
             this.rankedOnly = Optional.ofNullable(rankedOnly);
             return this;
         }
 
-        /**
-         * <p>If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "ranked_only", nulls = Nulls.SKIP)
         public _FinalStage rankedOnly(Optional<Boolean> rankedOnly) {
@@ -2016,49 +1515,25 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The sorting order of the results. Possible values are:</p>
-         * <ul>
-         * <li><code>relevancy</code>: The most relevant results first.</li>
-         * <li><code>date</code>: The most recently published results first.</li>
-         * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
-         * </ul>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
-        public _FinalStage sortBy(AuthorsGetRequestSortBy sortBy) {
+        public _FinalStage sortBy(SortBy sortBy) {
             this.sortBy = Optional.ofNullable(sortBy);
             return this;
         }
 
-        /**
-         * <p>The sorting order of the results. Possible values are:</p>
-         * <ul>
-         * <li><code>relevancy</code>: The most relevant results first.</li>
-         * <li><code>date</code>: The most recently published results first.</li>
-         * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
-         * </ul>
-         */
         @java.lang.Override
         @JsonSetter(value = "sort_by", nulls = Nulls.SKIP)
-        public _FinalStage sortBy(Optional<AuthorsGetRequestSortBy> sortBy) {
+        public _FinalStage sortBy(Optional<SortBy> sortBy) {
             this.sortBy = sortBy;
             return this;
         }
 
-        /**
-         * <p>If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         public _FinalStage byParseDate(Boolean byParseDate) {
             this.byParseDate = Optional.ofNullable(byParseDate);
             return this;
         }
 
-        /**
-         * <p>If true, the <code>from_</code> and <code>to_</code> parameters use article parse dates instead of published dates. Additionally, the <code>parse_date</code> variable is added to the output for each article object.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "by_parse_date", nulls = Nulls.SKIP)
         public _FinalStage byParseDate(Optional<Boolean> byParseDate) {
@@ -2066,117 +1541,48 @@ public final class AuthorsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The precision of the published date. There are three types:</p>
-         * <ul>
-         * <li><code>full</code>: The day and time of an article is correctly identified with the appropriate timezone.</li>
-         * <li><code>timezone unknown</code>: The day and time of an article is correctly identified without timezone.</li>
-         * <li><code>date</code>: Only the day is identified without an exact time.</li>
-         * </ul>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
-        public _FinalStage publishedDatePrecision(AuthorsGetRequestPublishedDatePrecision publishedDatePrecision) {
+        public _FinalStage publishedDatePrecision(String publishedDatePrecision) {
             this.publishedDatePrecision = Optional.ofNullable(publishedDatePrecision);
             return this;
         }
 
-        /**
-         * <p>The precision of the published date. There are three types:</p>
-         * <ul>
-         * <li><code>full</code>: The day and time of an article is correctly identified with the appropriate timezone.</li>
-         * <li><code>timezone unknown</code>: The day and time of an article is correctly identified without timezone.</li>
-         * <li><code>date</code>: Only the day is identified without an exact time.</li>
-         * </ul>
-         */
         @java.lang.Override
         @JsonSetter(value = "published_date_precision", nulls = Nulls.SKIP)
-        public _FinalStage publishedDatePrecision(
-                Optional<AuthorsGetRequestPublishedDatePrecision> publishedDatePrecision) {
+        public _FinalStage publishedDatePrecision(Optional<String> publishedDatePrecision) {
             this.publishedDatePrecision = publishedDatePrecision;
             return this;
         }
 
-        /**
-         * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
-         * <p>Formats with examples:</p>
-         * <ul>
-         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-         * <li>English phrases: <code>1 day ago</code>, <code>now</code></li>
-         * </ul>
-         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
-        public _FinalStage to(OffsetDateTime to) {
+        public _FinalStage to(To to) {
             this.to = Optional.ofNullable(to);
             return this;
         }
 
-        /**
-         * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
-         * <p>Formats with examples:</p>
-         * <ul>
-         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-         * <li>English phrases: <code>1 day ago</code>, <code>now</code></li>
-         * </ul>
-         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "to_", nulls = Nulls.SKIP)
-        public _FinalStage to(Optional<OffsetDateTime> to) {
+        public _FinalStage to(Optional<To> to) {
             this.to = to;
             return this;
         }
 
-        /**
-         * <p>The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
-         * <p>Formats with examples:</p>
-         * <ul>
-         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-         * <li>English phrases: <code>7 day ago</code>, <code>today</code></li>
-         * </ul>
-         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
-        public _FinalStage from(OffsetDateTime from) {
+        public _FinalStage from(From from) {
             this.from = Optional.ofNullable(from);
             return this;
         }
 
-        /**
-         * <p>The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text. The default time zone is UTC.</p>
-         * <p>Formats with examples:</p>
-         * <ul>
-         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-         * <li>English phrases: <code>7 day ago</code>, <code>today</code></li>
-         * </ul>
-         * <p><strong>Note</strong>: By default, applied to the publication date of the article. To use the article's parse date instead, set the <code>by_parse_date</code> parameter to <code>true</code>.</p>
-         */
         @java.lang.Override
         @JsonSetter(value = "from_", nulls = Nulls.SKIP)
-        public _FinalStage from(Optional<OffsetDateTime> from) {
+        public _FinalStage from(Optional<From> from) {
             this.from = from;
             return this;
         }
 
         /**
          * <p>The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.</p>
-         * <p>Example:<code>&quot;US, CA&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -2187,8 +1593,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.</p>
-         * <p>Example:<code>&quot;US, CA&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "not_countries", nulls = Nulls.SKIP)
@@ -2199,8 +1604,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;US, CA&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -2211,8 +1615,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;US, CA&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "countries", nulls = Nulls.SKIP)
@@ -2223,8 +1626,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;fr, de&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -2235,8 +1637,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;fr, de&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "not_lang", nulls = Nulls.SKIP)
@@ -2247,8 +1648,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;en, es&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -2259,8 +1659,7 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;en, es&quot;</code></p>
-         * <p>To learn more, see <a href="/docs/v3/api-reference/overview/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
+         * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "lang", nulls = Nulls.SKIP)
@@ -2271,7 +1670,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -2282,7 +1680,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;cnn.com, wsj.com&quot;</code></p>
          */
         @java.lang.Override
         @JsonSetter(value = "not_sources", nulls = Nulls.SKIP)
@@ -2293,11 +1690,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.</p>
-         * <p>Examples:</p>
-         * <ul>
-         * <li><code>&quot;nytimes.com&quot;</code></li>
-         * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
-         * </ul>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -2308,11 +1700,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.</p>
-         * <p>Examples:</p>
-         * <ul>
-         * <li><code>&quot;nytimes.com&quot;</code></li>
-         * <li><code>&quot;theguardian.com, finance.yahoo.com&quot;</code></li>
-         * </ul>
          */
         @java.lang.Override
         @JsonSetter(value = "sources", nulls = Nulls.SKIP)
@@ -2323,14 +1710,8 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Predefined top news sources per country.</p>
-         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
-         * <p>Examples:</p>
-         * <ul>
-         * <li><code>&quot;top 100 US&quot;</code></li>
-         * <li><code>&quot;top 33 AT&quot;</code></li>
-         * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
-         * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
-         * </ul>
+         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>.</p>
+         * <p>Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -2341,14 +1722,8 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>Predefined top news sources per country.</p>
-         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>. Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
-         * <p>Examples:</p>
-         * <ul>
-         * <li><code>&quot;top 100 US&quot;</code></li>
-         * <li><code>&quot;top 33 AT&quot;</code></li>
-         * <li><code>&quot;top 50 US, top 20 GB&quot;</code></li>
-         * <li><code>&quot;top 33 AT, top 50 IT&quot;</code></li>
-         * </ul>
+         * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>.</p>
+         * <p>Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "predefined_sources", nulls = Nulls.SKIP)
@@ -2359,7 +1734,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;John Doe, Jane Doe&quot;</code></p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -2370,7 +1744,6 @@ public final class AuthorsGetRequest {
 
         /**
          * <p>The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;John Doe, Jane Doe&quot;</code></p>
          */
         @java.lang.Override
         @JsonSetter(value = "not_author_name", nulls = Nulls.SKIP)
@@ -2405,6 +1778,7 @@ public final class AuthorsGetRequest {
                     parentUrl,
                     allLinks,
                     allDomainLinks,
+                    allLinksText,
                     wordCountMin,
                     wordCountMax,
                     page,
@@ -2426,6 +1800,18 @@ public final class AuthorsGetRequest {
                     customTags,
                     robotsCompliant,
                     additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

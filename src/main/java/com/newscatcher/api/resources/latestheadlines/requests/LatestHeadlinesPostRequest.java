@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.types.AllDomainLinks;
 import com.newscatcher.api.types.AllLinks;
+import com.newscatcher.api.types.AllLinksText;
 import com.newscatcher.api.types.ClusteringVariable;
 import com.newscatcher.api.types.Countries;
 import com.newscatcher.api.types.CustomTags;
@@ -26,11 +27,9 @@ import com.newscatcher.api.types.NotIabTags;
 import com.newscatcher.api.types.NotIptcTags;
 import com.newscatcher.api.types.NotLang;
 import com.newscatcher.api.types.NotSources;
-import com.newscatcher.api.types.NotTheme;
 import com.newscatcher.api.types.ParentUrl;
 import com.newscatcher.api.types.PredefinedSources;
 import com.newscatcher.api.types.Sources;
-import com.newscatcher.api.types.Theme;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -73,6 +72,8 @@ public final class LatestHeadlinesPostRequest {
 
     private final Optional<AllDomainLinks> allDomainLinks;
 
+    private final Optional<AllLinksText> allLinksText;
+
     private final Optional<Integer> wordCountMin;
 
     private final Optional<Integer> wordCountMax;
@@ -93,9 +94,9 @@ public final class LatestHeadlinesPostRequest {
 
     private final Optional<Boolean> hasNlp;
 
-    private final Optional<Theme> theme;
+    private final Optional<String> theme;
 
-    private final Optional<NotTheme> notTheme;
+    private final Optional<String> notTheme;
 
     private final Optional<String> orgEntityName;
 
@@ -145,6 +146,7 @@ public final class LatestHeadlinesPostRequest {
             Optional<ParentUrl> parentUrl,
             Optional<AllLinks> allLinks,
             Optional<AllDomainLinks> allDomainLinks,
+            Optional<AllLinksText> allLinksText,
             Optional<Integer> wordCountMin,
             Optional<Integer> wordCountMax,
             Optional<Integer> page,
@@ -155,8 +157,8 @@ public final class LatestHeadlinesPostRequest {
             Optional<Boolean> includeTranslationFields,
             Optional<Boolean> includeNlpData,
             Optional<Boolean> hasNlp,
-            Optional<Theme> theme,
-            Optional<NotTheme> notTheme,
+            Optional<String> theme,
+            Optional<String> notTheme,
             Optional<String> orgEntityName,
             Optional<String> perEntityName,
             Optional<String> locEntityName,
@@ -189,6 +191,7 @@ public final class LatestHeadlinesPostRequest {
         this.parentUrl = parentUrl;
         this.allLinks = allLinks;
         this.allDomainLinks = allDomainLinks;
+        this.allLinksText = allLinksText;
         this.wordCountMin = wordCountMin;
         this.wordCountMax = wordCountMax;
         this.page = page;
@@ -303,6 +306,11 @@ public final class LatestHeadlinesPostRequest {
         return allDomainLinks;
     }
 
+    @JsonProperty("all_links_text")
+    public Optional<AllLinksText> getAllLinksText() {
+        return allLinksText;
+    }
+
     @JsonProperty("word_count_min")
     public Optional<Integer> getWordCountMin() {
         return wordCountMin;
@@ -354,12 +362,12 @@ public final class LatestHeadlinesPostRequest {
     }
 
     @JsonProperty("theme")
-    public Optional<Theme> getTheme() {
+    public Optional<String> getTheme() {
         return theme;
     }
 
     @JsonProperty("not_theme")
-    public Optional<NotTheme> getNotTheme() {
+    public Optional<String> getNotTheme() {
         return notTheme;
     }
 
@@ -462,6 +470,7 @@ public final class LatestHeadlinesPostRequest {
                 && parentUrl.equals(other.parentUrl)
                 && allLinks.equals(other.allLinks)
                 && allDomainLinks.equals(other.allDomainLinks)
+                && allLinksText.equals(other.allLinksText)
                 && wordCountMin.equals(other.wordCountMin)
                 && wordCountMax.equals(other.wordCountMax)
                 && page.equals(other.page)
@@ -510,6 +519,7 @@ public final class LatestHeadlinesPostRequest {
                 this.parentUrl,
                 this.allLinks,
                 this.allDomainLinks,
+                this.allLinksText,
                 this.wordCountMin,
                 this.wordCountMax,
                 this.page,
@@ -583,6 +593,8 @@ public final class LatestHeadlinesPostRequest {
 
         private Optional<AllDomainLinks> allDomainLinks = Optional.empty();
 
+        private Optional<AllLinksText> allLinksText = Optional.empty();
+
         private Optional<Integer> wordCountMin = Optional.empty();
 
         private Optional<Integer> wordCountMax = Optional.empty();
@@ -603,9 +615,9 @@ public final class LatestHeadlinesPostRequest {
 
         private Optional<Boolean> hasNlp = Optional.empty();
 
-        private Optional<Theme> theme = Optional.empty();
+        private Optional<String> theme = Optional.empty();
 
-        private Optional<NotTheme> notTheme = Optional.empty();
+        private Optional<String> notTheme = Optional.empty();
 
         private Optional<String> orgEntityName = Optional.empty();
 
@@ -658,6 +670,7 @@ public final class LatestHeadlinesPostRequest {
             parentUrl(other.getParentUrl());
             allLinks(other.getAllLinks());
             allDomainLinks(other.getAllDomainLinks());
+            allLinksText(other.getAllLinksText());
             wordCountMin(other.getWordCountMin());
             wordCountMax(other.getWordCountMax());
             page(other.getPage());
@@ -874,6 +887,17 @@ public final class LatestHeadlinesPostRequest {
             return this;
         }
 
+        @JsonSetter(value = "all_links_text", nulls = Nulls.SKIP)
+        public Builder allLinksText(Optional<AllLinksText> allLinksText) {
+            this.allLinksText = allLinksText;
+            return this;
+        }
+
+        public Builder allLinksText(AllLinksText allLinksText) {
+            this.allLinksText = Optional.ofNullable(allLinksText);
+            return this;
+        }
+
         @JsonSetter(value = "word_count_min", nulls = Nulls.SKIP)
         public Builder wordCountMin(Optional<Integer> wordCountMin) {
             this.wordCountMin = wordCountMin;
@@ -985,23 +1009,23 @@ public final class LatestHeadlinesPostRequest {
         }
 
         @JsonSetter(value = "theme", nulls = Nulls.SKIP)
-        public Builder theme(Optional<Theme> theme) {
+        public Builder theme(Optional<String> theme) {
             this.theme = theme;
             return this;
         }
 
-        public Builder theme(Theme theme) {
+        public Builder theme(String theme) {
             this.theme = Optional.ofNullable(theme);
             return this;
         }
 
         @JsonSetter(value = "not_theme", nulls = Nulls.SKIP)
-        public Builder notTheme(Optional<NotTheme> notTheme) {
+        public Builder notTheme(Optional<String> notTheme) {
             this.notTheme = notTheme;
             return this;
         }
 
-        public Builder notTheme(NotTheme notTheme) {
+        public Builder notTheme(String notTheme) {
             this.notTheme = Optional.ofNullable(notTheme);
             return this;
         }
@@ -1179,6 +1203,7 @@ public final class LatestHeadlinesPostRequest {
                     parentUrl,
                     allLinks,
                     allDomainLinks,
+                    allLinksText,
                     wordCountMin,
                     wordCountMax,
                     page,
@@ -1206,6 +1231,16 @@ public final class LatestHeadlinesPostRequest {
                     customTags,
                     robotsCompliant,
                     additionalProperties);
+        }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

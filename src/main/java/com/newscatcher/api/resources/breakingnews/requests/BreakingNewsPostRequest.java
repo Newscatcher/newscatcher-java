@@ -12,9 +12,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
-import com.newscatcher.api.types.NotTheme;
 import com.newscatcher.api.types.SortBy;
-import com.newscatcher.api.types.Theme;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -43,9 +41,9 @@ public final class BreakingNewsPostRequest {
 
     private final Optional<Boolean> hasNlp;
 
-    private final Optional<Theme> theme;
+    private final Optional<String> theme;
 
-    private final Optional<NotTheme> notTheme;
+    private final Optional<String> notTheme;
 
     private final Optional<String> orgEntityName;
 
@@ -61,9 +59,7 @@ public final class BreakingNewsPostRequest {
 
     private final Optional<Float> contentSentimentMin;
 
-    private final Optional<Float> contentSentientMax;
-
-    private final Optional<Boolean> robotsCompliant;
+    private final Optional<Float> contentSentimentMax;
 
     private final Map<String, Object> additionalProperties;
 
@@ -78,8 +74,8 @@ public final class BreakingNewsPostRequest {
             Optional<Boolean> includeTranslationFields,
             Optional<Boolean> includeNlpData,
             Optional<Boolean> hasNlp,
-            Optional<Theme> theme,
-            Optional<NotTheme> notTheme,
+            Optional<String> theme,
+            Optional<String> notTheme,
             Optional<String> orgEntityName,
             Optional<String> perEntityName,
             Optional<String> locEntityName,
@@ -87,8 +83,7 @@ public final class BreakingNewsPostRequest {
             Optional<Float> titleSentimentMin,
             Optional<Float> titleSentimentMax,
             Optional<Float> contentSentimentMin,
-            Optional<Float> contentSentientMax,
-            Optional<Boolean> robotsCompliant,
+            Optional<Float> contentSentimentMax,
             Map<String, Object> additionalProperties) {
         this.sortBy = sortBy;
         this.rankedOnly = rankedOnly;
@@ -109,8 +104,7 @@ public final class BreakingNewsPostRequest {
         this.titleSentimentMin = titleSentimentMin;
         this.titleSentimentMax = titleSentimentMax;
         this.contentSentimentMin = contentSentimentMin;
-        this.contentSentientMax = contentSentientMax;
-        this.robotsCompliant = robotsCompliant;
+        this.contentSentimentMax = contentSentimentMax;
         this.additionalProperties = additionalProperties;
     }
 
@@ -165,12 +159,12 @@ public final class BreakingNewsPostRequest {
     }
 
     @JsonProperty("theme")
-    public Optional<Theme> getTheme() {
+    public Optional<String> getTheme() {
         return theme;
     }
 
     @JsonProperty("not_theme")
-    public Optional<NotTheme> getNotTheme() {
+    public Optional<String> getNotTheme() {
         return notTheme;
     }
 
@@ -209,14 +203,9 @@ public final class BreakingNewsPostRequest {
         return contentSentimentMin;
     }
 
-    @JsonProperty("content_sentient_max")
-    public Optional<Float> getContentSentientMax() {
-        return contentSentientMax;
-    }
-
-    @JsonProperty("robots_compliant")
-    public Optional<Boolean> getRobotsCompliant() {
-        return robotsCompliant;
+    @JsonProperty("content_sentiment_max")
+    public Optional<Float> getContentSentimentMax() {
+        return contentSentimentMax;
     }
 
     @java.lang.Override
@@ -250,8 +239,7 @@ public final class BreakingNewsPostRequest {
                 && titleSentimentMin.equals(other.titleSentimentMin)
                 && titleSentimentMax.equals(other.titleSentimentMax)
                 && contentSentimentMin.equals(other.contentSentimentMin)
-                && contentSentientMax.equals(other.contentSentientMax)
-                && robotsCompliant.equals(other.robotsCompliant);
+                && contentSentimentMax.equals(other.contentSentimentMax);
     }
 
     @java.lang.Override
@@ -276,8 +264,7 @@ public final class BreakingNewsPostRequest {
                 this.titleSentimentMin,
                 this.titleSentimentMax,
                 this.contentSentimentMin,
-                this.contentSentientMax,
-                this.robotsCompliant);
+                this.contentSentimentMax);
     }
 
     @java.lang.Override
@@ -311,9 +298,9 @@ public final class BreakingNewsPostRequest {
 
         private Optional<Boolean> hasNlp = Optional.empty();
 
-        private Optional<Theme> theme = Optional.empty();
+        private Optional<String> theme = Optional.empty();
 
-        private Optional<NotTheme> notTheme = Optional.empty();
+        private Optional<String> notTheme = Optional.empty();
 
         private Optional<String> orgEntityName = Optional.empty();
 
@@ -329,9 +316,7 @@ public final class BreakingNewsPostRequest {
 
         private Optional<Float> contentSentimentMin = Optional.empty();
 
-        private Optional<Float> contentSentientMax = Optional.empty();
-
-        private Optional<Boolean> robotsCompliant = Optional.empty();
+        private Optional<Float> contentSentimentMax = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -358,8 +343,7 @@ public final class BreakingNewsPostRequest {
             titleSentimentMin(other.getTitleSentimentMin());
             titleSentimentMax(other.getTitleSentimentMax());
             contentSentimentMin(other.getContentSentimentMin());
-            contentSentientMax(other.getContentSentientMax());
-            robotsCompliant(other.getRobotsCompliant());
+            contentSentimentMax(other.getContentSentimentMax());
             return this;
         }
 
@@ -474,23 +458,23 @@ public final class BreakingNewsPostRequest {
         }
 
         @JsonSetter(value = "theme", nulls = Nulls.SKIP)
-        public Builder theme(Optional<Theme> theme) {
+        public Builder theme(Optional<String> theme) {
             this.theme = theme;
             return this;
         }
 
-        public Builder theme(Theme theme) {
+        public Builder theme(String theme) {
             this.theme = Optional.ofNullable(theme);
             return this;
         }
 
         @JsonSetter(value = "not_theme", nulls = Nulls.SKIP)
-        public Builder notTheme(Optional<NotTheme> notTheme) {
+        public Builder notTheme(Optional<String> notTheme) {
             this.notTheme = notTheme;
             return this;
         }
 
-        public Builder notTheme(NotTheme notTheme) {
+        public Builder notTheme(String notTheme) {
             this.notTheme = Optional.ofNullable(notTheme);
             return this;
         }
@@ -572,25 +556,14 @@ public final class BreakingNewsPostRequest {
             return this;
         }
 
-        @JsonSetter(value = "content_sentient_max", nulls = Nulls.SKIP)
-        public Builder contentSentientMax(Optional<Float> contentSentientMax) {
-            this.contentSentientMax = contentSentientMax;
+        @JsonSetter(value = "content_sentiment_max", nulls = Nulls.SKIP)
+        public Builder contentSentimentMax(Optional<Float> contentSentimentMax) {
+            this.contentSentimentMax = contentSentimentMax;
             return this;
         }
 
-        public Builder contentSentientMax(Float contentSentientMax) {
-            this.contentSentientMax = Optional.ofNullable(contentSentientMax);
-            return this;
-        }
-
-        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
-        public Builder robotsCompliant(Optional<Boolean> robotsCompliant) {
-            this.robotsCompliant = robotsCompliant;
-            return this;
-        }
-
-        public Builder robotsCompliant(Boolean robotsCompliant) {
-            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
+        public Builder contentSentimentMax(Float contentSentimentMax) {
+            this.contentSentimentMax = Optional.ofNullable(contentSentimentMax);
             return this;
         }
 
@@ -615,9 +588,18 @@ public final class BreakingNewsPostRequest {
                     titleSentimentMin,
                     titleSentimentMax,
                     contentSentimentMin,
-                    contentSentientMax,
-                    robotsCompliant,
+                    contentSentimentMax,
                     additionalProperties);
+        }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

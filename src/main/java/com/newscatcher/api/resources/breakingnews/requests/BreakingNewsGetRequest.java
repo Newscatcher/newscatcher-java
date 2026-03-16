@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.newscatcher.api.core.ObjectMappers;
-import com.newscatcher.api.resources.breakingnews.types.BreakingNewsGetRequestSortBy;
+import com.newscatcher.api.types.SortBy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = BreakingNewsGetRequest.Builder.class)
 public final class BreakingNewsGetRequest {
-    private final Optional<BreakingNewsGetRequestSortBy> sortBy;
+    private final Optional<SortBy> sortBy;
 
     private final Optional<Boolean> rankedOnly;
 
@@ -61,12 +61,10 @@ public final class BreakingNewsGetRequest {
 
     private final Optional<Float> contentSentimentMax;
 
-    private final Optional<Boolean> robotsCompliant;
-
     private final Map<String, Object> additionalProperties;
 
     private BreakingNewsGetRequest(
-            Optional<BreakingNewsGetRequestSortBy> sortBy,
+            Optional<SortBy> sortBy,
             Optional<Boolean> rankedOnly,
             Optional<Integer> fromRank,
             Optional<Integer> toRank,
@@ -86,7 +84,6 @@ public final class BreakingNewsGetRequest {
             Optional<Float> titleSentimentMax,
             Optional<Float> contentSentimentMin,
             Optional<Float> contentSentimentMax,
-            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.sortBy = sortBy;
         this.rankedOnly = rankedOnly;
@@ -108,59 +105,34 @@ public final class BreakingNewsGetRequest {
         this.titleSentimentMax = titleSentimentMax;
         this.contentSentimentMin = contentSentimentMin;
         this.contentSentimentMax = contentSentimentMax;
-        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
-    /**
-     * @return The sorting order of the results. Possible values are:
-     * <ul>
-     * <li><code>relevancy</code>: The most relevant results first.</li>
-     * <li><code>date</code>: The most recently published results first.</li>
-     * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
-     * </ul>
-     */
     @JsonProperty("sort_by")
-    public Optional<BreakingNewsGetRequestSortBy> getSortBy() {
+    public Optional<SortBy> getSortBy() {
         return sortBy;
     }
 
-    /**
-     * @return If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.
-     */
     @JsonProperty("ranked_only")
     public Optional<Boolean> getRankedOnly() {
         return rankedOnly;
     }
 
-    /**
-     * @return The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.
-     */
     @JsonProperty("from_rank")
     public Optional<Integer> getFromRank() {
         return fromRank;
     }
 
-    /**
-     * @return The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.
-     */
     @JsonProperty("to_rank")
     public Optional<Integer> getToRank() {
         return toRank;
     }
 
-    /**
-     * @return The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.
-     * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
-     */
     @JsonProperty("page")
     public Optional<Integer> getPage() {
         return page;
     }
 
-    /**
-     * @return The number of articles to return per page.
-     */
     @JsonProperty("page_size")
     public Optional<Integer> getPageSize() {
         return pageSize;
@@ -186,143 +158,54 @@ public final class BreakingNewsGetRequest {
         return hasNlp;
     }
 
-    /**
-     * @return Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.
-     * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
-     */
     @JsonProperty("theme")
     public Optional<String> getTheme() {
         return theme;
     }
 
-    /**
-     * @return Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.
-     * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("not_theme")
     public Optional<String> getNotTheme() {
         return notTheme;
     }
 
-    /**
-     * @return Filters articles that mention specific organization names, as identified by NLP analysis. To specify multiple organizations, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).
-     * <p>Example: <code>&quot;Apple, Microsoft&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>ORG_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
-     */
     @JsonProperty("ORG_entity_name")
     public Optional<String> getOrgEntityName() {
         return orgEntityName;
     }
 
-    /**
-     * @return Filters articles that mention specific person names, as identified by NLP analysis. To specify multiple names, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).
-     * <p>Example: <code>&quot;Elon Musk, Jeff Bezos&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>PER_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
-     */
     @JsonProperty("PER_entity_name")
     public Optional<String> getPerEntityName() {
         return perEntityName;
     }
 
-    /**
-     * @return Filters articles that mention specific location names, as identified by NLP analysis. To specify multiple locations, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).
-     * <p>Example: <code>&quot;California, New York&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>LOC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
-     */
     @JsonProperty("LOC_entity_name")
     public Optional<String> getLocEntityName() {
         return locEntityName;
     }
 
-    /**
-     * @return Filters articles that mention other named entities not falling under person, organization, or location categories. Includes events, nationalities, products, works of art, and more. To specify multiple entities, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).
-     * <p>Example: <code>&quot;Bitcoin, Blockchain&quot;</code></p>
-     * <p><strong>Note</strong>: The <code>MISC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
-     */
     @JsonProperty("MISC_entity_name")
     public Optional<String> getMiscEntityName() {
         return miscEntityName;
     }
 
-    /**
-     * @return Filters articles based on the minimum sentiment score of their titles.
-     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-     * <ul>
-     * <li>Negative values indicate negative sentiment.</li>
-     * <li>Positive values indicate positive sentiment.</li>
-     * <li>Values close to 0 indicate neutral sentiment.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("title_sentiment_min")
     public Optional<Float> getTitleSentimentMin() {
         return titleSentimentMin;
     }
 
-    /**
-     * @return Filters articles based on the maximum sentiment score of their titles.
-     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-     * <ul>
-     * <li>Negative values indicate negative sentiment.</li>
-     * <li>Positive values indicate positive sentiment.</li>
-     * <li>Values close to 0 indicate neutral sentiment.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("title_sentiment_max")
     public Optional<Float> getTitleSentimentMax() {
         return titleSentimentMax;
     }
 
-    /**
-     * @return Filters articles based on the minimum sentiment score of their content.
-     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-     * <ul>
-     * <li>Negative values indicate negative sentiment.</li>
-     * <li>Positive values indicate positive sentiment.</li>
-     * <li>Values close to 0 indicate neutral sentiment.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("content_sentiment_min")
     public Optional<Float> getContentSentimentMin() {
         return contentSentimentMin;
     }
 
-    /**
-     * @return Filters articles based on the maximum sentiment score of their content.
-     * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-     * <ul>
-     * <li>Negative values indicate negative sentiment.</li>
-     * <li>Positive values indicate positive sentiment.</li>
-     * <li>Values close to 0 indicate neutral sentiment.</li>
-     * </ul>
-     * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-     * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-     */
     @JsonProperty("content_sentiment_max")
     public Optional<Float> getContentSentimentMax() {
         return contentSentimentMax;
-    }
-
-    /**
-     * @return If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.
-     */
-    @JsonProperty("robots_compliant")
-    public Optional<Boolean> getRobotsCompliant() {
-        return robotsCompliant;
     }
 
     @java.lang.Override
@@ -356,8 +239,7 @@ public final class BreakingNewsGetRequest {
                 && titleSentimentMin.equals(other.titleSentimentMin)
                 && titleSentimentMax.equals(other.titleSentimentMax)
                 && contentSentimentMin.equals(other.contentSentimentMin)
-                && contentSentimentMax.equals(other.contentSentimentMax)
-                && robotsCompliant.equals(other.robotsCompliant);
+                && contentSentimentMax.equals(other.contentSentimentMax);
     }
 
     @java.lang.Override
@@ -382,8 +264,7 @@ public final class BreakingNewsGetRequest {
                 this.titleSentimentMin,
                 this.titleSentimentMax,
                 this.contentSentimentMin,
-                this.contentSentimentMax,
-                this.robotsCompliant);
+                this.contentSentimentMax);
     }
 
     @java.lang.Override
@@ -397,7 +278,7 @@ public final class BreakingNewsGetRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private Optional<BreakingNewsGetRequestSortBy> sortBy = Optional.empty();
+        private Optional<SortBy> sortBy = Optional.empty();
 
         private Optional<Boolean> rankedOnly = Optional.empty();
 
@@ -437,8 +318,6 @@ public final class BreakingNewsGetRequest {
 
         private Optional<Float> contentSentimentMax = Optional.empty();
 
-        private Optional<Boolean> robotsCompliant = Optional.empty();
-
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -465,32 +344,20 @@ public final class BreakingNewsGetRequest {
             titleSentimentMax(other.getTitleSentimentMax());
             contentSentimentMin(other.getContentSentimentMin());
             contentSentimentMax(other.getContentSentimentMax());
-            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
-        /**
-         * <p>The sorting order of the results. Possible values are:</p>
-         * <ul>
-         * <li><code>relevancy</code>: The most relevant results first.</li>
-         * <li><code>date</code>: The most recently published results first.</li>
-         * <li><code>rank</code>: The results from the highest-ranked sources first.</li>
-         * </ul>
-         */
         @JsonSetter(value = "sort_by", nulls = Nulls.SKIP)
-        public Builder sortBy(Optional<BreakingNewsGetRequestSortBy> sortBy) {
+        public Builder sortBy(Optional<SortBy> sortBy) {
             this.sortBy = sortBy;
             return this;
         }
 
-        public Builder sortBy(BreakingNewsGetRequestSortBy sortBy) {
+        public Builder sortBy(SortBy sortBy) {
             this.sortBy = Optional.ofNullable(sortBy);
             return this;
         }
 
-        /**
-         * <p>If true, limits the search to sources ranked in the top 1 million online websites. If false, includes unranked sources which are assigned a rank of 999999.</p>
-         */
         @JsonSetter(value = "ranked_only", nulls = Nulls.SKIP)
         public Builder rankedOnly(Optional<Boolean> rankedOnly) {
             this.rankedOnly = rankedOnly;
@@ -502,9 +369,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The lowest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
-         */
         @JsonSetter(value = "from_rank", nulls = Nulls.SKIP)
         public Builder fromRank(Optional<Integer> fromRank) {
             this.fromRank = fromRank;
@@ -516,9 +380,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The highest boundary of the rank of a news website to filter by. A lower rank indicates a more popular source.</p>
-         */
         @JsonSetter(value = "to_rank", nulls = Nulls.SKIP)
         public Builder toRank(Optional<Integer> toRank) {
             this.toRank = toRank;
@@ -530,10 +391,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The page number to scroll through the results. Use for pagination, as a single API response can return up to 1,000 articles.</p>
-         * <p>For details, see <a href="https://www.newscatcherapi.com/docs/v3/documentation/how-to/paginate-large-datasets">How to paginate large datasets</a>.</p>
-         */
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public Builder page(Optional<Integer> page) {
             this.page = page;
@@ -545,9 +402,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>The number of articles to return per page.</p>
-         */
         @JsonSetter(value = "page_size", nulls = Nulls.SKIP)
         public Builder pageSize(Optional<Integer> pageSize) {
             this.pageSize = pageSize;
@@ -603,13 +457,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on their general topic, as determined by NLP analysis. To select multiple themes, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Finance, Tech&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         * <p>Available options: <code>Business</code>, <code>Economics</code>, <code>Entertainment</code>, <code>Finance</code>, <code>Health</code>, <code>Politics</code>, <code>Science</code>, <code>Sports</code>, <code>Tech</code>, <code>Crime</code>, <code>Financial Crime</code>, <code>Lifestyle</code>, <code>Automotive</code>, <code>Travel</code>, <code>Weather</code>, <code>General</code>.</p>
-         */
         @JsonSetter(value = "theme", nulls = Nulls.SKIP)
         public Builder theme(Optional<String> theme) {
             this.theme = theme;
@@ -621,12 +468,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Inverse of the <code>theme</code> parameter. Excludes articles based on their general topic, as determined by NLP analysis. To exclude multiple themes, use a comma-separated string.</p>
-         * <p>Example: <code>&quot;Crime, Tech&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>not_theme</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @JsonSetter(value = "not_theme", nulls = Nulls.SKIP)
         public Builder notTheme(Optional<String> notTheme) {
             this.notTheme = notTheme;
@@ -638,12 +479,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles that mention specific organization names, as identified by NLP analysis. To specify multiple organizations, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).</p>
-         * <p>Example: <code>&quot;Apple, Microsoft&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>ORG_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
-         */
         @JsonSetter(value = "ORG_entity_name", nulls = Nulls.SKIP)
         public Builder orgEntityName(Optional<String> orgEntityName) {
             this.orgEntityName = orgEntityName;
@@ -655,12 +490,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles that mention specific person names, as identified by NLP analysis. To specify multiple names, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).</p>
-         * <p>Example: <code>&quot;Elon Musk, Jeff Bezos&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>PER_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
-         */
         @JsonSetter(value = "PER_entity_name", nulls = Nulls.SKIP)
         public Builder perEntityName(Optional<String> perEntityName) {
             this.perEntityName = perEntityName;
@@ -672,12 +501,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles that mention specific location names, as identified by NLP analysis. To specify multiple locations, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).</p>
-         * <p>Example: <code>&quot;California, New York&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>LOC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
-         */
         @JsonSetter(value = "LOC_entity_name", nulls = Nulls.SKIP)
         public Builder locEntityName(Optional<String> locEntityName) {
             this.locEntityName = locEntityName;
@@ -689,12 +512,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles that mention other named entities not falling under person, organization, or location categories. Includes events, nationalities, products, works of art, and more. To specify multiple entities, use a comma-separated string. To search named entities in translations, combine with the translation options of the <code>search_in</code> parameter (e.g., <code>title_content_translated</code>).</p>
-         * <p>Example: <code>&quot;Bitcoin, Blockchain&quot;</code></p>
-         * <p><strong>Note</strong>: The <code>MISC_entity_name</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/how-to/search-by-entity">Search by entity</a>.</p>
-         */
         @JsonSetter(value = "MISC_entity_name", nulls = Nulls.SKIP)
         public Builder miscEntityName(Optional<String> miscEntityName) {
             this.miscEntityName = miscEntityName;
@@ -706,17 +523,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the minimum sentiment score of their titles.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>title_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @JsonSetter(value = "title_sentiment_min", nulls = Nulls.SKIP)
         public Builder titleSentimentMin(Optional<Float> titleSentimentMin) {
             this.titleSentimentMin = titleSentimentMin;
@@ -728,17 +534,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the maximum sentiment score of their titles.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>title_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @JsonSetter(value = "title_sentiment_max", nulls = Nulls.SKIP)
         public Builder titleSentimentMax(Optional<Float> titleSentimentMax) {
             this.titleSentimentMax = titleSentimentMax;
@@ -750,17 +545,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the minimum sentiment score of their content.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>content_sentiment_min</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @JsonSetter(value = "content_sentiment_min", nulls = Nulls.SKIP)
         public Builder contentSentimentMin(Optional<Float> contentSentimentMin) {
             this.contentSentimentMin = contentSentimentMin;
@@ -772,17 +556,6 @@ public final class BreakingNewsGetRequest {
             return this;
         }
 
-        /**
-         * <p>Filters articles based on the maximum sentiment score of their content.</p>
-         * <p>Range is <code>-1.0</code> to <code>1.0</code>, where:</p>
-         * <ul>
-         * <li>Negative values indicate negative sentiment.</li>
-         * <li>Positive values indicate positive sentiment.</li>
-         * <li>Values close to 0 indicate neutral sentiment.</li>
-         * </ul>
-         * <p><strong>Note</strong>: The <code>content_sentiment_max</code> parameter is only available if NLP is included in your subscription plan.</p>
-         * <p>To learn more, see <a href="/docs/v3/documentation/guides-and-concepts/nlp-features">NLP features</a>.</p>
-         */
         @JsonSetter(value = "content_sentiment_max", nulls = Nulls.SKIP)
         public Builder contentSentimentMax(Optional<Float> contentSentimentMax) {
             this.contentSentimentMax = contentSentimentMax;
@@ -791,20 +564,6 @@ public final class BreakingNewsGetRequest {
 
         public Builder contentSentimentMax(Float contentSentimentMax) {
             this.contentSentimentMax = Optional.ofNullable(contentSentimentMax);
-            return this;
-        }
-
-        /**
-         * <p>If true, returns only articles/sources that comply with the publisher's robots.txt rules. If false, returns only articles/sources that do not comply with robots.txt rules. If omitted, returns all articles/sources regardless of compliance status.</p>
-         */
-        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
-        public Builder robotsCompliant(Optional<Boolean> robotsCompliant) {
-            this.robotsCompliant = robotsCompliant;
-            return this;
-        }
-
-        public Builder robotsCompliant(Boolean robotsCompliant) {
-            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
             return this;
         }
 
@@ -830,8 +589,17 @@ public final class BreakingNewsGetRequest {
                     titleSentimentMax,
                     contentSentimentMin,
                     contentSentimentMax,
-                    robotsCompliant,
                     additionalProperties);
+        }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

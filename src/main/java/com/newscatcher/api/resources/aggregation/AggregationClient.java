@@ -5,10 +5,10 @@ package com.newscatcher.api.resources.aggregation;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.resources.aggregation.requests.AggregationGetRequest;
-import com.newscatcher.api.resources.aggregation.requests.AggregationPostRequest;
-import com.newscatcher.api.resources.aggregation.types.AggregationGetResponse;
-import com.newscatcher.api.resources.aggregation.types.AggregationPostResponse;
+import com.newscatcher.api.resources.aggregation.requests.AggregationCountGetRequest;
+import com.newscatcher.api.resources.aggregation.requests.AggregationCountPostRequest;
+import com.newscatcher.api.resources.aggregation.types.AggregationCountGetResponse;
+import com.newscatcher.api.resources.aggregation.types.AggregationCountPostResponse;
 
 public class AggregationClient {
     protected final ClientOptions clientOptions;
@@ -30,28 +30,28 @@ public class AggregationClient {
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public AggregationGetResponse get(AggregationGetRequest request) {
-        return this.rawClient.get(request).body();
+    public AggregationCountGetResponse countGet(AggregationCountGetRequest request) {
+        return this.rawClient.countGet(request).body();
     }
 
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public AggregationGetResponse get(AggregationGetRequest request, RequestOptions requestOptions) {
-        return this.rawClient.get(request, requestOptions).body();
+    public AggregationCountGetResponse countGet(AggregationCountGetRequest request, RequestOptions requestOptions) {
+        return this.rawClient.countGet(request, requestOptions).body();
     }
 
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public AggregationPostResponse post(AggregationPostRequest request) {
-        return this.rawClient.post(request).body();
+    public AggregationCountPostResponse countPost(AggregationCountPostRequest request) {
+        return this.rawClient.countPost(request).body();
     }
 
     /**
      * Retrieves the count of articles aggregated by day or hour based on various search criteria, such as keyword, language, country, and source.
      */
-    public AggregationPostResponse post(AggregationPostRequest request, RequestOptions requestOptions) {
-        return this.rawClient.post(request, requestOptions).body();
+    public AggregationCountPostResponse countPost(AggregationCountPostRequest request, RequestOptions requestOptions) {
+        return this.rawClient.countPost(request, requestOptions).body();
     }
 }

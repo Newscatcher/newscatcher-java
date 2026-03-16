@@ -36,6 +36,13 @@ public class BreakingNewsClient {
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
+    public BreakingNewsResponseDto breakingNewsGet(RequestOptions requestOptions) {
+        return this.rawClient.breakingNewsGet(requestOptions).body();
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
     public BreakingNewsResponseDto breakingNewsGet(BreakingNewsGetRequest request) {
         return this.rawClient.breakingNewsGet(request).body();
     }
@@ -52,6 +59,13 @@ public class BreakingNewsClient {
      */
     public BreakingNewsResponseDto breakingNewsPost() {
         return this.rawClient.breakingNewsPost().body();
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
+    public BreakingNewsResponseDto breakingNewsPost(RequestOptions requestOptions) {
+        return this.rawClient.breakingNewsPost(requestOptions).body();
     }
 
     /**

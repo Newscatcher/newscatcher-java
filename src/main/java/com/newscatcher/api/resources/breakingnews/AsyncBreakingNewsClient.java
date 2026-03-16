@@ -37,6 +37,13 @@ public class AsyncBreakingNewsClient {
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
+    public CompletableFuture<BreakingNewsResponseDto> breakingNewsGet(RequestOptions requestOptions) {
+        return this.rawClient.breakingNewsGet(requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
     public CompletableFuture<BreakingNewsResponseDto> breakingNewsGet(BreakingNewsGetRequest request) {
         return this.rawClient.breakingNewsGet(request).thenApply(response -> response.body());
     }
@@ -54,6 +61,13 @@ public class AsyncBreakingNewsClient {
      */
     public CompletableFuture<BreakingNewsResponseDto> breakingNewsPost() {
         return this.rawClient.breakingNewsPost().thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
+    public CompletableFuture<BreakingNewsResponseDto> breakingNewsPost(RequestOptions requestOptions) {
+        return this.rawClient.breakingNewsPost(requestOptions).thenApply(response -> response.body());
     }
 
     /**
