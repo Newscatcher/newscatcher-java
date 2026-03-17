@@ -5,8 +5,8 @@ package com.newscatcher.api.resources.sources;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.resources.sources.requests.SourcesGetRequest;
-import com.newscatcher.api.resources.sources.requests.SourcesPostRequest;
+import com.newscatcher.api.resources.sources.requests.GetSourcesRequest;
+import com.newscatcher.api.resources.sources.requests.PostSourcesRequest;
 import com.newscatcher.api.types.SourcesResponseDto;
 
 public class SourcesClient {
@@ -36,14 +36,21 @@ public class SourcesClient {
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
-    public SourcesResponseDto get(SourcesGetRequest request) {
+    public SourcesResponseDto get(RequestOptions requestOptions) {
+        return this.rawClient.get(requestOptions).body();
+    }
+
+    /**
+     * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
+     */
+    public SourcesResponseDto get(GetSourcesRequest request) {
         return this.rawClient.get(request).body();
     }
 
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
-    public SourcesResponseDto get(SourcesGetRequest request, RequestOptions requestOptions) {
+    public SourcesResponseDto get(GetSourcesRequest request, RequestOptions requestOptions) {
         return this.rawClient.get(request, requestOptions).body();
     }
 
@@ -57,14 +64,21 @@ public class SourcesClient {
     /**
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
-    public SourcesResponseDto post(SourcesPostRequest request) {
+    public SourcesResponseDto post(RequestOptions requestOptions) {
+        return this.rawClient.post(requestOptions).body();
+    }
+
+    /**
+     * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
+     */
+    public SourcesResponseDto post(PostSourcesRequest request) {
         return this.rawClient.post(request).body();
     }
 
     /**
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
-    public SourcesResponseDto post(SourcesPostRequest request, RequestOptions requestOptions) {
+    public SourcesResponseDto post(PostSourcesRequest request, RequestOptions requestOptions) {
         return this.rawClient.post(request, requestOptions).body();
     }
 }

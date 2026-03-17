@@ -5,8 +5,8 @@ package com.newscatcher.api.resources.sources;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.resources.sources.requests.SourcesGetRequest;
-import com.newscatcher.api.resources.sources.requests.SourcesPostRequest;
+import com.newscatcher.api.resources.sources.requests.GetSourcesRequest;
+import com.newscatcher.api.resources.sources.requests.PostSourcesRequest;
 import com.newscatcher.api.types.SourcesResponseDto;
 import java.util.concurrent.CompletableFuture;
 
@@ -37,14 +37,21 @@ public class AsyncSourcesClient {
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
-    public CompletableFuture<SourcesResponseDto> get(SourcesGetRequest request) {
+    public CompletableFuture<SourcesResponseDto> get(RequestOptions requestOptions) {
+        return this.rawClient.get(requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
+     */
+    public CompletableFuture<SourcesResponseDto> get(GetSourcesRequest request) {
         return this.rawClient.get(request).thenApply(response -> response.body());
     }
 
     /**
      * Retrieves a list of sources based on specified criteria such as language, country, rank, and more.
      */
-    public CompletableFuture<SourcesResponseDto> get(SourcesGetRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<SourcesResponseDto> get(GetSourcesRequest request, RequestOptions requestOptions) {
         return this.rawClient.get(request, requestOptions).thenApply(response -> response.body());
     }
 
@@ -58,14 +65,21 @@ public class AsyncSourcesClient {
     /**
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
-    public CompletableFuture<SourcesResponseDto> post(SourcesPostRequest request) {
+    public CompletableFuture<SourcesResponseDto> post(RequestOptions requestOptions) {
+        return this.rawClient.post(requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
+     */
+    public CompletableFuture<SourcesResponseDto> post(PostSourcesRequest request) {
         return this.rawClient.post(request).thenApply(response -> response.body());
     }
 
     /**
      * Retrieves the list of sources available in the database. You can filter the sources by language, country, and more.
      */
-    public CompletableFuture<SourcesResponseDto> post(SourcesPostRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<SourcesResponseDto> post(PostSourcesRequest request, RequestOptions requestOptions) {
         return this.rawClient.post(request, requestOptions).thenApply(response -> response.body());
     }
 }

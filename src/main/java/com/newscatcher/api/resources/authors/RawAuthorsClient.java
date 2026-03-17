@@ -19,10 +19,10 @@ import com.newscatcher.api.errors.RequestTimeoutError;
 import com.newscatcher.api.errors.TooManyRequestsError;
 import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
-import com.newscatcher.api.resources.authors.requests.AuthorsGetRequest;
-import com.newscatcher.api.resources.authors.requests.AuthorsPostRequest;
-import com.newscatcher.api.resources.authors.types.AuthorsGetResponse;
-import com.newscatcher.api.resources.authors.types.AuthorsPostResponse;
+import com.newscatcher.api.resources.authors.requests.GetAuthorsRequest;
+import com.newscatcher.api.resources.authors.requests.PostAuthorsRequest;
+import com.newscatcher.api.resources.authors.types.GetAuthorsResponse;
+import com.newscatcher.api.resources.authors.types.PostAuthorsResponse;
 import com.newscatcher.api.types.Error;
 import java.io.IOException;
 import okhttp3.Headers;
@@ -43,15 +43,15 @@ public class RawAuthorsClient {
     /**
      * Searches for articles written by a specified author. You can filter results by language, country, source, and more.
      */
-    public NewscatcherApiHttpResponse<AuthorsGetResponse> get(AuthorsGetRequest request) {
+    public NewscatcherApiHttpResponse<GetAuthorsResponse> get(GetAuthorsRequest request) {
         return get(request, null);
     }
 
     /**
      * Searches for articles written by a specified author. You can filter results by language, country, source, and more.
      */
-    public NewscatcherApiHttpResponse<AuthorsGetResponse> get(
-            AuthorsGetRequest request, RequestOptions requestOptions) {
+    public NewscatcherApiHttpResponse<GetAuthorsResponse> get(
+            GetAuthorsRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/authors");
@@ -149,6 +149,10 @@ public class RawAuthorsClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "all_domain_links", request.getAllDomainLinks().get(), false);
         }
+        if (request.getAllLinksText().isPresent()) {
+            QueryStringMapper.addQueryParameter(
+                    httpUrl, "all_links_text", request.getAllLinksText().get(), false);
+        }
         if (request.getWordCountMin().isPresent()) {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "word_count_min", request.getWordCountMin().get(), false);
@@ -244,6 +248,11 @@ public class RawAuthorsClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -256,11 +265,11 @@ public class RawAuthorsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new NewscatcherApiHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AuthorsGetResponse.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, GetAuthorsResponse.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -288,11 +297,9 @@ public class RawAuthorsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new NewscatcherApiException("Network error executing HTTP request", e);
         }
@@ -301,19 +308,23 @@ public class RawAuthorsClient {
     /**
      * Searches for articles by author. You can filter results by language, country, source, and more.
      */
-    public NewscatcherApiHttpResponse<AuthorsPostResponse> post(AuthorsPostRequest request) {
+    public NewscatcherApiHttpResponse<PostAuthorsResponse> post(PostAuthorsRequest request) {
         return post(request, null);
     }
 
     /**
      * Searches for articles by author. You can filter results by language, country, source, and more.
      */
-    public NewscatcherApiHttpResponse<AuthorsPostResponse> post(
-            AuthorsPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+    public NewscatcherApiHttpResponse<PostAuthorsResponse> post(
+            PostAuthorsRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/authors")
-                .build();
+                .addPathSegments("api/authors");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -322,7 +333,7 @@ public class RawAuthorsClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -334,12 +345,11 @@ public class RawAuthorsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new NewscatcherApiHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AuthorsPostResponse.class),
-                        response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, PostAuthorsResponse.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -367,11 +377,9 @@ public class RawAuthorsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new NewscatcherApiApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new NewscatcherApiException("Network error executing HTTP request", e);
         }
