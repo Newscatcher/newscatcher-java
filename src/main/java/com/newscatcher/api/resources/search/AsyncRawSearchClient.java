@@ -19,10 +19,10 @@ import com.newscatcher.api.errors.RequestTimeoutError;
 import com.newscatcher.api.errors.TooManyRequestsError;
 import com.newscatcher.api.errors.UnauthorizedError;
 import com.newscatcher.api.errors.UnprocessableEntityError;
-import com.newscatcher.api.resources.search.requests.SearchGetRequest;
-import com.newscatcher.api.resources.search.requests.SearchPostRequest;
-import com.newscatcher.api.resources.search.types.SearchGetResponse;
-import com.newscatcher.api.resources.search.types.SearchPostResponse;
+import com.newscatcher.api.resources.search.requests.GetSearchRequest;
+import com.newscatcher.api.resources.search.requests.PostSearchRequest;
+import com.newscatcher.api.resources.search.types.GetSearchResponse;
+import com.newscatcher.api.resources.search.types.PostSearchResponse;
 import com.newscatcher.api.types.Error;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -45,17 +45,17 @@ public class AsyncRawSearchClient {
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<SearchGetResponse>> get(SearchGetRequest request) {
+    public CompletableFuture<NewscatcherApiHttpResponse<GetSearchResponse>> get(GetSearchRequest request) {
         return get(request, null);
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<SearchGetResponse>> get(
-            SearchGetRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<NewscatcherApiHttpResponse<GetSearchResponse>> get(
+            GetSearchRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("api/search");
@@ -167,6 +167,10 @@ public class AsyncRawSearchClient {
         if (request.getAllDomainLinks().isPresent()) {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "all_domain_links", request.getAllDomainLinks().get(), false);
+        }
+        if (request.getAllLinksText().isPresent()) {
+            QueryStringMapper.addQueryParameter(
+                    httpUrl, "all_links_text", request.getAllLinksText().get(), false);
         }
         if (request.getAdditionalDomainInfo().isPresent()) {
             QueryStringMapper.addQueryParameter(
@@ -315,6 +319,11 @@ public class AsyncRawSearchClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "robots_compliant", request.getRobotsCompliant().get(), false);
         }
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -325,18 +334,18 @@ public class AsyncRawSearchClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<NewscatcherApiHttpResponse<SearchGetResponse>> future = new CompletableFuture<>();
+        CompletableFuture<NewscatcherApiHttpResponse<GetSearchResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SearchGetResponse.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, GetSearchResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -378,11 +387,9 @@ public class AsyncRawSearchClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(
@@ -399,21 +406,25 @@ public class AsyncRawSearchClient {
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<SearchPostResponse>> post(SearchPostRequest request) {
+    public CompletableFuture<NewscatcherApiHttpResponse<PostSearchResponse>> post(PostSearchRequest request) {
         return post(request, null);
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public CompletableFuture<NewscatcherApiHttpResponse<SearchPostResponse>> post(
-            SearchPostRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+    public CompletableFuture<NewscatcherApiHttpResponse<PostSearchResponse>> post(
+            PostSearchRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
-                .addPathSegments("api/search")
-                .build();
+                .addPathSegments("api/search");
+        if (requestOptions != null) {
+            requestOptions.getQueryParameters().forEach((_key, _value) -> {
+                httpUrl.addQueryParameter(_key, _value);
+            });
+        }
         RequestBody body;
         try {
             body = RequestBody.create(
@@ -422,7 +433,7 @@ public class AsyncRawSearchClient {
             throw new NewscatcherApiException("Failed to serialize request", e);
         }
         Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
+                .url(httpUrl.build())
                 .method("POST", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -432,18 +443,18 @@ public class AsyncRawSearchClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<NewscatcherApiHttpResponse<SearchPostResponse>> future = new CompletableFuture<>();
+        CompletableFuture<NewscatcherApiHttpResponse<PostSearchResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new NewscatcherApiHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SearchPostResponse.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, PostSearchResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -485,11 +496,9 @@ public class AsyncRawSearchClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new NewscatcherApiApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(

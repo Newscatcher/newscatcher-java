@@ -87,7 +87,9 @@ public final class AggregationItem {
         @JsonSetter(value = "aggregation_count", nulls = Nulls.SKIP)
         public Builder aggregationCount(List<TimeFrameCount> aggregationCount) {
             this.aggregationCount.clear();
-            this.aggregationCount.addAll(aggregationCount);
+            if (aggregationCount != null) {
+                this.aggregationCount.addAll(aggregationCount);
+            }
             return this;
         }
 
@@ -97,12 +99,24 @@ public final class AggregationItem {
         }
 
         public Builder addAllAggregationCount(List<TimeFrameCount> aggregationCount) {
-            this.aggregationCount.addAll(aggregationCount);
+            if (aggregationCount != null) {
+                this.aggregationCount.addAll(aggregationCount);
+            }
             return this;
         }
 
         public AggregationItem build() {
             return new AggregationItem(aggregationCount, additionalProperties);
+        }
+
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

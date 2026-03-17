@@ -95,6 +95,10 @@ public final class TimeFrameCount {
 
     public interface _FinalStage {
         TimeFrameCount build();
+
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -142,6 +146,18 @@ public final class TimeFrameCount {
         @java.lang.Override
         public TimeFrameCount build() {
             return new TimeFrameCount(timeFrame, articleCount, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

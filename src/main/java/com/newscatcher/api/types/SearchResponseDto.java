@@ -188,6 +188,10 @@ public final class SearchResponseDto implements IBaseSearchResponseDto {
     public interface _FinalStage {
         SearchResponseDto build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         _FinalStage articles(Optional<List<ArticleEntity>> articles);
 
         _FinalStage articles(List<ArticleEntity> articles);
@@ -321,6 +325,18 @@ public final class SearchResponseDto implements IBaseSearchResponseDto {
         public SearchResponseDto build() {
             return new SearchResponseDto(
                     status, totalHits, page, totalPages, pageSize, articles, userInput, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

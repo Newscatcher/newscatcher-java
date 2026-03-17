@@ -5,8 +5,8 @@ package com.newscatcher.api.resources.breakingnews;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.resources.breakingnews.requests.BreakingNewsGetRequest;
-import com.newscatcher.api.resources.breakingnews.requests.BreakingNewsPostRequest;
+import com.newscatcher.api.resources.breakingnews.requests.GetBreakingNewsRequest;
+import com.newscatcher.api.resources.breakingnews.requests.PostBreakingNewsRequest;
 import com.newscatcher.api.types.BreakingNewsResponseDto;
 
 public class BreakingNewsClient {
@@ -29,42 +29,56 @@ public class BreakingNewsClient {
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public BreakingNewsResponseDto breakingNewsGet() {
-        return this.rawClient.breakingNewsGet().body();
+    public BreakingNewsResponseDto get() {
+        return this.rawClient.get().body();
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public BreakingNewsResponseDto breakingNewsGet(BreakingNewsGetRequest request) {
-        return this.rawClient.breakingNewsGet(request).body();
+    public BreakingNewsResponseDto get(RequestOptions requestOptions) {
+        return this.rawClient.get(requestOptions).body();
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public BreakingNewsResponseDto breakingNewsGet(BreakingNewsGetRequest request, RequestOptions requestOptions) {
-        return this.rawClient.breakingNewsGet(request, requestOptions).body();
+    public BreakingNewsResponseDto get(GetBreakingNewsRequest request) {
+        return this.rawClient.get(request).body();
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public BreakingNewsResponseDto breakingNewsPost() {
-        return this.rawClient.breakingNewsPost().body();
+    public BreakingNewsResponseDto get(GetBreakingNewsRequest request, RequestOptions requestOptions) {
+        return this.rawClient.get(request, requestOptions).body();
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public BreakingNewsResponseDto breakingNewsPost(BreakingNewsPostRequest request) {
-        return this.rawClient.breakingNewsPost(request).body();
+    public BreakingNewsResponseDto post() {
+        return this.rawClient.post().body();
     }
 
     /**
      * Retrieves breaking news articles and sorts them based on specified criteria.
      */
-    public BreakingNewsResponseDto breakingNewsPost(BreakingNewsPostRequest request, RequestOptions requestOptions) {
-        return this.rawClient.breakingNewsPost(request, requestOptions).body();
+    public BreakingNewsResponseDto post(RequestOptions requestOptions) {
+        return this.rawClient.post(requestOptions).body();
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
+    public BreakingNewsResponseDto post(PostBreakingNewsRequest request) {
+        return this.rawClient.post(request).body();
+    }
+
+    /**
+     * Retrieves breaking news articles and sorts them based on specified criteria.
+     */
+    public BreakingNewsResponseDto post(PostBreakingNewsRequest request, RequestOptions requestOptions) {
+        return this.rawClient.post(request, requestOptions).body();
     }
 }

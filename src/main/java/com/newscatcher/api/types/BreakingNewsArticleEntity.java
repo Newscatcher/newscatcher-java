@@ -5,12 +5,15 @@ package com.newscatcher.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.newscatcher.api.core.Nullable;
+import com.newscatcher.api.core.NullableNonemptyFilter;
 import com.newscatcher.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +28,9 @@ public final class BreakingNewsArticleEntity {
 
     private final Optional<String> author;
 
-    private final Optional<Authors> authors;
+    private final Optional<BreakingNewsArticleEntityAuthors> authors;
 
-    private final Optional<Journalists> journalists;
+    private final Optional<BreakingNewsArticleEntityJournalists> journalists;
 
     private final Optional<String> publishedDate;
 
@@ -65,7 +68,11 @@ public final class BreakingNewsArticleEntity {
 
     private final Optional<String> description;
 
-    private final String content;
+    private final Optional<String> content;
+
+    private final Optional<String> titleTranslatedEn;
+
+    private final Optional<String> contentTranslatedEn;
 
     private final Optional<Integer> wordCount;
 
@@ -83,15 +90,13 @@ public final class BreakingNewsArticleEntity {
 
     private final double score;
 
-    private final Optional<Boolean> robotsCompliant;
-
     private final Map<String, Object> additionalProperties;
 
     private BreakingNewsArticleEntity(
             String title,
             Optional<String> author,
-            Optional<Authors> authors,
-            Optional<Journalists> journalists,
+            Optional<BreakingNewsArticleEntityAuthors> authors,
+            Optional<BreakingNewsArticleEntityJournalists> journalists,
             Optional<String> publishedDate,
             Optional<String> publishedDatePrecision,
             Optional<String> updatedDate,
@@ -110,7 +115,9 @@ public final class BreakingNewsArticleEntity {
             Optional<String> media,
             Optional<String> language,
             Optional<String> description,
-            String content,
+            Optional<String> content,
+            Optional<String> titleTranslatedEn,
+            Optional<String> contentTranslatedEn,
             Optional<Integer> wordCount,
             Optional<Boolean> isOpinion,
             Optional<String> twitterAccount,
@@ -119,7 +126,6 @@ public final class BreakingNewsArticleEntity {
             Optional<NlpDataEntity> nlp,
             String id,
             double score,
-            Optional<Boolean> robotsCompliant,
             Map<String, Object> additionalProperties) {
         this.title = title;
         this.author = author;
@@ -144,6 +150,8 @@ public final class BreakingNewsArticleEntity {
         this.language = language;
         this.description = description;
         this.content = content;
+        this.titleTranslatedEn = titleTranslatedEn;
+        this.contentTranslatedEn = contentTranslatedEn;
         this.wordCount = wordCount;
         this.isOpinion = isOpinion;
         this.twitterAccount = twitterAccount;
@@ -152,7 +160,6 @@ public final class BreakingNewsArticleEntity {
         this.nlp = nlp;
         this.id = id;
         this.score = score;
-        this.robotsCompliant = robotsCompliant;
         this.additionalProperties = additionalProperties;
     }
 
@@ -176,15 +183,18 @@ public final class BreakingNewsArticleEntity {
      * @return A list of authors of the article.
      */
     @JsonProperty("authors")
-    public Optional<Authors> getAuthors() {
+    public Optional<BreakingNewsArticleEntityAuthors> getAuthors() {
         return authors;
     }
 
     /**
      * @return A list of journalists associated with the article.
      */
-    @JsonProperty("journalists")
-    public Optional<Journalists> getJournalists() {
+    @JsonIgnore
+    public Optional<BreakingNewsArticleEntityJournalists> getJournalists() {
+        if (journalists == null) {
+            return Optional.empty();
+        }
         return journalists;
     }
 
@@ -207,24 +217,33 @@ public final class BreakingNewsArticleEntity {
     /**
      * @return The date the article was last updated.
      */
-    @JsonProperty("updated_date")
+    @JsonIgnore
     public Optional<String> getUpdatedDate() {
+        if (updatedDate == null) {
+            return Optional.empty();
+        }
         return updatedDate;
     }
 
     /**
      * @return The precision of the updated date.
      */
-    @JsonProperty("updated_date_precision")
+    @JsonIgnore
     public Optional<String> getUpdatedDatePrecision() {
+        if (updatedDatePrecision == null) {
+            return Optional.empty();
+        }
         return updatedDatePrecision;
     }
 
     /**
      * @return The date the article was parsed.
      */
-    @JsonProperty("parse_date")
+    @JsonIgnore
     public Optional<String> getParseDate() {
+        if (parseDate == null) {
+            return Optional.empty();
+        }
         return parseDate;
     }
 
@@ -269,7 +288,7 @@ public final class BreakingNewsArticleEntity {
     }
 
     /**
-     * @return Indicates if the article is paid content.
+     * @return Indicates whether the source labels the article as paywalled or requiring a subscription for full access.
      */
     @JsonProperty("paid_content")
     public Optional<Boolean> getPaidContent() {
@@ -336,8 +355,30 @@ public final class BreakingNewsArticleEntity {
      * @return The content of the article.
      */
     @JsonProperty("content")
-    public String getContent() {
+    public Optional<String> getContent() {
         return content;
+    }
+
+    /**
+     * @return English translation of the article title. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.
+     */
+    @JsonIgnore
+    public Optional<String> getTitleTranslatedEn() {
+        if (titleTranslatedEn == null) {
+            return Optional.empty();
+        }
+        return titleTranslatedEn;
+    }
+
+    /**
+     * @return English translation of the article content. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.
+     */
+    @JsonIgnore
+    public Optional<String> getContentTranslatedEn() {
+        if (contentTranslatedEn == null) {
+            return Optional.empty();
+        }
+        return contentTranslatedEn;
     }
 
     /**
@@ -359,8 +400,11 @@ public final class BreakingNewsArticleEntity {
     /**
      * @return The Twitter account associated with the article.
      */
-    @JsonProperty("twitter_account")
+    @JsonIgnore
     public Optional<String> getTwitterAccount() {
+        if (twitterAccount == null) {
+            return Optional.empty();
+        }
         return twitterAccount;
     }
 
@@ -401,12 +445,46 @@ public final class BreakingNewsArticleEntity {
         return score;
     }
 
-    /**
-     * @return True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.
-     */
-    @JsonProperty("robots_compliant")
-    public Optional<Boolean> getRobotsCompliant() {
-        return robotsCompliant;
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("journalists")
+    private Optional<BreakingNewsArticleEntityJournalists> _getJournalists() {
+        return journalists;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("updated_date")
+    private Optional<String> _getUpdatedDate() {
+        return updatedDate;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("updated_date_precision")
+    private Optional<String> _getUpdatedDatePrecision() {
+        return updatedDatePrecision;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("parse_date")
+    private Optional<String> _getParseDate() {
+        return parseDate;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("title_translated_en")
+    private Optional<String> _getTitleTranslatedEn() {
+        return titleTranslatedEn;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("content_translated_en")
+    private Optional<String> _getContentTranslatedEn() {
+        return contentTranslatedEn;
+    }
+
+    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = NullableNonemptyFilter.class)
+    @JsonProperty("twitter_account")
+    private Optional<String> _getTwitterAccount() {
+        return twitterAccount;
     }
 
     @java.lang.Override
@@ -444,6 +522,8 @@ public final class BreakingNewsArticleEntity {
                 && language.equals(other.language)
                 && description.equals(other.description)
                 && content.equals(other.content)
+                && titleTranslatedEn.equals(other.titleTranslatedEn)
+                && contentTranslatedEn.equals(other.contentTranslatedEn)
                 && wordCount.equals(other.wordCount)
                 && isOpinion.equals(other.isOpinion)
                 && twitterAccount.equals(other.twitterAccount)
@@ -451,8 +531,7 @@ public final class BreakingNewsArticleEntity {
                 && allDomainLinks.equals(other.allDomainLinks)
                 && nlp.equals(other.nlp)
                 && id.equals(other.id)
-                && score == other.score
-                && robotsCompliant.equals(other.robotsCompliant);
+                && score == other.score;
     }
 
     @java.lang.Override
@@ -481,6 +560,8 @@ public final class BreakingNewsArticleEntity {
                 this.language,
                 this.description,
                 this.content,
+                this.titleTranslatedEn,
+                this.contentTranslatedEn,
                 this.wordCount,
                 this.isOpinion,
                 this.twitterAccount,
@@ -488,8 +569,7 @@ public final class BreakingNewsArticleEntity {
                 this.allDomainLinks,
                 this.nlp,
                 this.id,
-                this.score,
-                this.robotsCompliant);
+                this.score);
     }
 
     @java.lang.Override
@@ -542,14 +622,7 @@ public final class BreakingNewsArticleEntity {
         /**
          * <p>The rank of the article's source.</p>
          */
-        ContentStage rank(int rank);
-    }
-
-    public interface ContentStage {
-        /**
-         * <p>The content of the article.</p>
-         */
-        IdStage content(@NotNull String content);
+        IdStage rank(int rank);
     }
 
     public interface IdStage {
@@ -569,6 +642,10 @@ public final class BreakingNewsArticleEntity {
     public interface _FinalStage {
         BreakingNewsArticleEntity build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>The primary author of the article.</p>
          */
@@ -579,16 +656,18 @@ public final class BreakingNewsArticleEntity {
         /**
          * <p>A list of authors of the article.</p>
          */
-        _FinalStage authors(Optional<Authors> authors);
+        _FinalStage authors(Optional<BreakingNewsArticleEntityAuthors> authors);
 
-        _FinalStage authors(Authors authors);
+        _FinalStage authors(BreakingNewsArticleEntityAuthors authors);
 
         /**
          * <p>A list of journalists associated with the article.</p>
          */
-        _FinalStage journalists(Optional<Journalists> journalists);
+        _FinalStage journalists(Optional<BreakingNewsArticleEntityJournalists> journalists);
 
-        _FinalStage journalists(Journalists journalists);
+        _FinalStage journalists(BreakingNewsArticleEntityJournalists journalists);
+
+        _FinalStage journalists(Nullable<BreakingNewsArticleEntityJournalists> journalists);
 
         /**
          * <p>The date the article was published.</p>
@@ -611,6 +690,8 @@ public final class BreakingNewsArticleEntity {
 
         _FinalStage updatedDate(String updatedDate);
 
+        _FinalStage updatedDate(Nullable<String> updatedDate);
+
         /**
          * <p>The precision of the updated date.</p>
          */
@@ -618,12 +699,16 @@ public final class BreakingNewsArticleEntity {
 
         _FinalStage updatedDatePrecision(String updatedDatePrecision);
 
+        _FinalStage updatedDatePrecision(Nullable<String> updatedDatePrecision);
+
         /**
          * <p>The date the article was parsed.</p>
          */
         _FinalStage parseDate(Optional<String> parseDate);
 
         _FinalStage parseDate(String parseDate);
+
+        _FinalStage parseDate(Nullable<String> parseDate);
 
         /**
          * <p>The name of the source where the article was published.</p>
@@ -640,7 +725,7 @@ public final class BreakingNewsArticleEntity {
         _FinalStage isHeadline(Boolean isHeadline);
 
         /**
-         * <p>Indicates if the article is paid content.</p>
+         * <p>Indicates whether the source labels the article as paywalled or requiring a subscription for full access.</p>
          */
         _FinalStage paidContent(Optional<Boolean> paidContent);
 
@@ -682,6 +767,31 @@ public final class BreakingNewsArticleEntity {
         _FinalStage description(String description);
 
         /**
+         * <p>The content of the article.</p>
+         */
+        _FinalStage content(Optional<String> content);
+
+        _FinalStage content(String content);
+
+        /**
+         * <p>English translation of the article title. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        _FinalStage titleTranslatedEn(Optional<String> titleTranslatedEn);
+
+        _FinalStage titleTranslatedEn(String titleTranslatedEn);
+
+        _FinalStage titleTranslatedEn(Nullable<String> titleTranslatedEn);
+
+        /**
+         * <p>English translation of the article content. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        _FinalStage contentTranslatedEn(Optional<String> contentTranslatedEn);
+
+        _FinalStage contentTranslatedEn(String contentTranslatedEn);
+
+        _FinalStage contentTranslatedEn(Nullable<String> contentTranslatedEn);
+
+        /**
          * <p>The word count of the article.</p>
          */
         _FinalStage wordCount(Optional<Integer> wordCount);
@@ -702,6 +812,8 @@ public final class BreakingNewsArticleEntity {
 
         _FinalStage twitterAccount(String twitterAccount);
 
+        _FinalStage twitterAccount(Nullable<String> twitterAccount);
+
         /**
          * <p>A list of all URLs mentioned in the article.</p>
          */
@@ -719,13 +831,6 @@ public final class BreakingNewsArticleEntity {
         _FinalStage nlp(Optional<NlpDataEntity> nlp);
 
         _FinalStage nlp(NlpDataEntity nlp);
-
-        /**
-         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
-         */
-        _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant);
-
-        _FinalStage robotsCompliant(Boolean robotsCompliant);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -736,7 +841,6 @@ public final class BreakingNewsArticleEntity {
                     FullDomainUrlStage,
                     ParentUrlStage,
                     RankStage,
-                    ContentStage,
                     IdStage,
                     ScoreStage,
                     _FinalStage {
@@ -752,13 +856,9 @@ public final class BreakingNewsArticleEntity {
 
         private int rank;
 
-        private String content;
-
         private String id;
 
         private double score;
-
-        private Optional<Boolean> robotsCompliant = Optional.empty();
 
         private Optional<NlpDataEntity> nlp = Optional.empty();
 
@@ -771,6 +871,12 @@ public final class BreakingNewsArticleEntity {
         private Optional<Boolean> isOpinion = Optional.empty();
 
         private Optional<Integer> wordCount = Optional.empty();
+
+        private Optional<String> contentTranslatedEn = Optional.empty();
+
+        private Optional<String> titleTranslatedEn = Optional.empty();
+
+        private Optional<String> content = Optional.empty();
 
         private Optional<String> description = Optional.empty();
 
@@ -798,9 +904,9 @@ public final class BreakingNewsArticleEntity {
 
         private Optional<String> publishedDate = Optional.empty();
 
-        private Optional<Journalists> journalists = Optional.empty();
+        private Optional<BreakingNewsArticleEntityJournalists> journalists = Optional.empty();
 
-        private Optional<Authors> authors = Optional.empty();
+        private Optional<BreakingNewsArticleEntityAuthors> authors = Optional.empty();
 
         private Optional<String> author = Optional.empty();
 
@@ -834,6 +940,8 @@ public final class BreakingNewsArticleEntity {
             language(other.getLanguage());
             description(other.getDescription());
             content(other.getContent());
+            titleTranslatedEn(other.getTitleTranslatedEn());
+            contentTranslatedEn(other.getContentTranslatedEn());
             wordCount(other.getWordCount());
             isOpinion(other.getIsOpinion());
             twitterAccount(other.getTwitterAccount());
@@ -842,7 +950,6 @@ public final class BreakingNewsArticleEntity {
             nlp(other.getNlp());
             id(other.getId());
             score(other.getScore());
-            robotsCompliant(other.getRobotsCompliant());
             return this;
         }
 
@@ -913,20 +1020,8 @@ public final class BreakingNewsArticleEntity {
          */
         @java.lang.Override
         @JsonSetter("rank")
-        public ContentStage rank(int rank) {
+        public IdStage rank(int rank) {
             this.rank = rank;
-            return this;
-        }
-
-        /**
-         * <p>The content of the article.</p>
-         * <p>The content of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("content")
-        public IdStage content(@NotNull String content) {
-            this.content = Objects.requireNonNull(content, "content must not be null");
             return this;
         }
 
@@ -951,26 +1046,6 @@ public final class BreakingNewsArticleEntity {
         @JsonSetter("score")
         public _FinalStage score(double score) {
             this.score = score;
-            return this;
-        }
-
-        /**
-         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage robotsCompliant(Boolean robotsCompliant) {
-            this.robotsCompliant = Optional.ofNullable(robotsCompliant);
-            return this;
-        }
-
-        /**
-         * <p>True if the article content can be safely accessed according to the publisher's robots.txt rules; false otherwise.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "robots_compliant", nulls = Nulls.SKIP)
-        public _FinalStage robotsCompliant(Optional<Boolean> robotsCompliant) {
-            this.robotsCompliant = robotsCompliant;
             return this;
         }
 
@@ -1032,6 +1107,22 @@ public final class BreakingNewsArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
+        public _FinalStage twitterAccount(Nullable<String> twitterAccount) {
+            if (twitterAccount.isNull()) {
+                this.twitterAccount = null;
+            } else if (twitterAccount.isEmpty()) {
+                this.twitterAccount = Optional.empty();
+            } else {
+                this.twitterAccount = Optional.of(twitterAccount.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>The Twitter account associated with the article.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
         public _FinalStage twitterAccount(String twitterAccount) {
             this.twitterAccount = Optional.ofNullable(twitterAccount);
             return this;
@@ -1084,6 +1175,98 @@ public final class BreakingNewsArticleEntity {
         @JsonSetter(value = "word_count", nulls = Nulls.SKIP)
         public _FinalStage wordCount(Optional<Integer> wordCount) {
             this.wordCount = wordCount;
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article content. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage contentTranslatedEn(Nullable<String> contentTranslatedEn) {
+            if (contentTranslatedEn.isNull()) {
+                this.contentTranslatedEn = null;
+            } else if (contentTranslatedEn.isEmpty()) {
+                this.contentTranslatedEn = Optional.empty();
+            } else {
+                this.contentTranslatedEn = Optional.of(contentTranslatedEn.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article content. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage contentTranslatedEn(String contentTranslatedEn) {
+            this.contentTranslatedEn = Optional.ofNullable(contentTranslatedEn);
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article content. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "content_translated_en", nulls = Nulls.SKIP)
+        public _FinalStage contentTranslatedEn(Optional<String> contentTranslatedEn) {
+            this.contentTranslatedEn = contentTranslatedEn;
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article title. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage titleTranslatedEn(Nullable<String> titleTranslatedEn) {
+            if (titleTranslatedEn.isNull()) {
+                this.titleTranslatedEn = null;
+            } else if (titleTranslatedEn.isEmpty()) {
+                this.titleTranslatedEn = Optional.empty();
+            } else {
+                this.titleTranslatedEn = Optional.of(titleTranslatedEn.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article title. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage titleTranslatedEn(String titleTranslatedEn) {
+            this.titleTranslatedEn = Optional.ofNullable(titleTranslatedEn);
+            return this;
+        }
+
+        /**
+         * <p>English translation of the article title. Available when setting the <code>include_translation_fields</code> parameter to <code>true</code>.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "title_translated_en", nulls = Nulls.SKIP)
+        public _FinalStage titleTranslatedEn(Optional<String> titleTranslatedEn) {
+            this.titleTranslatedEn = titleTranslatedEn;
+            return this;
+        }
+
+        /**
+         * <p>The content of the article.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage content(String content) {
+            this.content = Optional.ofNullable(content);
+            return this;
+        }
+
+        /**
+         * <p>The content of the article.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "content", nulls = Nulls.SKIP)
+        public _FinalStage content(Optional<String> content) {
+            this.content = content;
             return this;
         }
 
@@ -1188,7 +1371,7 @@ public final class BreakingNewsArticleEntity {
         }
 
         /**
-         * <p>Indicates if the article is paid content.</p>
+         * <p>Indicates whether the source labels the article as paywalled or requiring a subscription for full access.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1198,7 +1381,7 @@ public final class BreakingNewsArticleEntity {
         }
 
         /**
-         * <p>Indicates if the article is paid content.</p>
+         * <p>Indicates whether the source labels the article as paywalled or requiring a subscription for full access.</p>
          */
         @java.lang.Override
         @JsonSetter(value = "paid_content", nulls = Nulls.SKIP)
@@ -1252,6 +1435,22 @@ public final class BreakingNewsArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
+        public _FinalStage parseDate(Nullable<String> parseDate) {
+            if (parseDate.isNull()) {
+                this.parseDate = null;
+            } else if (parseDate.isEmpty()) {
+                this.parseDate = Optional.empty();
+            } else {
+                this.parseDate = Optional.of(parseDate.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>The date the article was parsed.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
         public _FinalStage parseDate(String parseDate) {
             this.parseDate = Optional.ofNullable(parseDate);
             return this;
@@ -1272,6 +1471,22 @@ public final class BreakingNewsArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
+        public _FinalStage updatedDatePrecision(Nullable<String> updatedDatePrecision) {
+            if (updatedDatePrecision.isNull()) {
+                this.updatedDatePrecision = null;
+            } else if (updatedDatePrecision.isEmpty()) {
+                this.updatedDatePrecision = Optional.empty();
+            } else {
+                this.updatedDatePrecision = Optional.of(updatedDatePrecision.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>The precision of the updated date.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
         public _FinalStage updatedDatePrecision(String updatedDatePrecision) {
             this.updatedDatePrecision = Optional.ofNullable(updatedDatePrecision);
             return this;
@@ -1284,6 +1499,22 @@ public final class BreakingNewsArticleEntity {
         @JsonSetter(value = "updated_date_precision", nulls = Nulls.SKIP)
         public _FinalStage updatedDatePrecision(Optional<String> updatedDatePrecision) {
             this.updatedDatePrecision = updatedDatePrecision;
+            return this;
+        }
+
+        /**
+         * <p>The date the article was last updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage updatedDate(Nullable<String> updatedDate) {
+            if (updatedDate.isNull()) {
+                this.updatedDate = null;
+            } else if (updatedDate.isEmpty()) {
+                this.updatedDate = Optional.empty();
+            } else {
+                this.updatedDate = Optional.of(updatedDate.get());
+            }
             return this;
         }
 
@@ -1352,7 +1583,23 @@ public final class BreakingNewsArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage journalists(Journalists journalists) {
+        public _FinalStage journalists(Nullable<BreakingNewsArticleEntityJournalists> journalists) {
+            if (journalists.isNull()) {
+                this.journalists = null;
+            } else if (journalists.isEmpty()) {
+                this.journalists = Optional.empty();
+            } else {
+                this.journalists = Optional.of(journalists.get());
+            }
+            return this;
+        }
+
+        /**
+         * <p>A list of journalists associated with the article.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage journalists(BreakingNewsArticleEntityJournalists journalists) {
             this.journalists = Optional.ofNullable(journalists);
             return this;
         }
@@ -1362,7 +1609,7 @@ public final class BreakingNewsArticleEntity {
          */
         @java.lang.Override
         @JsonSetter(value = "journalists", nulls = Nulls.SKIP)
-        public _FinalStage journalists(Optional<Journalists> journalists) {
+        public _FinalStage journalists(Optional<BreakingNewsArticleEntityJournalists> journalists) {
             this.journalists = journalists;
             return this;
         }
@@ -1372,7 +1619,7 @@ public final class BreakingNewsArticleEntity {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage authors(Authors authors) {
+        public _FinalStage authors(BreakingNewsArticleEntityAuthors authors) {
             this.authors = Optional.ofNullable(authors);
             return this;
         }
@@ -1382,7 +1629,7 @@ public final class BreakingNewsArticleEntity {
          */
         @java.lang.Override
         @JsonSetter(value = "authors", nulls = Nulls.SKIP)
-        public _FinalStage authors(Optional<Authors> authors) {
+        public _FinalStage authors(Optional<BreakingNewsArticleEntityAuthors> authors) {
             this.authors = authors;
             return this;
         }
@@ -1433,6 +1680,8 @@ public final class BreakingNewsArticleEntity {
                     language,
                     description,
                     content,
+                    titleTranslatedEn,
+                    contentTranslatedEn,
                     wordCount,
                     isOpinion,
                     twitterAccount,
@@ -1441,8 +1690,19 @@ public final class BreakingNewsArticleEntity {
                     nlp,
                     id,
                     score,
-                    robotsCompliant,
                     additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

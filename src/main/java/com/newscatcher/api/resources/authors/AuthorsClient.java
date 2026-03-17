@@ -5,10 +5,10 @@ package com.newscatcher.api.resources.authors;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.resources.authors.requests.AuthorsGetRequest;
-import com.newscatcher.api.resources.authors.requests.AuthorsPostRequest;
-import com.newscatcher.api.resources.authors.types.AuthorsGetResponse;
-import com.newscatcher.api.resources.authors.types.AuthorsPostResponse;
+import com.newscatcher.api.resources.authors.requests.GetAuthorsRequest;
+import com.newscatcher.api.resources.authors.requests.PostAuthorsRequest;
+import com.newscatcher.api.resources.authors.types.GetAuthorsResponse;
+import com.newscatcher.api.resources.authors.types.PostAuthorsResponse;
 
 public class AuthorsClient {
     protected final ClientOptions clientOptions;
@@ -30,28 +30,28 @@ public class AuthorsClient {
     /**
      * Searches for articles written by a specified author. You can filter results by language, country, source, and more.
      */
-    public AuthorsGetResponse get(AuthorsGetRequest request) {
+    public GetAuthorsResponse get(GetAuthorsRequest request) {
         return this.rawClient.get(request).body();
     }
 
     /**
      * Searches for articles written by a specified author. You can filter results by language, country, source, and more.
      */
-    public AuthorsGetResponse get(AuthorsGetRequest request, RequestOptions requestOptions) {
+    public GetAuthorsResponse get(GetAuthorsRequest request, RequestOptions requestOptions) {
         return this.rawClient.get(request, requestOptions).body();
     }
 
     /**
      * Searches for articles by author. You can filter results by language, country, source, and more.
      */
-    public AuthorsPostResponse post(AuthorsPostRequest request) {
+    public PostAuthorsResponse post(PostAuthorsRequest request) {
         return this.rawClient.post(request).body();
     }
 
     /**
      * Searches for articles by author. You can filter results by language, country, source, and more.
      */
-    public AuthorsPostResponse post(AuthorsPostRequest request, RequestOptions requestOptions) {
+    public PostAuthorsResponse post(PostAuthorsRequest request, RequestOptions requestOptions) {
         return this.rawClient.post(request, requestOptions).body();
     }
 }

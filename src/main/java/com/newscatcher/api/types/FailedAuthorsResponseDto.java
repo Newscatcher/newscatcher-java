@@ -191,6 +191,10 @@ public final class FailedAuthorsResponseDto implements IBaseSearchResponseDto {
     public interface _FinalStage {
         FailedAuthorsResponseDto build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>An empty list of articles, as no matches were found.</p>
          */
@@ -334,6 +338,18 @@ public final class FailedAuthorsResponseDto implements IBaseSearchResponseDto {
         public FailedAuthorsResponseDto build() {
             return new FailedAuthorsResponseDto(
                     status, totalHits, page, totalPages, pageSize, articles, userInput, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

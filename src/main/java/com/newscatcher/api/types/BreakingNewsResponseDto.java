@@ -197,6 +197,10 @@ public final class BreakingNewsResponseDto implements IBaseSearchResponseDto {
     public interface _FinalStage {
         BreakingNewsResponseDto build();
 
+        _FinalStage additionalProperty(String key, Object value);
+
+        _FinalStage additionalProperties(Map<String, Object> additionalProperties);
+
         /**
          * <p>A list of breaking news events, each containing relevant articles.</p>
          */
@@ -340,6 +344,18 @@ public final class BreakingNewsResponseDto implements IBaseSearchResponseDto {
         public BreakingNewsResponseDto build() {
             return new BreakingNewsResponseDto(
                     status, totalHits, page, totalPages, pageSize, breakingNewsEvents, userInput, additionalProperties);
+        }
+
+        @java.lang.Override
+        public Builder additionalProperty(String key, Object value) {
+            this.additionalProperties.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public Builder additionalProperties(Map<String, Object> additionalProperties) {
+            this.additionalProperties.putAll(additionalProperties);
+            return this;
         }
     }
 }

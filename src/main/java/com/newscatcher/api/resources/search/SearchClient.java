@@ -5,10 +5,10 @@ package com.newscatcher.api.resources.search;
 
 import com.newscatcher.api.core.ClientOptions;
 import com.newscatcher.api.core.RequestOptions;
-import com.newscatcher.api.resources.search.requests.SearchGetRequest;
-import com.newscatcher.api.resources.search.requests.SearchPostRequest;
-import com.newscatcher.api.resources.search.types.SearchGetResponse;
-import com.newscatcher.api.resources.search.types.SearchPostResponse;
+import com.newscatcher.api.resources.search.requests.GetSearchRequest;
+import com.newscatcher.api.resources.search.requests.PostSearchRequest;
+import com.newscatcher.api.resources.search.types.GetSearchResponse;
+import com.newscatcher.api.resources.search.types.PostSearchResponse;
 
 public class SearchClient {
     protected final ClientOptions clientOptions;
@@ -28,30 +28,30 @@ public class SearchClient {
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public SearchGetResponse get(SearchGetRequest request) {
+    public GetSearchResponse get(GetSearchRequest request) {
         return this.rawClient.get(request).body();
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public SearchGetResponse get(SearchGetRequest request, RequestOptions requestOptions) {
+    public GetSearchResponse get(GetSearchRequest request, RequestOptions requestOptions) {
         return this.rawClient.get(request, requestOptions).body();
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public SearchPostResponse post(SearchPostRequest request) {
+    public PostSearchResponse post(PostSearchRequest request) {
         return this.rawClient.post(request).body();
     }
 
     /**
-     * Searches for articles based on specified criteria such as keyword, language, country, source, and more.
+     * Searches for articles based on specified criteria such as keywords, language, country, source, and more.
      */
-    public SearchPostResponse post(SearchPostRequest request, RequestOptions requestOptions) {
+    public PostSearchResponse post(PostSearchRequest request, RequestOptions requestOptions) {
         return this.rawClient.post(request, requestOptions).body();
     }
 }
