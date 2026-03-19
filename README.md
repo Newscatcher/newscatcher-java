@@ -55,7 +55,7 @@ Add the dependency in your `pom.xml` file:
 <dependency>
   <groupId>com.newscatcherapi</groupId>
   <artifactId>newscatcher-sdk</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
 </dependency>
 ```
 
@@ -334,7 +334,7 @@ The `withRawResponse()` method returns a raw client that wraps all responses wit
 (A normal client's `response` is identical to a raw client's `response.body()`.)
 
 ```java
-PostHttpResponse response = client.search().withRawResponse().post(...);
+NewscatcherApiHttpResponse response = client.search().withRawResponse().post(...);
 
 System.out.println(response.body());
 System.out.println(response.headers().get("X-My-Header"));
@@ -352,4 +352,5 @@ On the other hand, contributions to the README are always very welcome!
 ## Release Notes
 
 For release notes and changelog, visit our [GitHub releases page](https://github.com/Newscatcher/newscatcher-java/releases).
+
 
