@@ -5,9 +5,9 @@ package com.newscatcher.api.resources.search.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -261,17 +261,17 @@ public final class GetSearchRequest {
         this.additionalProperties = additionalProperties;
     }
 
-    @JsonProperty("q")
+    @JsonIgnore
     public String getQ() {
         return q;
     }
 
-    @JsonProperty("search_in")
+    @JsonIgnore
     public Optional<String> getSearchIn() {
         return searchIn;
     }
 
-    @JsonProperty("include_translation_fields")
+    @JsonIgnore
     public Optional<Boolean> getIncludeTranslationFields() {
         return includeTranslationFields;
     }
@@ -281,7 +281,7 @@ public final class GetSearchRequest {
      * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>.</p>
      * <p>Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
      */
-    @JsonProperty("predefined_sources")
+    @JsonIgnore
     public Optional<String> getPredefinedSources() {
         return predefinedSources;
     }
@@ -290,7 +290,7 @@ public final class GetSearchRequest {
      * @return Word or phrase to search within the source names. To specify multiple values, use a comma-separated string.
      * <p><strong>Note</strong>: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like <code>&quot;sport&quot;</code> or <code>&quot;new york times&quot;</code>. For example, <code>&quot;sport&quot;</code> returns sources such as <code>&quot;Motorsport&quot;</code>, <code>&quot;Dot Esport&quot;</code>, and <code>&quot;Tuttosport&quot;</code>.</p>
      */
-    @JsonProperty("source_name")
+    @JsonIgnore
     public Optional<String> getSourceName() {
         return sourceName;
     }
@@ -298,7 +298,7 @@ public final class GetSearchRequest {
     /**
      * @return One or more news sources to narrow down the search. The format must be a domain URL. Subdomains, such as <code>finance.yahoo.com</code>, are also acceptable.To specify multiple sources, use a comma-separated string.
      */
-    @JsonProperty("sources")
+    @JsonIgnore
     public Optional<String> getSources() {
         return sources;
     }
@@ -306,7 +306,7 @@ public final class GetSearchRequest {
     /**
      * @return The news sources to exclude from the search. To exclude multiple sources, use a comma-separated string.
      */
-    @JsonProperty("not_sources")
+    @JsonIgnore
     public Optional<String> getNotSources() {
         return notSources;
     }
@@ -315,7 +315,7 @@ public final class GetSearchRequest {
      * @return The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.
      * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
      */
-    @JsonProperty("lang")
+    @JsonIgnore
     public Optional<String> getLang() {
         return lang;
     }
@@ -324,7 +324,7 @@ public final class GetSearchRequest {
      * @return The language(s) to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To exclude multiple languages, use a comma-separated string.
      * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
      */
-    @JsonProperty("not_lang")
+    @JsonIgnore
     public Optional<String> getNotLang() {
         return notLang;
     }
@@ -333,7 +333,7 @@ public final class GetSearchRequest {
      * @return The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.
      * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
      */
-    @JsonProperty("countries")
+    @JsonIgnore
     public Optional<String> getCountries() {
         return countries;
     }
@@ -342,7 +342,7 @@ public final class GetSearchRequest {
      * @return The publisher location countries to exclude from the search. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To exclude multiple countries, use a comma-separated string.
      * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
      */
-    @JsonProperty("not_countries")
+    @JsonIgnore
     public Optional<String> getNotCountries() {
         return notCountries;
     }
@@ -350,62 +350,62 @@ public final class GetSearchRequest {
     /**
      * @return The list of author names to exclude from your search. To exclude articles by specific authors, use a comma-separated string.
      */
-    @JsonProperty("not_author_name")
+    @JsonIgnore
     public Optional<String> getNotAuthorName() {
         return notAuthorName;
     }
 
-    @JsonProperty("from_")
+    @JsonIgnore
     public Optional<From> getFrom() {
         return from;
     }
 
-    @JsonProperty("to_")
+    @JsonIgnore
     public Optional<To> getTo() {
         return to;
     }
 
-    @JsonProperty("published_date_precision")
+    @JsonIgnore
     public Optional<String> getPublishedDatePrecision() {
         return publishedDatePrecision;
     }
 
-    @JsonProperty("by_parse_date")
+    @JsonIgnore
     public Optional<Boolean> getByParseDate() {
         return byParseDate;
     }
 
-    @JsonProperty("sort_by")
+    @JsonIgnore
     public Optional<SortBy> getSortBy() {
         return sortBy;
     }
 
-    @JsonProperty("ranked_only")
+    @JsonIgnore
     public Optional<Boolean> getRankedOnly() {
         return rankedOnly;
     }
 
-    @JsonProperty("from_rank")
+    @JsonIgnore
     public Optional<Integer> getFromRank() {
         return fromRank;
     }
 
-    @JsonProperty("to_rank")
+    @JsonIgnore
     public Optional<Integer> getToRank() {
         return toRank;
     }
 
-    @JsonProperty("is_headline")
+    @JsonIgnore
     public Optional<Boolean> getIsHeadline() {
         return isHeadline;
     }
 
-    @JsonProperty("is_opinion")
+    @JsonIgnore
     public Optional<Boolean> getIsOpinion() {
         return isOpinion;
     }
 
-    @JsonProperty("is_paid_content")
+    @JsonIgnore
     public Optional<Boolean> getIsPaidContent() {
         return isPaidContent;
     }
@@ -413,7 +413,7 @@ public final class GetSearchRequest {
     /**
      * @return The categorical URL(s) to filter your search. To filter your search by multiple categorical URLs, use a comma-separated string.
      */
-    @JsonProperty("parent_url")
+    @JsonIgnore
     public Optional<String> getParentUrl() {
         return parentUrl;
     }
@@ -422,7 +422,7 @@ public final class GetSearchRequest {
      * @return The complete URL(s) mentioned in the article. For multiple URLs, use a comma-separated string.
      * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
      */
-    @JsonProperty("all_links")
+    @JsonIgnore
     public Optional<String> getAllLinks() {
         return allLinks;
     }
@@ -431,7 +431,7 @@ public final class GetSearchRequest {
      * @return The domain(s) mentioned in the article. For multiple domains, use a comma-separated string.
      * <p>For more details, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
      */
-    @JsonProperty("all_domain_links")
+    @JsonIgnore
     public Optional<String> getAllDomainLinks() {
         return allDomainLinks;
     }
@@ -441,22 +441,22 @@ public final class GetSearchRequest {
      * <p><strong>Note</strong>: When this parameter is used, the response includes the <code>all_links_data</code> field with detailed link information.</p>
      * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/how-to/search-by-url">Search by URL</a>.</p>
      */
-    @JsonProperty("all_links_text")
+    @JsonIgnore
     public Optional<String> getAllLinksText() {
         return allLinksText;
     }
 
-    @JsonProperty("additional_domain_info")
+    @JsonIgnore
     public Optional<Boolean> getAdditionalDomainInfo() {
         return additionalDomainInfo;
     }
 
-    @JsonProperty("is_news_domain")
+    @JsonIgnore
     public Optional<Boolean> getIsNewsDomain() {
         return isNewsDomain;
     }
 
-    @JsonProperty("news_domain_type")
+    @JsonIgnore
     public Optional<NewsDomainType> getNewsDomainType() {
         return newsDomainType;
     }
@@ -465,102 +465,102 @@ public final class GetSearchRequest {
      * @return Filters results based on the news type. Multiple types can be specified using a comma-separated string.
      * <p>For a complete list of available news types, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#news-type-news-type">Enumerated parameters &gt; News type</a>.</p>
      */
-    @JsonProperty("news_type")
+    @JsonIgnore
     public Optional<String> getNewsType() {
         return newsType;
     }
 
-    @JsonProperty("word_count_min")
+    @JsonIgnore
     public Optional<Integer> getWordCountMin() {
         return wordCountMin;
     }
 
-    @JsonProperty("word_count_max")
+    @JsonIgnore
     public Optional<Integer> getWordCountMax() {
         return wordCountMax;
     }
 
-    @JsonProperty("page")
+    @JsonIgnore
     public Optional<Integer> getPage() {
         return page;
     }
 
-    @JsonProperty("page_size")
+    @JsonIgnore
     public Optional<Integer> getPageSize() {
         return pageSize;
     }
 
-    @JsonProperty("clustering_enabled")
+    @JsonIgnore
     public Optional<Boolean> getClusteringEnabled() {
         return clusteringEnabled;
     }
 
-    @JsonProperty("clustering_variable")
+    @JsonIgnore
     public Optional<ClusteringVariable> getClusteringVariable() {
         return clusteringVariable;
     }
 
-    @JsonProperty("clustering_threshold")
+    @JsonIgnore
     public Optional<Float> getClusteringThreshold() {
         return clusteringThreshold;
     }
 
-    @JsonProperty("include_nlp_data")
+    @JsonIgnore
     public Optional<Boolean> getIncludeNlpData() {
         return includeNlpData;
     }
 
-    @JsonProperty("has_nlp")
+    @JsonIgnore
     public Optional<Boolean> getHasNlp() {
         return hasNlp;
     }
 
-    @JsonProperty("theme")
+    @JsonIgnore
     public Optional<String> getTheme() {
         return theme;
     }
 
-    @JsonProperty("not_theme")
+    @JsonIgnore
     public Optional<String> getNotTheme() {
         return notTheme;
     }
 
-    @JsonProperty("ORG_entity_name")
+    @JsonIgnore
     public Optional<String> getOrgEntityName() {
         return orgEntityName;
     }
 
-    @JsonProperty("PER_entity_name")
+    @JsonIgnore
     public Optional<String> getPerEntityName() {
         return perEntityName;
     }
 
-    @JsonProperty("LOC_entity_name")
+    @JsonIgnore
     public Optional<String> getLocEntityName() {
         return locEntityName;
     }
 
-    @JsonProperty("MISC_entity_name")
+    @JsonIgnore
     public Optional<String> getMiscEntityName() {
         return miscEntityName;
     }
 
-    @JsonProperty("title_sentiment_min")
+    @JsonIgnore
     public Optional<Float> getTitleSentimentMin() {
         return titleSentimentMin;
     }
 
-    @JsonProperty("title_sentiment_max")
+    @JsonIgnore
     public Optional<Float> getTitleSentimentMax() {
         return titleSentimentMax;
     }
 
-    @JsonProperty("content_sentiment_min")
+    @JsonIgnore
     public Optional<Float> getContentSentimentMin() {
         return contentSentimentMin;
     }
 
-    @JsonProperty("content_sentiment_max")
+    @JsonIgnore
     public Optional<Float> getContentSentimentMax() {
         return contentSentimentMax;
     }
@@ -570,7 +570,7 @@ public final class GetSearchRequest {
      * <p><strong>Note</strong>: The <code>iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
      */
-    @JsonProperty("iptc_tags")
+    @JsonIgnore
     public Optional<String> getIptcTags() {
         return iptcTags;
     }
@@ -580,7 +580,7 @@ public final class GetSearchRequest {
      * <p><strong>Note</strong>: The <code>not_iptc_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see <a href="https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html">IPTC Media Topic NewsCodes</a>.</p>
      */
-    @JsonProperty("not_iptc_tags")
+    @JsonIgnore
     public Optional<String> getNotIptcTags() {
         return notIptcTags;
     }
@@ -590,7 +590,7 @@ public final class GetSearchRequest {
      * <p><strong>Note</strong>: The <code>iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
      */
-    @JsonProperty("iab_tags")
+    @JsonIgnore
     public Optional<String> getIabTags() {
         return iabTags;
     }
@@ -600,7 +600,7 @@ public final class GetSearchRequest {
      * <p><strong>Note</strong>: The <code>not_iab_tags</code> parameter is only available in the <code>v3_nlp_iptc_tags</code> subscription plan.</p>
      * <p>To learn more, see the <a href="https://iabtechlab.com/standards/content-taxonomy/">IAB Content taxonomy</a>.</p>
      */
-    @JsonProperty("not_iab_tags")
+    @JsonIgnore
     public Optional<String> getNotIabTags() {
         return notIabTags;
     }
@@ -613,17 +613,17 @@ public final class GetSearchRequest {
      * <p>Example: <code>custom_tags.industry=&quot;Manufacturing,Logistics&quot;</code></p>
      * <p>To learn more, see the <a href="https://www.newscatcherapi.com/docs/news-api/guides-and-concepts/custom-tags">Custom tags</a>.</p>
      */
-    @JsonProperty("custom_tags")
+    @JsonIgnore
     public Optional<String> getCustomTags() {
         return customTags;
     }
 
-    @JsonProperty("exclude_duplicates")
+    @JsonIgnore
     public Optional<Boolean> getExcludeDuplicates() {
         return excludeDuplicates;
     }
 
-    @JsonProperty("robots_compliant")
+    @JsonIgnore
     public Optional<Boolean> getRobotsCompliant() {
         return robotsCompliant;
     }
