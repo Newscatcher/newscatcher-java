@@ -5,9 +5,9 @@ package com.newscatcher.api.resources.searchbylink.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -61,7 +61,7 @@ public final class GetSearchByLinkRequest {
      * @return The Newscatcher article ID (corresponds to the <code>_id</code> field in API response) or a list of article IDs to search for. To specify multiple IDs, use a comma-separated string.
      * <p><strong>Caution</strong>: You can use either the <code>links</code> or the <code>ids</code> parameter, but not both at the same time.</p>
      */
-    @JsonProperty("ids")
+    @JsonIgnore
     public Optional<String> getIds() {
         return ids;
     }
@@ -70,32 +70,32 @@ public final class GetSearchByLinkRequest {
      * @return The article link or list of article links to search for. To specify multiple links, use a comma-separated string.
      * <p><strong>Caution</strong>: You can use either the <code>links</code> or the <code>ids</code> parameter, but not both at the same time.</p>
      */
-    @JsonProperty("links")
+    @JsonIgnore
     public Optional<String> getLinks() {
         return links;
     }
 
-    @JsonProperty("from_")
+    @JsonIgnore
     public Optional<From> getFrom() {
         return from;
     }
 
-    @JsonProperty("to_")
+    @JsonIgnore
     public Optional<To> getTo() {
         return to;
     }
 
-    @JsonProperty("page")
+    @JsonIgnore
     public Optional<Integer> getPage() {
         return page;
     }
 
-    @JsonProperty("page_size")
+    @JsonIgnore
     public Optional<Integer> getPageSize() {
         return pageSize;
     }
 
-    @JsonProperty("robots_compliant")
+    @JsonIgnore
     public Optional<Boolean> getRobotsCompliant() {
         return robotsCompliant;
     }
