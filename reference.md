@@ -43,10 +43,10 @@ client.search().get(
         .notCountries("UK,FR")
         .notAuthorName("John Doe, Jane Doe")
         .from(
-            From.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+            From.of(OffsetDateTime.parse("1 day ago"))
         )
         .to(
-            To.of(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+            To.of(OffsetDateTime.parse("1 day ago"))
         )
         .publishedDatePrecision("full")
         .byParseDate(true)
@@ -68,7 +68,7 @@ client.search().get(
         .page(2)
         .pageSize(50)
         .clusteringEnabled(true)
-        .clusteringThreshold(0.6f)
+        .clusteringThreshold(0.7f)
         .includeNlpData(true)
         .hasNlp(true)
         .theme("Finance,Tech")
@@ -1202,7 +1202,7 @@ client.latestHeadlines().get(
         .page(2)
         .pageSize(50)
         .clusteringEnabled(true)
-        .clusteringThreshold(0.6f)
+        .clusteringThreshold(0.7f)
         .includeTranslationFields(true)
         .includeNlpData(true)
         .hasNlp(true)
@@ -2558,10 +2558,10 @@ client.authors().get(
         .countries("US,CA")
         .notCountries("UK,FR")
         .from(
-            From.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+            From.of(OffsetDateTime.parse("1 day ago"))
         )
         .to(
-            To.of(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+            To.of(OffsetDateTime.parse("1 day ago"))
         )
         .publishedDatePrecision("full")
         .byParseDate(true)
@@ -3472,10 +3472,10 @@ client.searchByLink().get(
         .ids("5f8d0d55b6e45e00179c6e7e")
         .links("https://nytimes.com/article1,https://bbc.com/article2")
         .from(
-            From.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+            From.of(OffsetDateTime.parse("1 day ago"))
         )
         .to(
-            To.of(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+            To.of(OffsetDateTime.parse("1 day ago"))
         )
         .page(2)
         .pageSize(50)
@@ -4050,10 +4050,10 @@ client.aggregationCount().get(
         .notCountries("UK,FR")
         .notAuthorName("John Doe, Jane Doe")
         .from(
-            From.of(OffsetDateTime.parse("2024-07-01T00:00:00Z"))
+            From.of(OffsetDateTime.parse("1 day ago"))
         )
         .to(
-            To.of(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+            To.of(OffsetDateTime.parse("1 day ago"))
         )
         .publishedDatePrecision("full")
         .byParseDate(true)

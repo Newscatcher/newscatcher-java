@@ -5,9 +5,9 @@ package com.newscatcher.api.resources.sources.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -76,7 +76,7 @@ public final class GetSourcesRequest {
      * @return The language(s) of the search. The only accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1</a> code. To select multiple languages, use a comma-separated string.
      * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#language-lang-and-not-lang">Enumerated parameters &gt; Language</a>.</p>
      */
-    @JsonProperty("lang")
+    @JsonIgnore
     public Optional<String> getLang() {
         return lang;
     }
@@ -85,7 +85,7 @@ public final class GetSourcesRequest {
      * @return The countries where the news publisher is located. The accepted format is the two-letter <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a> code. To select multiple countries, use a comma-separated string.
      * <p>To learn more, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#country-country-and-not-country">Enumerated parameters &gt; Country</a>.</p>
      */
-    @JsonProperty("countries")
+    @JsonIgnore
     public Optional<String> getCountries() {
         return countries;
     }
@@ -95,7 +95,7 @@ public final class GetSourcesRequest {
      * <p>Format: start with the word <code>top</code>, followed by the number of desired sources, and then the two-letter country code <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>.</p>
      * <p>Multiple countries with the number of top sources can be specified as a comma-separated string.</p>
      */
-    @JsonProperty("predefined_sources")
+    @JsonIgnore
     public Optional<String> getPredefinedSources() {
         return predefinedSources;
     }
@@ -104,7 +104,7 @@ public final class GetSourcesRequest {
      * @return Word or phrase to search within the source names. To specify multiple values, use a comma-separated string.
      * <p><strong>Note</strong>: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like <code>&quot;sport&quot;</code> or <code>&quot;new york times&quot;</code>. For example, <code>&quot;sport&quot;</code> returns sources such as <code>&quot;Motorsport&quot;</code>, <code>&quot;Dot Esport&quot;</code>, and <code>&quot;Tuttosport&quot;</code>.</p>
      */
-    @JsonProperty("source_name")
+    @JsonIgnore
     public Optional<String> getSourceName() {
         return sourceName;
     }
@@ -114,22 +114,22 @@ public final class GetSourcesRequest {
      * <p><strong>Caution</strong>:  When specifying the <code>source_url</code> parameter,
      * you can only use <code>include_additional_info</code> as an extra parameter.</p>
      */
-    @JsonProperty("source_url")
+    @JsonIgnore
     public Optional<String> getSourceUrl() {
         return sourceUrl;
     }
 
-    @JsonProperty("include_additional_info")
+    @JsonIgnore
     public Optional<Boolean> getIncludeAdditionalInfo() {
         return includeAdditionalInfo;
     }
 
-    @JsonProperty("is_news_domain")
+    @JsonIgnore
     public Optional<Boolean> getIsNewsDomain() {
         return isNewsDomain;
     }
 
-    @JsonProperty("news_domain_type")
+    @JsonIgnore
     public Optional<NewsDomainType> getNewsDomainType() {
         return newsDomainType;
     }
@@ -138,17 +138,17 @@ public final class GetSourcesRequest {
      * @return Filters results based on the news type. Multiple types can be specified using a comma-separated string.
      * <p>For a complete list of available news types, see <a href="https://www.newscatcherapi.com/docs/news-api/api-reference/enumerated-parameters#news-type-news-type">Enumerated parameters &gt; News type</a>.</p>
      */
-    @JsonProperty("news_type")
+    @JsonIgnore
     public Optional<String> getNewsType() {
         return newsType;
     }
 
-    @JsonProperty("from_rank")
+    @JsonIgnore
     public Optional<Integer> getFromRank() {
         return fromRank;
     }
 
-    @JsonProperty("to_rank")
+    @JsonIgnore
     public Optional<Integer> getToRank() {
         return toRank;
     }
