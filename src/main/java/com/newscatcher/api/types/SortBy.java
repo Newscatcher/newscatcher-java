@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public final class SortBy {
     public static final SortBy RANK = new SortBy(Value.RANK, "rank");
 
-    public static final SortBy DATE = new SortBy(Value.DATE, "date");
-
     public static final SortBy RELEVANCY = new SortBy(Value.RELEVANCY, "relevancy");
+
+    public static final SortBy DATE = new SortBy(Value.DATE, "date");
 
     private final Value value;
 
@@ -46,10 +46,10 @@ public final class SortBy {
         switch (value) {
             case RANK:
                 return visitor.visitRank();
-            case DATE:
-                return visitor.visitDate();
             case RELEVANCY:
                 return visitor.visitRelevancy();
+            case DATE:
+                return visitor.visitDate();
             case UNKNOWN:
             default:
                 return visitor.visitUnknown(string);
@@ -61,10 +61,10 @@ public final class SortBy {
         switch (value) {
             case "rank":
                 return RANK;
-            case "date":
-                return DATE;
             case "relevancy":
                 return RELEVANCY;
+            case "date":
+                return DATE;
             default:
                 return new SortBy(Value.UNKNOWN, value);
         }

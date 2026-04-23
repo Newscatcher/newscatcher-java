@@ -31,6 +31,8 @@ public final class NlpDataEntity {
 
     private final Optional<List<Float>> newEmbedding;
 
+    private final Optional<List<Float>> qwenEmbedding;
+
     private final Optional<List<NamedEntityListItem>> nerPer;
 
     private final Optional<List<NamedEntityListItem>> nerOrg;
@@ -61,6 +63,7 @@ public final class NlpDataEntity {
             Optional<String> summary,
             Optional<SentimentScores> sentiment,
             Optional<List<Float>> newEmbedding,
+            Optional<List<Float>> qwenEmbedding,
             Optional<List<NamedEntityListItem>> nerPer,
             Optional<List<NamedEntityListItem>> nerOrg,
             Optional<List<NamedEntityListItem>> nerMisc,
@@ -78,6 +81,7 @@ public final class NlpDataEntity {
         this.summary = summary;
         this.sentiment = sentiment;
         this.newEmbedding = newEmbedding;
+        this.qwenEmbedding = qwenEmbedding;
         this.nerPer = nerPer;
         this.nerOrg = nerOrg;
         this.nerMisc = nerMisc;
@@ -122,12 +126,21 @@ public final class NlpDataEntity {
     }
 
     /**
-     * @return A dense 1024-dimensional vector representation of the article content, generated using  the <a href="https://huggingface.co/intfloat/multilingual-e5-large">multilingual-e5-large</a> model.
+     * @return A dense 1024-dimensional vector representation of the article content, generated using the <a href="https://huggingface.co/intfloat/multilingual-e5-large">multilingual-e5-large</a> model. Available for articles indexed before January 1, 2026.
      * <p><strong>Note</strong>: The <code>new_embedding</code> field is only available in the <code>v3_nlp_embeddings</code> subscription plan.</p>
      */
     @JsonProperty("new_embedding")
     public Optional<List<Float>> getNewEmbedding() {
         return newEmbedding;
+    }
+
+    /**
+     * @return A dense 1024-dimensional vector representation of the article content, generated using the <a href="https://huggingface.co/Qwen/Qwen3-Embedding">Qwen3-Embedding-0.6B</a> model. Available for articles indexed from January 1, 2026 onward. Embeddings are computed from a combination of the article <code>title</code> and <code>content</code> fields.
+     * <p><strong>Note</strong>: The <code>qwen_embedding</code> field is only available in the <code>v3_nlp_embeddings</code> subscription plan.</p>
+     */
+    @JsonProperty("qwen_embedding")
+    public Optional<List<Float>> getQwenEmbedding() {
+        return qwenEmbedding;
     }
 
     /**
@@ -238,6 +251,7 @@ public final class NlpDataEntity {
                 && summary.equals(other.summary)
                 && sentiment.equals(other.sentiment)
                 && newEmbedding.equals(other.newEmbedding)
+                && qwenEmbedding.equals(other.qwenEmbedding)
                 && nerPer.equals(other.nerPer)
                 && nerOrg.equals(other.nerOrg)
                 && nerMisc.equals(other.nerMisc)
@@ -259,6 +273,7 @@ public final class NlpDataEntity {
                 this.summary,
                 this.sentiment,
                 this.newEmbedding,
+                this.qwenEmbedding,
                 this.nerPer,
                 this.nerOrg,
                 this.nerMisc,
@@ -293,6 +308,8 @@ public final class NlpDataEntity {
 
         private Optional<List<Float>> newEmbedding = Optional.empty();
 
+        private Optional<List<Float>> qwenEmbedding = Optional.empty();
+
         private Optional<List<NamedEntityListItem>> nerPer = Optional.empty();
 
         private Optional<List<NamedEntityListItem>> nerOrg = Optional.empty();
@@ -326,6 +343,7 @@ public final class NlpDataEntity {
             summary(other.getSummary());
             sentiment(other.getSentiment());
             newEmbedding(other.getNewEmbedding());
+            qwenEmbedding(other.getQwenEmbedding());
             nerPer(other.getNerPer());
             nerOrg(other.getNerOrg());
             nerMisc(other.getNerMisc());
@@ -394,7 +412,7 @@ public final class NlpDataEntity {
         }
 
         /**
-         * <p>A dense 1024-dimensional vector representation of the article content, generated using  the <a href="https://huggingface.co/intfloat/multilingual-e5-large">multilingual-e5-large</a> model.</p>
+         * <p>A dense 1024-dimensional vector representation of the article content, generated using the <a href="https://huggingface.co/intfloat/multilingual-e5-large">multilingual-e5-large</a> model. Available for articles indexed before January 1, 2026.</p>
          * <p><strong>Note</strong>: The <code>new_embedding</code> field is only available in the <code>v3_nlp_embeddings</code> subscription plan.</p>
          */
         @JsonSetter(value = "new_embedding", nulls = Nulls.SKIP)
@@ -405,6 +423,21 @@ public final class NlpDataEntity {
 
         public Builder newEmbedding(List<Float> newEmbedding) {
             this.newEmbedding = Optional.ofNullable(newEmbedding);
+            return this;
+        }
+
+        /**
+         * <p>A dense 1024-dimensional vector representation of the article content, generated using the <a href="https://huggingface.co/Qwen/Qwen3-Embedding">Qwen3-Embedding-0.6B</a> model. Available for articles indexed from January 1, 2026 onward. Embeddings are computed from a combination of the article <code>title</code> and <code>content</code> fields.</p>
+         * <p><strong>Note</strong>: The <code>qwen_embedding</code> field is only available in the <code>v3_nlp_embeddings</code> subscription plan.</p>
+         */
+        @JsonSetter(value = "qwen_embedding", nulls = Nulls.SKIP)
+        public Builder qwenEmbedding(Optional<List<Float>> qwenEmbedding) {
+            this.qwenEmbedding = qwenEmbedding;
+            return this;
+        }
+
+        public Builder qwenEmbedding(List<Float> qwenEmbedding) {
+            this.qwenEmbedding = Optional.ofNullable(qwenEmbedding);
             return this;
         }
 
@@ -572,6 +605,7 @@ public final class NlpDataEntity {
                     summary,
                     sentiment,
                     newEmbedding,
+                    qwenEmbedding,
                     nerPer,
                     nerOrg,
                     nerMisc,

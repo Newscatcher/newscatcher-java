@@ -7,16 +7,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public final class NewsDomainType {
+    public static final NewsDomainType AGGREGATOR = new NewsDomainType(Value.AGGREGATOR, "Aggregator");
+
     public static final NewsDomainType PRESS_RELEASES = new NewsDomainType(Value.PRESS_RELEASES, "Press Releases");
 
-    public static final NewsDomainType AGGREGATOR = new NewsDomainType(Value.AGGREGATOR, "Aggregator");
+    public static final NewsDomainType ORIGINAL_CONTENT =
+            new NewsDomainType(Value.ORIGINAL_CONTENT, "Original Content");
 
     public static final NewsDomainType REPUBLISHER = new NewsDomainType(Value.REPUBLISHER, "Republisher");
 
     public static final NewsDomainType OTHER = new NewsDomainType(Value.OTHER, "Other");
-
-    public static final NewsDomainType ORIGINAL_CONTENT =
-            new NewsDomainType(Value.ORIGINAL_CONTENT, "Original Content");
 
     private final Value value;
 
@@ -50,16 +50,16 @@ public final class NewsDomainType {
 
     public <T> T visit(Visitor<T> visitor) {
         switch (value) {
-            case PRESS_RELEASES:
-                return visitor.visitPressReleases();
             case AGGREGATOR:
                 return visitor.visitAggregator();
+            case PRESS_RELEASES:
+                return visitor.visitPressReleases();
+            case ORIGINAL_CONTENT:
+                return visitor.visitOriginalContent();
             case REPUBLISHER:
                 return visitor.visitRepublisher();
             case OTHER:
                 return visitor.visitOther();
-            case ORIGINAL_CONTENT:
-                return visitor.visitOriginalContent();
             case UNKNOWN:
             default:
                 return visitor.visitUnknown(string);
@@ -69,16 +69,16 @@ public final class NewsDomainType {
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static NewsDomainType valueOf(String value) {
         switch (value) {
-            case "Press Releases":
-                return PRESS_RELEASES;
             case "Aggregator":
                 return AGGREGATOR;
+            case "Press Releases":
+                return PRESS_RELEASES;
+            case "Original Content":
+                return ORIGINAL_CONTENT;
             case "Republisher":
                 return REPUBLISHER;
             case "Other":
                 return OTHER;
-            case "Original Content":
-                return ORIGINAL_CONTENT;
             default:
                 return new NewsDomainType(Value.UNKNOWN, value);
         }
