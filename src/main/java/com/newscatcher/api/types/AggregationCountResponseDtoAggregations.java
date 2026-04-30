@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.newscatcher.api.core.ObjectMappers;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @JsonDeserialize(using = AggregationCountResponseDtoAggregations.Deserializer.class)
@@ -85,9 +86,11 @@ public final class AggregationCountResponseDtoAggregations {
         public AggregationCountResponseDtoAggregations deserialize(JsonParser p, DeserializationContext context)
                 throws IOException {
             Object value = p.readValueAs(Object.class);
-            try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, AggregationItem.class));
-            } catch (RuntimeException e) {
+            if (value instanceof Map<?, ?> && ((Map<?, ?>) value).containsKey("aggregation_count")) {
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, AggregationItem.class));
+                } catch (RuntimeException e) {
+                }
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<AggregationItem>>() {}));

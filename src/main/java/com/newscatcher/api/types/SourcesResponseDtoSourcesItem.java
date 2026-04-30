@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.newscatcher.api.core.ObjectMappers;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 @JsonDeserialize(using = SourcesResponseDtoSourcesItem.Deserializer.class)
@@ -82,9 +83,11 @@ public final class SourcesResponseDtoSourcesItem {
         public SourcesResponseDtoSourcesItem deserialize(JsonParser p, DeserializationContext context)
                 throws IOException {
             Object value = p.readValueAs(Object.class);
-            try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, SourceInfo.class));
-            } catch (RuntimeException e) {
+            if (value instanceof Map<?, ?> && ((Map<?, ?>) value).containsKey("domain_url")) {
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, SourceInfo.class));
+                } catch (RuntimeException e) {
+                }
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));

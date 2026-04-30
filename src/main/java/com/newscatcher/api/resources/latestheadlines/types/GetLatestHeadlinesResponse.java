@@ -13,6 +13,7 @@ import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.types.ClusteredSearchResponseDto;
 import com.newscatcher.api.types.SearchResponseDto;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 @JsonDeserialize(using = GetLatestHeadlinesResponse.Deserializer.class)
@@ -83,13 +84,29 @@ public final class GetLatestHeadlinesResponse {
         @java.lang.Override
         public GetLatestHeadlinesResponse deserialize(JsonParser p, DeserializationContext context) throws IOException {
             Object value = p.readValueAs(Object.class);
-            try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, SearchResponseDto.class));
-            } catch (RuntimeException e) {
+            if (value instanceof Map<?, ?>
+                    && ((Map<?, ?>) value).containsKey("status")
+                    && ((Map<?, ?>) value).containsKey("total_hits")
+                    && ((Map<?, ?>) value).containsKey("page")
+                    && ((Map<?, ?>) value).containsKey("total_pages")
+                    && ((Map<?, ?>) value).containsKey("page_size")) {
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, SearchResponseDto.class));
+                } catch (RuntimeException e) {
+                }
             }
-            try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ClusteredSearchResponseDto.class));
-            } catch (RuntimeException e) {
+            if (value instanceof Map<?, ?>
+                    && ((Map<?, ?>) value).containsKey("status")
+                    && ((Map<?, ?>) value).containsKey("total_hits")
+                    && ((Map<?, ?>) value).containsKey("page")
+                    && ((Map<?, ?>) value).containsKey("total_pages")
+                    && ((Map<?, ?>) value).containsKey("page_size")
+                    && ((Map<?, ?>) value).containsKey("clusters_count")
+                    && ((Map<?, ?>) value).containsKey("clusters")) {
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, ClusteredSearchResponseDto.class));
+                } catch (RuntimeException e) {
+                }
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }
