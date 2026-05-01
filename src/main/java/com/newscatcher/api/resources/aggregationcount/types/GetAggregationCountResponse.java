@@ -13,6 +13,7 @@ import com.newscatcher.api.core.ObjectMappers;
 import com.newscatcher.api.types.AggregationCountResponseDto;
 import com.newscatcher.api.types.FailedAggregationCountResponseDto;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 @JsonDeserialize(using = GetAggregationCountResponse.Deserializer.class)
@@ -84,13 +85,27 @@ public final class GetAggregationCountResponse {
         public GetAggregationCountResponse deserialize(JsonParser p, DeserializationContext context)
                 throws IOException {
             Object value = p.readValueAs(Object.class);
-            try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, AggregationCountResponseDto.class));
-            } catch (RuntimeException e) {
+            if (value instanceof Map<?, ?>
+                    && ((Map<?, ?>) value).containsKey("status")
+                    && ((Map<?, ?>) value).containsKey("total_hits")
+                    && ((Map<?, ?>) value).containsKey("page")
+                    && ((Map<?, ?>) value).containsKey("total_pages")
+                    && ((Map<?, ?>) value).containsKey("page_size")) {
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, AggregationCountResponseDto.class));
+                } catch (RuntimeException e) {
+                }
             }
-            try {
-                return of(ObjectMappers.JSON_MAPPER.convertValue(value, FailedAggregationCountResponseDto.class));
-            } catch (RuntimeException e) {
+            if (value instanceof Map<?, ?>
+                    && ((Map<?, ?>) value).containsKey("status")
+                    && ((Map<?, ?>) value).containsKey("total_hits")
+                    && ((Map<?, ?>) value).containsKey("page")
+                    && ((Map<?, ?>) value).containsKey("total_pages")
+                    && ((Map<?, ?>) value).containsKey("page_size")) {
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, FailedAggregationCountResponseDto.class));
+                } catch (RuntimeException e) {
+                }
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }

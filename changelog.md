@@ -1,3 +1,22 @@
+## 2.1.1 - 2026-04-30
+* fix: use field-presence checks in union deserializers to prevent misclassification
+* Previously, all union response deserializers attempted blind `convertValue`
+* calls in sequence, catching `RuntimeException` to fall through to the next
+* candidate type. This approach could silently misclassify a response payload
+* as the wrong union variant when Jackson's lenient conversion succeeded on an
+* incompatible type.
+* The deserializers now inspect the raw `Map` keys first, requiring the
+* presence of discriminating fields before attempting conversion. This makes
+* variant selection deterministic and prevents incorrect deserialization of
+* ambiguous payloads.
+* Key changes:
+* `GetAggregationCountResponse` and `PostAggregationCountResponse` deserializers now gate on `status`, `total_hits`, `page`, `total_pages`, and `page_size` keys before attempting conversion to `AggregationCountResponseDto` or `FailedAggregationCountResponseDto`
+* `GetAuthorsResponse` and `PostAuthorsResponse` deserializers apply the same pagination-field guard before converting to `SearchResponseDto` or `FailedAuthorsResponseDto`
+* `GetLatestHeadlinesResponse`, `PostLatestHeadlinesResponse`, `GetSearchResponse`, and `PostSearchResponse` deserializers additionally require `clusters_count` and `clusters` keys before attempting `ClusteredSearchResponseDto` conversion
+* `AggregationCountResponseDtoAggregations` deserializer gates on `aggregation_count` key before attempting `AggregationItem` conversion
+* `SourcesResponseDtoSourcesItem` deserializer gates on `domain_url` key before attempting `SourceInfo` conversion
+* 🌿 Generated with Fern
+
 ## 2.1.0 - 2026-04-23
 * ## [2.1.0] - 2025-07-10
 ### Added
