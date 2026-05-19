@@ -46,7 +46,7 @@ client.search().get(
             From.of(OffsetDateTime.parse("1 day ago"))
         )
         .to(
-            To.of(OffsetDateTime.parse("1 day ago"))
+            To.of("now")
         )
         .publishedDatePrecision("full")
         .byParseDate(true)
@@ -146,7 +146,9 @@ Multiple countries with the number of top sources can be specified as a comma-se
 
 Word or phrase to search within the source names. To specify multiple values, use a comma-separated string.
 
-**Note**: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like `"sport"` or `"new york times"`. For example, `"sport"` returns sources such as `"Motorsport"`, `"Dot Esport"`, and `"Tuttosport"`.
+**Note**: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like `"sport"` or `"new york times"`. 
+
+For example, `"sport"` returns sources such as `"Motorsport"`, `"Dot Esport"`, and `"Tuttosport"`.
     
 </dd>
 </dl>
@@ -2561,7 +2563,7 @@ client.authors().get(
             From.of(OffsetDateTime.parse("1 day ago"))
         )
         .to(
-            To.of(OffsetDateTime.parse("1 day ago"))
+            To.of("now")
         )
         .publishedDatePrecision("full")
         .byParseDate(true)
@@ -3475,7 +3477,7 @@ client.searchByLink().get(
             From.of(OffsetDateTime.parse("1 day ago"))
         )
         .to(
-            To.of(OffsetDateTime.parse("1 day ago"))
+            To.of("now")
         )
         .page(2)
         .pageSize(50)
@@ -3630,15 +3632,6 @@ client.searchByLink().post(
 <dd>
 
 **from:** `Optional<From>` 
-
-The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text strings. The default time zone is UTC. 
-
-Formats with examples:
-- YYYY-mm-ddTHH:MM:SS: `2024-07-01T00:00:00`
-- YYYY-MM-dd: `2024-07-01`
-- YYYY/mm/dd HH:MM:SS: `2024/07/01 00:00:00`
-- YYYY/mm/dd: `2024/07/01`
-- English phrases: `1 day ago`, `today`
     
 </dd>
 </dl>
@@ -3647,15 +3640,6 @@ Formats with examples:
 <dd>
 
 **to:** `Optional<To>` 
-
-The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text strings. The default time zone is UTC. 
-
-Formats with examples:
-- YYYY-mm-ddTHH:MM:SS: `2024-07-01T00:00:00`
-- YYYY-MM-dd: `2024-07-01`
-- YYYY/mm/dd HH:MM:SS: `2024/07/01 00:00:00`
-- YYYY/mm/dd: `2024/07/01`
-- English phrases: `1 day ago`, `now`
     
 </dd>
 </dl>
@@ -3790,7 +3774,9 @@ Multiple countries with the number of top sources can be specified as a comma-se
 
 Word or phrase to search within the source names. To specify multiple values, use a comma-separated string.
 
-**Note**: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like `"sport"` or `"new york times"`. For example, `"sport"` returns sources such as `"Motorsport"`, `"Dot Esport"`, and `"Tuttosport"`.
+**Note**: The search doesn't require an exact match and returns sources containing the specified terms in their names. You can use any word or phrase, like `"sport"` or `"new york times"`. 
+
+For example, `"sport"` returns sources such as `"Motorsport"`, `"Dot Esport"`, and `"Tuttosport"`.
     
 </dd>
 </dl>
@@ -4053,7 +4039,7 @@ client.aggregationCount().get(
             From.of(OffsetDateTime.parse("1 day ago"))
         )
         .to(
-            To.of(OffsetDateTime.parse("1 day ago"))
+            To.of("now")
         )
         .publishedDatePrecision("full")
         .byParseDate(true)

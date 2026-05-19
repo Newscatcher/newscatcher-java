@@ -5,9 +5,9 @@ package com.newscatcher.api.resources.breakingnews.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -108,102 +108,102 @@ public final class GetBreakingNewsRequest {
         this.additionalProperties = additionalProperties;
     }
 
-    @JsonIgnore
+    @JsonProperty("sort_by")
     public Optional<SortBy> getSortBy() {
         return sortBy;
     }
 
-    @JsonIgnore
+    @JsonProperty("ranked_only")
     public Optional<Boolean> getRankedOnly() {
         return rankedOnly;
     }
 
-    @JsonIgnore
+    @JsonProperty("from_rank")
     public Optional<Integer> getFromRank() {
         return fromRank;
     }
 
-    @JsonIgnore
+    @JsonProperty("to_rank")
     public Optional<Integer> getToRank() {
         return toRank;
     }
 
-    @JsonIgnore
+    @JsonProperty("page")
     public Optional<Integer> getPage() {
         return page;
     }
 
-    @JsonIgnore
+    @JsonProperty("page_size")
     public Optional<Integer> getPageSize() {
         return pageSize;
     }
 
-    @JsonIgnore
+    @JsonProperty("top_n_articles")
     public Optional<Integer> getTopNArticles() {
         return topNArticles;
     }
 
-    @JsonIgnore
+    @JsonProperty("include_translation_fields")
     public Optional<Boolean> getIncludeTranslationFields() {
         return includeTranslationFields;
     }
 
-    @JsonIgnore
+    @JsonProperty("include_nlp_data")
     public Optional<Boolean> getIncludeNlpData() {
         return includeNlpData;
     }
 
-    @JsonIgnore
+    @JsonProperty("has_nlp")
     public Optional<Boolean> getHasNlp() {
         return hasNlp;
     }
 
-    @JsonIgnore
+    @JsonProperty("theme")
     public Optional<String> getTheme() {
         return theme;
     }
 
-    @JsonIgnore
+    @JsonProperty("not_theme")
     public Optional<String> getNotTheme() {
         return notTheme;
     }
 
-    @JsonIgnore
+    @JsonProperty("ORG_entity_name")
     public Optional<String> getOrgEntityName() {
         return orgEntityName;
     }
 
-    @JsonIgnore
+    @JsonProperty("PER_entity_name")
     public Optional<String> getPerEntityName() {
         return perEntityName;
     }
 
-    @JsonIgnore
+    @JsonProperty("LOC_entity_name")
     public Optional<String> getLocEntityName() {
         return locEntityName;
     }
 
-    @JsonIgnore
+    @JsonProperty("MISC_entity_name")
     public Optional<String> getMiscEntityName() {
         return miscEntityName;
     }
 
-    @JsonIgnore
+    @JsonProperty("title_sentiment_min")
     public Optional<Float> getTitleSentimentMin() {
         return titleSentimentMin;
     }
 
-    @JsonIgnore
+    @JsonProperty("title_sentiment_max")
     public Optional<Float> getTitleSentimentMax() {
         return titleSentimentMax;
     }
 
-    @JsonIgnore
+    @JsonProperty("content_sentiment_min")
     public Optional<Float> getContentSentimentMin() {
         return contentSentimentMin;
     }
 
-    @JsonIgnore
+    @JsonProperty("content_sentiment_max")
     public Optional<Float> getContentSentimentMax() {
         return contentSentimentMax;
     }

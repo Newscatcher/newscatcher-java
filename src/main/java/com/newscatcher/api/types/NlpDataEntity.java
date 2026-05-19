@@ -21,7 +21,7 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = NlpDataEntity.Builder.class)
 public final class NlpDataEntity {
-    private final Optional<String> summaryTranslated;
+    private final Optional<String> translationSummary;
 
     private final Optional<String> theme;
 
@@ -58,7 +58,7 @@ public final class NlpDataEntity {
     private final Map<String, Object> additionalProperties;
 
     private NlpDataEntity(
-            Optional<String> summaryTranslated,
+            Optional<String> translationSummary,
             Optional<String> theme,
             Optional<String> summary,
             Optional<SentimentScores> sentiment,
@@ -76,7 +76,7 @@ public final class NlpDataEntity {
             Optional<List<String>> iptcTagsId,
             Optional<List<String>> iabTagsName,
             Map<String, Object> additionalProperties) {
-        this.summaryTranslated = summaryTranslated;
+        this.translationSummary = translationSummary;
         this.theme = theme;
         this.summary = summary;
         this.sentiment = sentiment;
@@ -99,9 +99,9 @@ public final class NlpDataEntity {
     /**
      * @return A brief AI-generated summary of the article's English translation.
      */
-    @JsonProperty("summary_translated")
-    public Optional<String> getSummaryTranslated() {
-        return summaryTranslated;
+    @JsonProperty("translation_summary")
+    public Optional<String> getTranslationSummary() {
+        return translationSummary;
     }
 
     /**
@@ -246,7 +246,7 @@ public final class NlpDataEntity {
     }
 
     private boolean equalTo(NlpDataEntity other) {
-        return summaryTranslated.equals(other.summaryTranslated)
+        return translationSummary.equals(other.translationSummary)
                 && theme.equals(other.theme)
                 && summary.equals(other.summary)
                 && sentiment.equals(other.sentiment)
@@ -268,7 +268,7 @@ public final class NlpDataEntity {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.summaryTranslated,
+                this.translationSummary,
                 this.theme,
                 this.summary,
                 this.sentiment,
@@ -298,7 +298,7 @@ public final class NlpDataEntity {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private Optional<String> summaryTranslated = Optional.empty();
+        private Optional<String> translationSummary = Optional.empty();
 
         private Optional<String> theme = Optional.empty();
 
@@ -338,7 +338,7 @@ public final class NlpDataEntity {
         private Builder() {}
 
         public Builder from(NlpDataEntity other) {
-            summaryTranslated(other.getSummaryTranslated());
+            translationSummary(other.getTranslationSummary());
             theme(other.getTheme());
             summary(other.getSummary());
             sentiment(other.getSentiment());
@@ -361,14 +361,14 @@ public final class NlpDataEntity {
         /**
          * <p>A brief AI-generated summary of the article's English translation.</p>
          */
-        @JsonSetter(value = "summary_translated", nulls = Nulls.SKIP)
-        public Builder summaryTranslated(Optional<String> summaryTranslated) {
-            this.summaryTranslated = summaryTranslated;
+        @JsonSetter(value = "translation_summary", nulls = Nulls.SKIP)
+        public Builder translationSummary(Optional<String> translationSummary) {
+            this.translationSummary = translationSummary;
             return this;
         }
 
-        public Builder summaryTranslated(String summaryTranslated) {
-            this.summaryTranslated = Optional.ofNullable(summaryTranslated);
+        public Builder translationSummary(String translationSummary) {
+            this.translationSummary = Optional.ofNullable(translationSummary);
             return this;
         }
 
@@ -600,7 +600,7 @@ public final class NlpDataEntity {
 
         public NlpDataEntity build() {
             return new NlpDataEntity(
-                    summaryTranslated,
+                    translationSummary,
                     theme,
                     summary,
                     sentiment,

@@ -1,3 +1,10 @@
+## 3.0.0 - 2026-05-19
+### Breaking Changes
+* **`NlpDataEntity.getSummaryTranslated()`** — renamed to `getTranslationSummary()`; the underlying JSON field also changed from `summary_translated` to `translation_summary`. Update all call sites to use `getTranslationSummary()` and `Builder.translationSummary(...)`.
+* **`To.Visitor`** — the `visit(OffsetDateTime)` and `visit(String)` method order in the `Visitor` interface is swapped; any anonymous or lambda implementations must reorder their overrides accordingly.
+### Fixed
+* **`GetAggregationCountRequest`**, **`GetAuthorsRequest`**, and **`GetBreakingNewsRequest`** — getter methods were annotated `@JsonIgnore` instead of `@JsonProperty`, causing all query parameters to be silently dropped from GET requests; they are now correctly annotated and transmitted.
+
 ## 2.1.1 - 2026-04-30
 * fix: use field-presence checks in union deserializers to prevent misclassification
 * Previously, all union response deserializers attempted blind `convertValue`
