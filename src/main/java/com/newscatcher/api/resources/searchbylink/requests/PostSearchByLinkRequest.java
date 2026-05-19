@@ -69,33 +69,11 @@ public final class PostSearchByLinkRequest {
         return links;
     }
 
-    /**
-     * @return The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text strings. The default time zone is UTC.
-     * <p>Formats with examples:</p>
-     * <ul>
-     * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-     * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-     * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-     * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-     * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
-     * </ul>
-     */
     @JsonProperty("from_")
     public Optional<From> getFrom() {
         return from;
     }
 
-    /**
-     * @return The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text strings. The default time zone is UTC.
-     * <p>Formats with examples:</p>
-     * <ul>
-     * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-     * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-     * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-     * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-     * <li>English phrases: <code>1 day ago</code>, <code>now</code></li>
-     * </ul>
-     */
     @JsonProperty("to_")
     public Optional<To> getTo() {
         return to;
@@ -205,17 +183,6 @@ public final class PostSearchByLinkRequest {
             return this;
         }
 
-        /**
-         * <p>The starting point in time to search from. Accepts date-time strings in ISO 8601 format and plain text strings. The default time zone is UTC.</p>
-         * <p>Formats with examples:</p>
-         * <ul>
-         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-         * <li>English phrases: <code>1 day ago</code>, <code>today</code></li>
-         * </ul>
-         */
         @JsonSetter(value = "from_", nulls = Nulls.SKIP)
         public Builder from(Optional<From> from) {
             this.from = from;
@@ -227,17 +194,6 @@ public final class PostSearchByLinkRequest {
             return this;
         }
 
-        /**
-         * <p>The ending point in time to search up to. Accepts date-time strings in ISO 8601 format and plain text strings. The default time zone is UTC.</p>
-         * <p>Formats with examples:</p>
-         * <ul>
-         * <li>YYYY-mm-ddTHH:MM:SS: <code>2024-07-01T00:00:00</code></li>
-         * <li>YYYY-MM-dd: <code>2024-07-01</code></li>
-         * <li>YYYY/mm/dd HH:MM:SS: <code>2024/07/01 00:00:00</code></li>
-         * <li>YYYY/mm/dd: <code>2024/07/01</code></li>
-         * <li>English phrases: <code>1 day ago</code>, <code>now</code></li>
-         * </ul>
-         */
         @JsonSetter(value = "to_", nulls = Nulls.SKIP)
         public Builder to(Optional<To> to) {
             this.to = to;
