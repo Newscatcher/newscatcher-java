@@ -153,7 +153,6 @@ public final class SourcesResponseDto {
 
         /**
          * <p>A message indicating the result of the request.</p>
-         * <p>A message indicating the result of the request.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

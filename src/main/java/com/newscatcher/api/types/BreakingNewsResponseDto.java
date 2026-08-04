@@ -249,7 +249,6 @@ public final class BreakingNewsResponseDto implements IBaseSearchResponseDto {
 
         /**
          * <p>The status of the response.</p>
-         * <p>The status of the response.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -260,7 +259,6 @@ public final class BreakingNewsResponseDto implements IBaseSearchResponseDto {
         }
 
         /**
-         * <p>The total number of articles matching the search criteria.</p>
          * <p>The total number of articles matching the search criteria.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -273,7 +271,6 @@ public final class BreakingNewsResponseDto implements IBaseSearchResponseDto {
 
         /**
          * <p>The current page number of the results.</p>
-         * <p>The current page number of the results.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -285,7 +282,6 @@ public final class BreakingNewsResponseDto implements IBaseSearchResponseDto {
 
         /**
          * <p>The total number of pages available for the given search criteria.</p>
-         * <p>The total number of pages available for the given search criteria.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -296,7 +292,6 @@ public final class BreakingNewsResponseDto implements IBaseSearchResponseDto {
         }
 
         /**
-         * <p>The number of articles per page.</p>
          * <p>The number of articles per page.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */

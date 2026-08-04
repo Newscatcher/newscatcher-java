@@ -166,7 +166,6 @@ public final class SourceInfo {
 
         /**
          * <p>The domain URL of the news source.</p>
-         * <p>The domain URL of the news source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

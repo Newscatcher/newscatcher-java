@@ -150,7 +150,6 @@ public final class BreakingNewsEventEntity {
 
         /**
          * <p>Unique identifier for the breaking news event/cluster.</p>
-         * <p>Unique identifier for the breaking news event/cluster.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -161,7 +160,6 @@ public final class BreakingNewsEventEntity {
         }
 
         /**
-         * <p>Number of articles in this breaking news cluster.</p>
          * <p>Number of articles in this breaking news cluster.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
