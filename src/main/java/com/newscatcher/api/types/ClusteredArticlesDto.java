@@ -127,7 +127,6 @@ public final class ClusteredArticlesDto implements IClusteredArticlesDto {
 
         /**
          * <p>The number of clusters in the search results.</p>
-         * <p>The number of clusters in the search results.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

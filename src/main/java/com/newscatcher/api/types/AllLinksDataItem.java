@@ -141,7 +141,6 @@ public final class AllLinksDataItem {
 
         /**
          * <p>The domain of the linked URL.</p>
-         * <p>The domain of the linked URL.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -153,7 +152,6 @@ public final class AllLinksDataItem {
 
         /**
          * <p>The complete URL of the link.</p>
-         * <p>The complete URL of the link.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -164,7 +162,6 @@ public final class AllLinksDataItem {
         }
 
         /**
-         * <p>The anchor text of the link.</p>
          * <p>The anchor text of the link.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */

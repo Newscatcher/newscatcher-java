@@ -147,7 +147,6 @@ public final class ClusterEntity {
 
         /**
          * <p>The unique identifier for the cluster.</p>
-         * <p>The unique identifier for the cluster.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -158,7 +157,6 @@ public final class ClusterEntity {
         }
 
         /**
-         * <p>The number of articles in the cluster.</p>
          * <p>The number of articles in the cluster.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */

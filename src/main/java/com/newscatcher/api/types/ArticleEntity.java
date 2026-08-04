@@ -1046,7 +1046,6 @@ public final class ArticleEntity {
 
         /**
          * <p>The title of the article.</p>
-         * <p>The title of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1057,7 +1056,6 @@ public final class ArticleEntity {
         }
 
         /**
-         * <p>The URL link to the article.</p>
          * <p>The URL link to the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -1070,7 +1068,6 @@ public final class ArticleEntity {
 
         /**
          * <p>The domain URL of the article.</p>
-         * <p>The domain URL of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1081,7 +1078,6 @@ public final class ArticleEntity {
         }
 
         /**
-         * <p>The full domain URL of the article.</p>
          * <p>The full domain URL of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -1094,7 +1090,6 @@ public final class ArticleEntity {
 
         /**
          * <p>The categorical URL of the article.</p>
-         * <p>The categorical URL of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1105,7 +1100,6 @@ public final class ArticleEntity {
         }
 
         /**
-         * <p>The rank of the article's source.</p>
          * <p>The rank of the article's source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -1118,7 +1112,6 @@ public final class ArticleEntity {
 
         /**
          * <p>The unique identifier for the article.</p>
-         * <p>The unique identifier for the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1129,7 +1122,6 @@ public final class ArticleEntity {
         }
 
         /**
-         * <p>The relevance score of the article.</p>
          * <p>The relevance score of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */

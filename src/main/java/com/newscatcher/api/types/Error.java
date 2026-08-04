@@ -141,7 +141,6 @@ public final class Error {
 
         /**
          * <p>A detailed description of the error.</p>
-         * <p>A detailed description of the error.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -153,7 +152,6 @@ public final class Error {
 
         /**
          * <p>The HTTP status code of the error.</p>
-         * <p>The HTTP status code of the error.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -164,7 +162,6 @@ public final class Error {
         }
 
         /**
-         * <p>A short description of the status code.</p>
          * <p>A short description of the status code.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
