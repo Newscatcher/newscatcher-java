@@ -1,3 +1,15 @@
+## [3.1.0] - 2026-08-04
+### Added
+- **`ClientOptions.Builder` and both `NewscatcherApiClientBuilder` / `AsyncNewscatcherApiClientBuilder`** — new `initialRetryDelayMillis()`, `maxRetryDelayMillis()`, and `retryJitterFactor()` builder methods to configure exponential-backoff retry parameters at the client level.
+- **`RequestOptions.Builder.maxRetries(Integer)`** — new builder method to override the global retry count on a per-request basis, honored by all resource clients.
+- **`ResponseDecompressionInterceptor`** — new interceptor that transparently decompresses gzip and deflate response bodies when `Accept-Encoding` is set explicitly.
+- **`DateTimeDeserializer`** — now falls back to space-separated ISO 8601 and RFC 1123 date-time formats when standard ISO 8601 parsing fails.
+
+### Fixed
+- **`NewscatcherApiClientBuilder` and `AsyncNewscatcherApiClientBuilder`** — `setAuthentication` no longer sends a null `x-api-token` header when `apiKey` is not set.
+- **`ConsoleLogger`** — handler log level is now set to `Level.ALL` so all log records are actually emitted.
+- **All resource clients** — `JsonProcessingException` is now caught and reported separately from `IOException`, surfacing a descriptive `"Failed to deserialize response: …"` message instead of a generic network error.
+
 ## 3.0.0 - 2026-05-19
 ### Breaking Changes
 * **`NlpDataEntity.getSummaryTranslated()`** — renamed to `getTranslationSummary()`; the underlying JSON field also changed from `summary_translated` to `translation_summary`. Update all call sites to use `getTranslationSummary()` and `Builder.translationSummary(...)`.
